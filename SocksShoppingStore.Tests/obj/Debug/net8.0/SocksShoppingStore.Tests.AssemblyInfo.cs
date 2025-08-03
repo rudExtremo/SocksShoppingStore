@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SocksShoppingStore.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1db156c2e70c3ef7bd17ef792af53389143c9ded")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+03958ac184287dd37f63340350f525cac44a169f")]
 [assembly: System.Reflection.AssemblyProductAttribute("SocksShoppingStore.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SocksShoppingStore.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

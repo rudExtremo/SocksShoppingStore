@@ -206,3 +206,4 @@ D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\obj\Debug\net8.0\refi
 D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\obj\Debug\net8.0\SocksShoppingStore.Tests.pdb
 D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\obj\Debug\net8.0\SocksShoppingStore.Tests.genruntimeconfig.cache
 D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\obj\Debug\net8.0\ref\SocksShoppingStore.Tests.dll
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\obj\Debug\net8.0\SocksShoppingStore.Tests.sourcelink.json

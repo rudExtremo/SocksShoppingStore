@@ -28,7 +28,11 @@ namespace SocksShoppingStore.Tests.PageObjects
         // Метод, который добавляет товар в корзину
         public void ClickAddToCartButtonForFirstProduct()
         {
-            FirstProductAddToCartButton.Click();
+            // Получаем доступ к исполнителю JavaScript
+            IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
+
+            // Выполняем скрипт, который кликает по нашему элементу
+            js.ExecuteScript("arguments[0].click();", FirstProductAddToCartButton);
         }
     }
 }

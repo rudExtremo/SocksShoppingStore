@@ -2,9 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\SocksShoppingStore",
-    "\\SocksShoppingStore.Tests",
-    "\\SocksShoppingStore\\Models"
+    "\\SocksShoppingStore\\Properties"
   ],
-  "SelectedNode": "\\SocksShoppingStore\\SocksShoppingStore.sln",
+  "SelectedNode": "\\SocksShoppingStore\\SocksShoppingStore.csproj",
   "PreviewInSolutionExplorer": false
 }
