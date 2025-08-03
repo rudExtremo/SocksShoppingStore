@@ -5,6 +5,6 @@
     "\\SocksShoppingStore.Tests",
     "\\SocksShoppingStore\\Models"
   ],
-  "SelectedNode": "\\SocksShoppingStore\\Models\\Sock.cs",
+  "SelectedNode": "\\SocksShoppingStore.Tests\\HomePageTests.cs",
   "PreviewInSolutionExplorer": false
 }

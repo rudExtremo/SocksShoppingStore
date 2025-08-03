@@ -48,7 +48,7 @@ namespace SocksShoppingStore.Tests
             _homePage.ClickAddToCartButtonForFirstProduct();
 
             // 3. Создаем объект страницы корзины, так как мы ожидаем, что нас на нее перенаправит
-            var cartPage = new CartPage(_driver);
+            var cartPage = new CartPage(_driver!);
 
             // 4. Ожидаемое имя первого товара
             string expectedProductName = "Носки 'Программист'";
