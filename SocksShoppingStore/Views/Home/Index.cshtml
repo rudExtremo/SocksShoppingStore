@@ -1,0 +1,25 @@
+﻿@model List<SocksShoppingStore.Models.Sock>
+@{
+    ViewData["Title"] = "Каталог Носков";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Магазин самых лучших носков</h1>
+</div>
+
+<div class="row mt-5">
+    @foreach (var sock in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="@sock.ImageUrl" class="card-img-top" alt="@sock.Name" style="height: 300px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">@sock.Name</h5>
+                    <p class="card-text">@sock.Description</p>
+                    <p class="card-text"><strong>Цена: @sock.Price.ToString("C")</strong></p>
+                    <a asp-controller="Home" asp-action="AddToCart" asp-route-id="@sock.Id" class="btn btn-primary">В корзину</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

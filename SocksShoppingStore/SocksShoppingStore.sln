@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36327.8 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocksShoppingStore", "SocksShoppingStore.csproj", "{76A11B07-5C44-92F8-06B1-DF061BC1C2E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocksShoppingStore.Tests", "..\SocksShoppingStore.Tests\SocksShoppingStore.Tests.csproj", "{08834D58-40F4-ECF7-A3D5-08376ABD1C9A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76A11B07-5C44-92F8-06B1-DF061BC1C2E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76A11B07-5C44-92F8-06B1-DF061BC1C2E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76A11B07-5C44-92F8-06B1-DF061BC1C2E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76A11B07-5C44-92F8-06B1-DF061BC1C2E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08834D58-40F4-ECF7-A3D5-08376ABD1C9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08834D58-40F4-ECF7-A3D5-08376ABD1C9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08834D58-40F4-ECF7-A3D5-08376ABD1C9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08834D58-40F4-ECF7-A3D5-08376ABD1C9A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6533C8C3-B49F-414E-8BA9-D2983F8CF6BB}
+	EndGlobalSection
+EndGlobal

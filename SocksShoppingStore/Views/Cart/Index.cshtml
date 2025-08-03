@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Корзина";
+    // Получаем имя товара из временных данных
+    var productName = TempData["AddedProductName"] as string;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (!string.IsNullOrEmpty(productName))
+{
+    <div class="alert alert-success">
+        Товар "<strong>@productName</strong>" успешно добавлен в корзину!
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        Ваша корзина пуста.
+    </div>
+}

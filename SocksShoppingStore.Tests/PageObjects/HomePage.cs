@@ -1,0 +1,34 @@
+﻿// Файл: PageObjects/HomePage.cs
+using OpenQA.Selenium;
+
+namespace SocksShoppingStore.Tests.PageObjects
+{
+    public class HomePage
+    {
+        private readonly IWebDriver _driver;
+        // URL главной страницы, который мы будем открывать
+        private readonly string _baseUrl = "https://localhost:7068";
+        private IWebElement FirstProductAddToCartButton => _driver.FindElement(By.CssSelector(".card .btn-primary"));
+        public HomePage(IWebDriver driver)
+        {
+            _driver = driver;
+        }
+
+        // Метод для навигации на страницу
+        public void Navigate()
+        {
+            _driver.Navigate().GoToUrl(_baseUrl);
+        }
+
+        // Метод, который возвращает заголовок страницы
+        public string GetPageTitle()
+        {
+            return _driver.Title;
+        }
+        // Метод, который добавляет товар в корзину
+        public void ClickAddToCartButtonForFirstProduct()
+        {
+            FirstProductAddToCartButton.Click();
+        }
+    }
+}
