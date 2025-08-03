@@ -21,12 +21,14 @@ jobs:
     - name: Build
       run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
 
+    # ШАГ 3.5 (НОВЫЙ ПОДХОД): Запускаем скомпилированный DLL напрямую
     - name: Start Web App and Wait for it to be Ready
       run: |
-        # ИЗМЕНЕНИЕ ЗДЕСЬ: Добавили "> app.log 2>&1" чтобы перенаправить вывод
-        dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://localhost:5123" > app.log 2>&1 &
+        # Запускаем DLL, а не проект. Путь взят из лога успешной сборки.
+        dotnet SocksShoppingStore/SocksShoppingStore/bin/Release/net8.0/SocksShoppingStore.dll --urls "http://localhost:5123" > app.log 2>&1 &
         
         echo "Waiting for web app to be ready..."
+        # Наш скрипт проверки остается без изменений
         for i in {1..30}; do
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5123)
           if [ $STATUS -eq 200 ]; then
