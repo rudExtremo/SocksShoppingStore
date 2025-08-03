@@ -15,11 +15,21 @@ namespace SocksShoppingStore.Tests
         [SetUp]
         public void Setup()
         {
-            _driver = new ChromeDriver();
+            // Создаем опции для Chrome
+            var options = new ChromeOptions();
+
+            // Включаем headless режим и добавляем аргументы, необходимые для работы в CI/CD на Linux
+            options.AddArgument("--headless");
+            options.AddArgument("--no-sandbox");
+            options.AddArgument("--disable-dev-shm-usage");
+            options.AddArgument("--disable-gpu");
+
+            // Создаем экземпляр браузера Chrome с нашими опциями
+            _driver = new ChromeDriver(options);
+
             _driver.Manage().Window.Maximize();
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
 
-            // Создаем экземпляр Page Object, передавая ему драйвер
             _homePage = new HomePage(_driver);
         }
 
