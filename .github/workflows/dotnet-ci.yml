@@ -11,26 +11,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Шаги 1, 2, 3 остаются без изменений
     - uses: actions/checkout@v4
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
     - name: Build
       run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
 
-    # ШАГ 3.5 (УЛУЧШЕННЫЙ): Запускаем сайт и ждем, пока он будет готов
     - name: Start Web App and Wait for it to be Ready
       run: |
-        dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://localhost:5123" &
+        # ИЗМЕНЕНИЕ ЗДЕСЬ: Добавили "> app.log 2>&1" чтобы перенаправить вывод
+        dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://localhost:5123" > app.log 2>&1 &
         
         echo "Waiting for web app to be ready..."
-        # Делаем 30 попыток с паузой в 2 секунды (в сумме ждем до минуты)
         for i in {1..30}; do
-          # Пробуем подключиться и получить http-код ответа
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5123)
-          # Если код 200 (OK), значит сайт готов
           if [ $STATUS -eq 200 ]; then
             echo "Web app is ready!"
             exit 0
@@ -39,10 +37,12 @@ jobs:
           sleep 2
         done
         
+        echo "--- Web app log (app.log) ---"
+        cat app.log
+        echo "--- End of web app log ---"
         echo "Web app failed to start in time."
         exit 1
-      timeout-minutes: 2 # Общий таймаут для этого шага
+      timeout-minutes: 2
 
-    # Шаг 4: Запуск тестов
     - name: Test
       run: dotnet test SocksShoppingStore/SocksShoppingStore.sln --no-build --configuration Release
