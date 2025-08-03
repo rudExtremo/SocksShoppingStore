@@ -1,0 +1,37 @@
+# Имя нашего процесса, которое будет отображаться на GitHub
+name: .NET Build and Test
+
+# Триггер: запускать этот процесс при каждом пуше в основную ветку (main)
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Название единственной задачи в нашем процессе
+  build-and-test:
+    # Тип виртуальной машины, на которой будут выполняться команды. 
+    # Ubuntu - быстрый и стандартный выбор для CI.
+    runs-on: ubuntu-latest
+
+    steps:
+    # Шаг 1: Клонирование репозитория
+    # Это стандартное действие, которое скачивает твой код на виртуальную машину
+    - uses: actions/checkout@v4
+
+    # Шаг 2: Настройка нужной версии .NET
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x # Укажи здесь свою версию .NET, если она другая
+
+    # Шаг 3: Сборка всего решения
+    # Команда dotnet build проверит, что код компилируется без ошибок
+    - name: Build
+      run: dotnet build --configuration Release
+
+    # Шаг 4: Запуск тестов
+    # Самая важная команда. Она найдет твой тестовый проект и запустит все тесты
+    - name: Test
+      run: dotnet test --no-build --configuration Release
