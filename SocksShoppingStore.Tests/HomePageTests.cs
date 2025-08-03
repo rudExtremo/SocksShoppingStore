@@ -9,7 +9,7 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     public class HomePageTests
     {
-        private IWebDriver _driver;
+        private IWebDriver? _driver; // Добавили '?'
         private HomePage _homePage; // <-- Поле для нашего Page Object
 
         [SetUp]
@@ -60,7 +60,7 @@ namespace SocksShoppingStore.Tests
         [TearDown]
         public void Teardown()
         {
-            _driver.Quit();
+            _driver?.Quit(); // Добавили '?'
         }
     }
 }

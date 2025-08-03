@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\SocksShoppingStore"
+    "\\SocksShoppingStore",
+    "\\SocksShoppingStore.Tests",
+    "\\SocksShoppingStore\\Models"
   ],
-  "SelectedNode": "\\SocksShoppingStore\\SocksShoppingStore.sln",
+  "SelectedNode": "\\SocksShoppingStore\\Models\\Sock.cs",
   "PreviewInSolutionExplorer": false
 }
