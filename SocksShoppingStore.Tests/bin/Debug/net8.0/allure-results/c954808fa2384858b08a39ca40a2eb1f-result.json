@@ -1,0 +1,103 @@
+{
+  "uuid": "2948d59f-958c-46f4-ad67-829a5b8dfa8e",
+  "historyId": "366870012442ef9c7d04e0a571d81691",
+  "testCaseId": "be75203e9d479b05a2dc9933590b3cde",
+  "fullName": "SocksShoppingStore.Tests:SocksShoppingStore.Tests.ShoppingCartTests.Cart_FullWorkflow_CalculatesTotalCorrectly()",
+  "labels": [
+    {
+      "name": "thread",
+      "value": "NonParallelWorker"
+    },
+    {
+      "name": "host",
+      "value": "ALCOTESTER"
+    },
+    {
+      "name": "language",
+      "value": "C#"
+    },
+    {
+      "name": "framework",
+      "value": "NUnit 3"
+    },
+    {
+      "name": "package",
+      "value": "SocksShoppingStore.Tests"
+    },
+    {
+      "name": "testMethod",
+      "value": "Cart_FullWorkflow_CalculatesTotalCorrectly"
+    },
+    {
+      "name": "testClass",
+      "value": "ShoppingCartTests"
+    },
+    {
+      "name": "story",
+      "value": "Полный сценарий работы с корзиной"
+    },
+    {
+      "name": "epic",
+      "value": "Магазин"
+    },
+    {
+      "name": "suite",
+      "value": "UI Тесты"
+    },
+    {
+      "name": "feature",
+      "value": "Корзина"
+    }
+  ],
+  "links": [],
+  "name": "Cart_FullWorkflow_CalculatesTotalCorrectly",
+  "status": "passed",
+  "stage": "finished",
+  "description": "Тест проверяет полный цикл: добавление нескольких товаров, проверку суммы и удаление.",
+  "steps": [
+    {
+      "name": "Шаг 1: Открыть сайт и добавить два одинаковых товара",
+      "status": "passed",
+      "stage": "finished",
+      "steps": [],
+      "attachments": [],
+      "parameters": [],
+      "start": 1754299909000,
+      "stop": 1754299910839
+    },
+    {
+      "name": "Шаг 2: Перейти в корзину",
+      "status": "passed",
+      "stage": "finished",
+      "steps": [],
+      "attachments": [],
+      "parameters": [],
+      "start": 1754299910839,
+      "stop": 1754299910973
+    },
+    {
+      "name": "Шаг 3: Проверить количество и итоговую сумму",
+      "status": "passed",
+      "stage": "finished",
+      "steps": [],
+      "attachments": [],
+      "parameters": [],
+      "start": 1754299910973,
+      "stop": 1754299911023
+    },
+    {
+      "name": "Шаг 4: Удалить товар и проверить, что корзина пуста",
+      "status": "passed",
+      "stage": "finished",
+      "steps": [],
+      "attachments": [],
+      "parameters": [],
+      "start": 1754299911023,
+      "stop": 1754299911172
+    }
+  ],
+  "attachments": [],
+  "parameters": [],
+  "start": 1754299907711,
+  "stop": 1754299911321
+}

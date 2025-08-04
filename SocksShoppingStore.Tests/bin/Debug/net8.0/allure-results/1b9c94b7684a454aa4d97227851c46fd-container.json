@@ -1,0 +1,12 @@
+{
+  "uuid": "2b4281f2-b871-46cb-ace4-b6e438fd96e3",
+  "name": "SocksShoppingStore.Tests.ApiTests.GetAllProducts_ReturnsOkStatusAndCorrectNumberOfItems",
+  "children": [
+    "41f067a1-9bdd-4a97-9207-d6abb5723f17"
+  ],
+  "befores": [],
+  "afters": [],
+  "links": [],
+  "start": 1754299904744,
+  "stop": 1754299905002
+}
