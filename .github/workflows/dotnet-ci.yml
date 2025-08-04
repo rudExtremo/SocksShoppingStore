@@ -11,40 +11,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Шаг 1: Клонирование репозитория
     - uses: actions/checkout@v4
 
+    # Шаг 2: Настройка нужной версии .NET
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
 
+    # Шаг 3: Сборка всего решения
     - name: Build
       run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
 
-    # ШАГ 3.5 (ФИНАЛЬНЫЙ): Меняем localhost на 0.0.0.0
-    - name: Start Web App and Wait for it to be Ready
+    # ШАГ 3.5: Запускаем веб-приложение в фоновом режиме
+    - name: Start Web App
       run: |
-        # Адрес 0.0.0.0 говорит серверу слушать все доступные интерфейсы
-        dotnet SocksShoppingStore/SocksShoppingStore/bin/Release/net8.0/SocksShoppingStore.dll --urls "http://0.0.0.0:5123" > app.log 2>&1 &
-        
-        echo "Waiting for web app to be ready..."
-        # Скрипт проверки остается тот же, он все равно будет подключаться к localhost
-        for i in {1..30}; do
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5123)
-          if [ $STATUS -eq 200 ]; then
-            echo "Web app is ready!"
-            exit 0
-          fi
-          echo "Attempt $i: Status was $STATUS. Retrying in 2 seconds..."
-          sleep 2
-        done
-        
-        echo "--- Web app log (app.log) ---"
-        cat app.log
-        echo "--- End of web app log ---"
-        echo "Web app failed to start in time."
-        exit 1
-      timeout-minutes: 2
-
+        dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://localhost:5123" &
+        sleep 15 # Увеличили время ожидания до 15 секунд
+    
+    # Шаг 4: Запуск тестов
     - name: Test
       run: dotnet test SocksShoppingStore/SocksShoppingStore.sln --no-build --configuration Release
