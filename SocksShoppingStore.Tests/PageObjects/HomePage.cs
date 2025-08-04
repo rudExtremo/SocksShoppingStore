@@ -7,7 +7,7 @@ namespace SocksShoppingStore.Tests.PageObjects
     {
         private readonly IWebDriver _driver;
         // URL главной страницы, который мы будем открывать
-        private readonly string _baseUrl = "https://localhost:7068";
+        private readonly string _baseUrl = "http://127.0.0.1:5123";
         private IWebElement FirstProductAddToCartButton => _driver.FindElement(By.CssSelector(".card .btn-primary"));
         public HomePage(IWebDriver driver)
         {
