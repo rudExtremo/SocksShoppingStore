@@ -18,33 +18,13 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    - name: Build and Restore
+    - name: Build
       run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
 
-    # ШАГ 3.5 (ЗОЛОТОЙ СТАНДАРТ): Сервер слушает 0.0.0.0, клиент стучится в 127.0.0.1
-    - name: Start Web App and Wait for it to be Ready
+    - name: Start Web App
       run: |
-        # Запускаем сервер на 0.0.0.0, чтобы он был максимально доступен
-        dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://0.0.0.0:5123" > app.log 2>&1 &
-        
-        echo "Waiting for web app to be ready..."
-        # Проверяем по прямому IP-адресу
-        for i in {1..30}; do
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5123)
-          if [ $STATUS -eq 200 ]; then
-            echo "Web app is ready!"
-            exit 0
-          fi
-          echo "Attempt $i: Status was $STATUS. Retrying in 1 second..."
-          sleep 1
-        done
-        
-        echo "--- Web app log (app.log) ---"
-        cat app.log
-        echo "--- End of web app log ---"
-        echo "Web app failed to start in time."
-        exit 1
-      timeout-minutes: 1
-
+        dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://localhost:5123" &
+        sleep 15
+    
     - name: Test
-      run: dotnet test SocksShoppingStore/SocksShoppingStore.sln --no-build --no-restore --configuration Release
+      run: dotnet test SocksShoppingStore/SocksShoppingStore.sln --no-build --configuration Release
