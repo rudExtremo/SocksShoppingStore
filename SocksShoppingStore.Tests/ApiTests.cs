@@ -10,7 +10,7 @@ using System.Text.Json;
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
-    [AllureNUnit] // <<< ИСПРАВЛЕНИЕ ЗДЕСЬ
+    [AllureNUnit]
     [AllureEpic("Магазин")]
     [AllureSuite("API Тесты")]
     public class ApiTests

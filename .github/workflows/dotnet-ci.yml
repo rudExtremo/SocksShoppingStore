@@ -1,4 +1,4 @@
-name: .NET Build, Test, Deploy to Azure and Report
+name: .NET Build, Test and Deploy Allure Report
 
 on:
   push:
@@ -7,10 +7,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+# Даем воркфлоу права на запись
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 jobs:
   build-and-test:
@@ -37,49 +36,14 @@ jobs:
         with:
           allure_results: SocksShoppingStore.Tests/allure-results
           allure_report: allure-report
-      - name: Upload Pages Artifact
-        if: always()
-        uses: actions/upload-pages-artifact@v3
+      
+      # >>> НАЧАЛО НОВЫХ ШАГОВ
+      - name: Deploy Allure Report to GH Pages
+        # Запускается только для main ветки, чтобы не публиковать отчеты из pull-request'ов
+        if: always() && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: allure-report
-
-  deploy-report:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
-
-  # >>> НАЧАЛО НОВОЙ ЗАДАЧИ
-  deploy-to-azure:
-    # Запускается только после тестов и только для main ветки
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-          
-      - name: Build and publish
-        run: |
-          dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
-          # ИСПРАВЛЕНИЕ ЗДЕСЬ: Убираем лишнюю папку из пути
-          dotnet publish SocksShoppingStore/SocksShoppingStore.csproj -c Release -o ./publish
-
-      - name: Deploy to Azure App Service
-        uses: azure/webapps-deploy@v3
-        with:
-          # Имя твоего App Service в Azure
-          app-name: 'testsocksshop' 
-          # Используем секрет, который мы создали
-          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          # Путь к папке с опубликованным приложением
-          package: './publish'
-  # <<< КОНЕЦ НОВОЙ ЗАДАЧИ
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Директория, которую нужно опубликовать
+          publish_dir: allure-report
+      # <<< КОНЕЦ НОВЫХ ШАГОВ
