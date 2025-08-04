@@ -1,70 +1,76 @@
-using NUnit.Framework;
+// Файл: HomePageTests.cs
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using SocksShoppingStore.Tests.PageObjects;
+using NUnit.Framework;
+using SocksShoppingStore.Tests.PageObjects; // <-- Добавляем нашу папку
 
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     public class HomePageTests
     {
-        private IWebDriver driver;
-        private const string BaseUrl = "http://localhost:5123";
+        private IWebDriver? _driver; // Добавили '?'
+        private HomePage _homePage; // <-- Поле для нашего Page Object
 
-        // Этот метод выполнится один раз перед всеми тестами в этом классе
-        [OneTimeSetUp]
-        public void OneTimeSetup()
-        {
-            // Создаем экземпляр драйвера только один раз
-            driver = new ChromeDriver();
-            driver.Manage().Window.Maximize();
-        }
-
-        // Этот метод будет выполняться перед каждым тестом
         [SetUp]
         public void Setup()
         {
-            // Очищаем куки перед каждым тестом для обеспечения полной изоляции
-            driver.Manage().Cookies.DeleteAllCookies();
-            // Переходим на главную страницу, чтобы каждый тест начинался с чистого состояния
-            driver.Navigate().GoToUrl(BaseUrl);
-        }
+            // Создаем опции для Chrome
+            var options = new ChromeOptions();
 
-        // Этот метод выполнится один раз после всех тестов в этом классе
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            // Закрываем драйвер только один раз в конце
-            driver.Quit();
-        }
+            // Включаем headless режим и добавляем аргументы, необходимые для работы в CI/CD на Linux
+            options.AddArgument("--headless");
+            options.AddArgument("--no-sandbox");
+            options.AddArgument("--disable-dev-shm-usage");
+            options.AddArgument("--disable-gpu");
 
-        [Test]
-        public void AddItemToCart_ShouldIncreaseCartCounter()
-        {
-            var homePage = new HomePage(driver);
-            string initialCartCount = homePage.GetCartCount();
-            Assert.That(initialCartCount, Is.EqualTo("0"), "Initial cart count should be 0");
+            // Создаем экземпляр браузера Chrome с нашими опциями
+            _driver = new ChromeDriver(options);
 
-            // Добавляем первый товар в корзину
-            homePage.AddFirstItemToCart();
+            _driver.Manage().Window.Maximize();
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
 
-            // Небольшое ожидание, чтобы счетчик успел обновиться
-            System.Threading.Thread.Sleep(500);
-
-            string updatedCartCount = homePage.GetCartCount();
-            Assert.That(updatedCartCount, Is.EqualTo("1"), "Cart count should be 1 after adding an item");
+            _homePage = new HomePage(_driver);
         }
 
         [Test]
-        public void NavigateToCart_ShouldOpenCartPage()
+        public void HomePage_Title_IsCorrect()
         {
-            var homePage = new HomePage(driver);
+            // 1. Переходим на страницу (используя метод из Page Object)
+            _homePage.Navigate();
 
-            // Кликаем на иконку корзины
-            CartPage cartPage = homePage.ClickCartIcon();
+            // 2. Ожидаемый заголовок
+            string expectedTitle = "Каталог Носков";
 
-            // Проверяем, что мы на странице корзины, проверяя заголовок
-            Assert.That(cartPage.GetPageTitle(), Is.EqualTo("Cart"), "Should be navigated to the Cart page");
+            // 3. Получаем фактический заголовок (тоже из Page Object)
+            string actualTitle = _homePage.GetPageTitle();
+
+            // 4. Проверка осталась той же
+            Assert.That(actualTitle, Does.StartWith(expectedTitle), "Заголовок главной страницы неверный!");
+        }
+        [Test]
+        public void AddToCart_WhenClicked_ProductAppearsInCart()
+        {
+            // 1. Переходим на главную
+            _homePage.Navigate();
+
+            // 2. Кликаем на кнопку "В корзину" у первого товара
+            _homePage.ClickAddToCartButtonForFirstProduct();
+
+            // 3. Создаем объект страницы корзины, так как мы ожидаем, что нас на нее перенаправит
+            var cartPage = new CartPage(_driver!);
+
+            // 4. Ожидаемое имя первого товара
+            string expectedProductName = "Носки 'Программист'";
+
+            // 5. Проверяем, что на странице корзины есть сообщение с именем нашего товара
+            Assert.That(cartPage.ContainsProduct(expectedProductName), Is.True, "Товар не был добавлен в корзину!");
+        }
+
+        [TearDown]
+        public void Teardown()
+        {
+            _driver?.Quit(); // Добавили '?'
         }
     }
 }
