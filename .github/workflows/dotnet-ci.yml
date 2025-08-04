@@ -47,8 +47,13 @@ jobs:
     needs: build-and-test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+    # ИСПРАВЛЕНИЕ ЗДЕСЬ: Добавляем environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
+        id: deployment # Добавляем id для ссылки на url
         uses: actions/deploy-pages@v4
 
   deploy-to-azure:
