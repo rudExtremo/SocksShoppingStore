@@ -207,3 +207,14 @@ D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\obj\Debug\net8.0\Sock
 D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\obj\Debug\net8.0\SocksShoppingStore.Tests.genruntimeconfig.cache
 D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\obj\Debug\net8.0\ref\SocksShoppingStore.Tests.dll
 D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\obj\Debug\net8.0\SocksShoppingStore.Tests.sourcelink.json
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\CoverletSourceRootsMapping_SocksShoppingStore.Tests
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\SocksShoppingStore.deps.json
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\SocksShoppingStore.runtimeconfig.json
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\appsettings.Development.json
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\appsettings.json
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\SocksShoppingStore.staticwebassets.runtime.json
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\SocksShoppingStore.staticwebassets.endpoints.json
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\SocksShoppingStore.exe
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\RestSharp.dll
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\SocksShoppingStore.dll
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\SocksShoppingStore.pdb
