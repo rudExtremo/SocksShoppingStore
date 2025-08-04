@@ -37,7 +37,6 @@ jobs:
           allure_results: SocksShoppingStore.Tests/allure-results
           allure_report: allure-report
       
-      # >>> НАЧАЛО НОВЫХ ШАГОВ
       - name: Deploy Allure Report to GH Pages
         # Запускается только для main ветки, чтобы не публиковать отчеты из pull-request'ов
         if: always() && github.ref == 'refs/heads/main'
@@ -46,4 +45,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # Директория, которую нужно опубликовать
           publish_dir: allure-report
-      # <<< КОНЕЦ НОВЫХ ШАГОВ

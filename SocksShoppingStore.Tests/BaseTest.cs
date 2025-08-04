@@ -47,7 +47,6 @@ namespace SocksShoppingStore.Tests
             if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed && Driver is ITakesScreenshot)
             {
                 var screenshot = ((ITakesScreenshot)Driver).GetScreenshot();
-                // Используем правильный метод AllureApi.AddAttachment
                 AllureApi.AddAttachment(
                     "Screenshot on failure",
                     "image/png",
