@@ -43,8 +43,8 @@ jobs:
     - name: Generate Allure Report
       # Этот шаг выполнится, даже если предыдущий (тесты) завершился с ошибкой
       if: always()
-      # ИСПРАВЛЕНИЕ ЗДЕСЬ: Используем точную, последнюю стабильную версию
-      uses: allure-framework/allure-action@v2.10.0
+      # ИСПРАВЛЕНИЕ ЗДЕСЬ: Используем более надежный и популярный community action
+      uses: simple-elf/allure-report-action@v1.7.0
       with:
         # Указываем путь к результатам тестов
         results_path: SocksShoppingStore.Tests/allure-results
@@ -55,5 +55,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: allure-report
-        path: allure-report
+        path: allure-results/allure-report # Уточняем путь к сгенерированному отчету
     # <<< КОНЕЦ НОВЫХ ШАГОВ
