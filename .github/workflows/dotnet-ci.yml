@@ -43,8 +43,8 @@ jobs:
     - name: Generate Allure Report
       # Этот шаг выполнится, даже если предыдущий (тесты) завершился с ошибкой
       if: always()
-      # ИСПРАВЛЕНИЕ ЗДЕСЬ: Обновляем версию до v3
-      uses: allure-framework/allure-action@v3
+      # ИСПРАВЛЕНИЕ ЗДЕСЬ: Используем точную, последнюю стабильную версию
+      uses: allure-framework/allure-action@v2.10.0
       with:
         # Указываем путь к результатам тестов
         results_path: SocksShoppingStore.Tests/allure-results
