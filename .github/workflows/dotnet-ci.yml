@@ -17,36 +17,88 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+      
+      # Устанавливаем Java, которая нужна для генерации отчета Allure
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Build and Restore
         run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
+
       - name: Start Web App
         run: |
           dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://0.0.0.0:5123" &
           sleep 15
+
       - name: Run tests
         continue-on-error: true
         run: dotnet test SocksShoppingStore/SocksShoppingStore.sln --no-build --configuration Release
+      
+      # Этот шаг поможет нам увидеть, где на самом деле создается папка allure-results
+      - name: List files after test
+        if: always()
+        run: ls -R
+
+      # --- Новые шаги для обогащения отчета ---
+      - name: Create Allure Environment File
+        if: always()
+        run: |
+          echo "BROWSER=Chrome" > allure-environment.properties
+          echo "STAND=Test" >> allure-environment.properties
+          echo "OS=${{ runner.os }}" >> allure-environment.properties
+          
+      - name: Copy Allure history
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Prepare Allure Results
+        if: always()
+        run: |
+          # Путь к результатам тестов, скорее всего, будет таким
+          RESULTS_PATH=SocksShoppingStore.Tests/bin/Release/net8.0/allure-results
+          # Создаем папку для истории, если ее нет
+          mkdir -p $RESULTS_PATH/history
+          # Копируем историю предыдущих запусков
+          if [ -d "gh-pages/history" ]; then
+            cp -r gh-pages/history/* $RESULTS_PATH/history/
+          fi
+          # Копируем файл с переменными окружения
+          cp allure-environment.properties $RESULTS_PATH/
+
+      # --- Генерация отчета ---
       - name: Generate Allure Report
         if: always()
         uses: simple-elf/allure-report-action@v1.7
         with:
-          allure_results: SocksShoppingStore.Tests/allure-results
+          # Указываем правильный путь к результатам
+          allure_results: SocksShoppingStore.Tests/bin/Release/net8.0/allure-results
           allure_report: allure-report
-      
-      # >>> НАЧАЛО НОВЫХ ШАГОВ
+          gh_pages: gh-pages
+          allure_history: allure-history
+
+      # --- Публикация отчета ---
       - name: Deploy Allure Report to GH Pages
-        # Запускается только для main ветки
         if: always() && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # Директория, которую нужно опубликовать
           publish_dir: allure-report
-      # <<< КОНЕЦ НОВЫХ ШАГОВ
+          # Публикуем в ветку gh-pages
+          publish_branch: gh-pages
+          # Сохраняем историю запусков
+          keep_files: true
 
   deploy-to-azure:
     needs: build-and-test
@@ -55,14 +107,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+
       - name: Build and publish
         run: |
           dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
           dotnet publish SocksShoppingStore/SocksShoppingStore.csproj -c Release -o ./publish
+
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v3
         with:
