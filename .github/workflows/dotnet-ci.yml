@@ -1,46 +1,84 @@
-name: .NET Build, Test and Allure Report
+name: .NET Build, Test, Deploy to Azure and Report
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Build and Restore
+        run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
+      - name: Start Web App and Wait
+        run: |
+          dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://0.0.0.0:5123" &
+          sleep 15
+      - name: Run tests
+        continue-on-error: true
+        run: dotnet test SocksShoppingStore/SocksShoppingStore.sln --no-build --configuration Release
+      - name: Generate Allure Report
+        if: always()
+        uses: simple-elf/allure-report-action@v1.7
+        with:
+          allure_results: SocksShoppingStore.Tests/allure-results
+          allure_report: allure-report
+      - name: Upload Pages Artifact
+        if: always()
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
+  deploy-report:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
 
-    - name: Build and Restore
-      run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
-
-    - name: Start Web App
-      run: |
-        dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://0.0.0.0:5123" &
-        sleep 15
+  # >>> НАЧАЛО НОВОЙ ЗАДАЧИ
+  deploy-to-azure:
+    # Запускается только после тестов и только для main ветки
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     
-    - name: Run tests
-      continue-on-error: true
-      run: dotnet test SocksShoppingStore/SocksShoppingStore.sln --no-build --configuration Release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Generate Allure Report
-      if: always()
-      uses: simple-elf/allure-report-action@v1.7
-      with:
-        allure_results: SocksShoppingStore.Tests/allure-results
-        allure_report: allure-report
-        
-    - name: Upload Allure Report
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: allure-report
-        path: allure-report
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+          
+      - name: Build and publish
+        run: |
+          dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
+          dotnet publish SocksShoppingStore/SocksShoppingStore/SocksShoppingStore.csproj -c Release -o ./publish
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          # Имя твоего App Service в Azure
+          app-name: 'stassocksshop' 
+          # Используем секрет, который мы создали
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          # Путь к папке с опубликованным приложением
+          package: './publish'
+  # <<< КОНЕЦ НОВОЙ ЗАДАЧИ
