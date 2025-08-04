@@ -11,44 +11,49 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
 
-      - name: Build and Restore
-        run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
+    - name: Build and Restore
+      run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
 
-      - name: Start Web App and Wait
-        run: |
-          dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://0.0.0.0:5123" > app.log 2>&1 &
-          echo "Waiting for app…"
-          for i in {1..30}; do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5123)
-            if [ $STATUS -eq 200 ]; then echo "👍 Web app is ready"; exit 0; fi
-            sleep 1
-          done
-          echo "🚨 Web app failed to start"; exit 1
-        timeout-minutes: 1
+    - name: Start Web App and Wait
+      run: |
+        dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://0.0.0.0:5123" > app.log 2>&1 &
+        echo "Waiting for web app..."
+        for i in {1..30}; do
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5123)
+          if [ $STATUS -eq 200 ]; then echo "Web app is ready!"; exit 0; fi
+          sleep 1
+        done
+        echo "--- Web app log (app.log) ---"
+        cat app.log
+        echo "Web app failed to start."; exit 1
+      timeout-minutes: 1
 
-      - name: Run tests (накапливаем результаты Allure)
-        continue-on-error: true
-        run: dotnet test SocksShoppingStore/SocksShoppingStore.sln --no-build --configuration Release
+    - name: Run tests
+      # Мы используем continue-on-error, чтобы отчет сгенерировался, даже если тесты упадут
+      continue-on-error: true
+      run: dotnet test SocksShoppingStore/SocksShoppingStore.sln --no-build --configuration Release
 
-      # — Вот новый шаг с Allure
-      - name: Generate Allure Report
-        if: always()
-        uses: simple-elf/allure-report-action@v1.12
-        with:
-          allure_results: SocksShoppingStore.Tests/allure-results
-          report_name: "Allure‑report"
-
-      - name: Upload Allure Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report
-          path: SocksShoppingStore.Tests/allure-report
+    - name: Generate Allure Report
+      if: always()
+      uses: simple-elf/allure-report-action@v1.7
+      with:
+        # Указываем путь к результатам тестов
+        allure_results: SocksShoppingStore.Tests/allure-results
+        # Указываем, куда положить сгенерированный отчет
+        allure_report: allure-report
+        
+    - name: Upload Allure Report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: allure-report
+        # Указываем путь к папке с отчетом для загрузки
+        path: allure-report
