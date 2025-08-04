@@ -7,10 +7,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+# Даем воркфлоу права на запись в репозиторий для создания ветки gh-pages
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 jobs:
   build-and-test:
@@ -37,24 +36,17 @@ jobs:
         with:
           allure_results: SocksShoppingStore.Tests/allure-results
           allure_report: allure-report
-      - name: Upload Pages Artifact
-        if: always()
-        uses: actions/upload-pages-artifact@v3
+      
+      # >>> НАЧАЛО НОВЫХ ШАГОВ
+      - name: Deploy Allure Report to GH Pages
+        # Запускается только для main ветки
+        if: always() && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: allure-report
-
-  deploy-report:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    # ИСПРАВЛЕНИЕ ЗДЕСЬ: Добавляем environment
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment # Добавляем id для ссылки на url
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Директория, которую нужно опубликовать
+          publish_dir: allure-report
+      # <<< КОНЕЦ НОВЫХ ШАГОВ
 
   deploy-to-azure:
     needs: build-and-test
