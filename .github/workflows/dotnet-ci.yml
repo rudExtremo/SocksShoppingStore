@@ -24,20 +24,24 @@ jobs:
 
     - name: Start Web App and Wait
       run: |
-        dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://0.0.0.0:5123" > app.log 2>&1 &
+        # Запускаем приложение без сборки, так как оно уже собрано, и перенаправляем лог
+        dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --no-build --urls "http://0.0.0.0:5123" > app.log 2>&1 &
+        # Добавляем небольшую паузу ПЕРЕД началом проверки
+        sleep 3
+        
         echo "Waiting for web app..."
         for i in {1..30}; do
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5123)
           if [ $STATUS -eq 200 ]; then echo "Web app is ready!"; exit 0; fi
           sleep 1
         done
+        
         echo "--- Web app log (app.log) ---"
         cat app.log
         echo "Web app failed to start."; exit 1
       timeout-minutes: 1
 
     - name: Run tests
-      # Мы используем continue-on-error, чтобы отчет сгенерировался, даже если тесты упадут
       continue-on-error: true
       run: dotnet test SocksShoppingStore/SocksShoppingStore.sln --no-build --configuration Release
 
@@ -45,9 +49,7 @@ jobs:
       if: always()
       uses: simple-elf/allure-report-action@v1.7
       with:
-        # Указываем путь к результатам тестов
         allure_results: SocksShoppingStore.Tests/allure-results
-        # Указываем, куда положить сгенерированный отчет
         allure_report: allure-report
         
     - name: Upload Allure Report
@@ -55,5 +57,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: allure-report
-        # Указываем путь к папке с отчетом для загрузки
         path: allure-report
