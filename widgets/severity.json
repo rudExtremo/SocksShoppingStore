@@ -1,1 +1,1 @@
-[]
+[{"uid":"206bf6fc185d9cdd","name":"AddToCart_SingleItem_UpdatesCartCounter","time":{"start":1754308269046,"stop":1754308271567,"duration":2521},"status":"passed","severity":"normal"},{"uid":"2dc1ae9eda386273","name":"GetAllProducts_ReturnsOkStatusAndCorrectNumberOfItems","time":{"start":1754308268764,"stop":1754308268952,"duration":188},"status":"passed","severity":"normal"},{"uid":"2102e3efcc7becf3","name":"Cart_FullWorkflow_CalculatesTotalCorrectly","time":{"start":1754308271568,"stop":1754308273483,"duration":1915},"status":"passed","severity":"normal"}]
