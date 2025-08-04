@@ -1,55 +1,74 @@
 ﻿using NUnit.Framework;
+using Allure.NUnit.Attributes;
+using System.Threading;
+using Allure.Net.Commons;
 
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
-    public class ShoppingCartTests : BaseTest // Наследуемся от нашего базового класса
+    [AllureEpic("Магазин")]
+    [AllureSuite("UI Тесты")]
+    [AllureFeature("Корзина")]
+    public class ShoppingCartTests : BaseTest
     {
         [Test]
+        [AllureStory("Добавление товара")]
+        [AllureDescription("Тест проверяет, что при добавлении товара в корзину счетчик на иконке обновляется.")]
         public void AddToCart_SingleItem_UpdatesCartCounter()
         {
-            // 1. Открываем сайт
-            HomePage!.Navigate();
+            AllureApi.Step("Шаг 1: Открыть главную страницу", () =>
+            {
+                HomePage!.Navigate();
+            });
 
-            // 2. Проверяем, что счетчик корзины равен "0"
-            Assert.That(HomePage.CartItemCountBadge.Text, Is.EqualTo("0"), "Изначально счетчик корзины должен быть 0");
+            AllureApi.Step("Шаг 2: Проверить, что счетчик корзины равен 0", () =>
+            {
+                Assert.That(HomePage!.CartItemCountBadge.Text, Is.EqualTo("0"));
+            });
 
-            // 3. Добавляем первый товар в корзину
-            HomePage.AddFirstProductToCart();
+            AllureApi.Step("Шаг 3: Добавить первый товар в корзину", () =>
+            {
+                HomePage!.AddFirstProductToCart();
+                Thread.Sleep(500);
+            });
 
-            // 4. Ждем немного, чтобы счетчик успел обновиться (на реальных проектах используют явные ожидания)
-            Thread.Sleep(500);
-
-            // 5. Проверяем, что счетчик корзины стал "1"
-            Assert.That(HomePage.CartItemCountBadge.Text, Is.EqualTo("1"), "Счетчик корзины не обновился после добавления товара");
+            AllureApi.Step("Шаг 4: Проверить, что счетчик корзины стал 1", () =>
+            {
+                Assert.That(HomePage!.CartItemCountBadge.Text, Is.EqualTo("1"));
+            });
         }
 
         [Test]
+        [AllureStory("Полный сценарий работы с корзиной")]
+        [AllureDescription("Тест проверяет полный цикл: добавление нескольких товаров, проверку суммы и удаление.")]
         public void Cart_FullWorkflow_CalculatesTotalCorrectly()
         {
-            // 1. Открываем сайт и добавляем первый товар
-            HomePage!.Navigate();
-            HomePage.AddFirstProductToCart();
-            Thread.Sleep(500); // Пауза для обновления
+            AllureApi.Step("Шаг 1: Открыть сайт и добавить два одинаковых товара", () =>
+            {
+                HomePage!.Navigate();
+                HomePage.AddFirstProductToCart();
+                Thread.Sleep(500);
+                HomePage.AddFirstProductToCart();
+                Thread.Sleep(500);
+            });
 
-            // 2. Добавляем этот же товар еще раз
-            HomePage.AddFirstProductToCart();
-            Thread.Sleep(500); // Пауза для обновления
+            AllureApi.Step("Шаг 2: Перейти в корзину", () =>
+            {
+                HomePage!.GoToCart();
+            });
 
-            // 3. Переходим в корзину
-            HomePage.GoToCart();
+            AllureApi.Step("Шаг 3: Проверить количество и итоговую сумму", () =>
+            {
+                Assert.That(CartPage!.GetFirstItemQuantity(), Is.EqualTo(2));
+                decimal expectedSum = 7.00m;
+                Assert.That(CartPage.GetTotalSum(), Is.EqualTo(expectedSum));
+            });
 
-            // 4. Проверяем количество первого товара (должно быть 2)
-            Assert.That(CartPage!.GetFirstItemQuantity(), Is.EqualTo(2), "Количество товара в корзине неверное");
-
-            // 5. Проверяем, что итоговая сумма верна (2 * 3.50€ = 7.00€)
-            // Цена первого товара "Носки 'Программист'" - 3.50
-            decimal expectedSum = 7.00m;
-            Assert.That(CartPage.GetTotalSum(), Is.EqualTo(expectedSum), "Итоговая сумма в корзине рассчитана неверно");
-
-            // 6. Удаляем товар и проверяем, что корзина пуста
-            CartPage.DeleteFirstItem();
-            Assert.That(CartPage.IsCartEmpty(), Is.True, "Корзина не пуста после удаления товара");
+            AllureApi.Step("Шаг 4: Удалить товар и проверить, что корзина пуста", () =>
+            {
+                CartPage!.DeleteFirstItem();
+                Assert.That(CartPage.IsCartEmpty(), Is.True);
+            });
         }
     }
 }

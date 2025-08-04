@@ -1,0 +1,13 @@
+{
+  "uuid": "0890deb9-da4f-425f-b6e2-86deca9581e9",
+  "name": "SocksShoppingStore.Tests.ShoppingCartTests",
+  "children": [
+    "8a328c7e-65c3-46cc-9342-60be4c2f312b",
+    "6e4cec7b-b371-48f9-9aca-809a20dba8c7"
+  ],
+  "befores": [],
+  "afters": [],
+  "links": [],
+  "start": 1754299564370,
+  "stop": 1754299570817
+}

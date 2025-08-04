@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using Allure.Net.Commons;
+using Allure.NUnit;
+using Allure.NUnit.Attributes;
+using NUnit.Framework;
 using RestSharp;
 using SocksShoppingStore.Models;
 using System.Net;
@@ -7,45 +10,49 @@ using System.Text.Json;
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
+    [AllureNUnit] // <<< ИСПРАВЛЕНИЕ ЗДЕСЬ
+    [AllureEpic("Магазин")]
+    [AllureSuite("API Тесты")]
     public class ApiTests
     {
-        private RestClient _client;
+        private RestClient? _client;
 
         [SetUp]
         public void Setup()
         {
-            // Определяем, запущены ли мы в среде CI
             bool isCi = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI"));
             string baseUrl = isCi ? "http://127.0.0.1:5123" : "https://localhost:7068";
-
-            // Для локального запуска с самодельным сертификатом нужно его игнорировать
             var options = new RestClientOptions(baseUrl)
             {
                 RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true
             };
-
             _client = new RestClient(options);
         }
 
         [Test]
+        [AllureStory("Каталог товаров")]
+        [AllureDescription("Тест проверяет, что API возвращает корректный список товаров.")]
         public void GetAllProducts_ReturnsOkStatusAndCorrectNumberOfItems()
         {
-            // 1. Создаем запрос к нашему API
+            List<Sock>? socks = null;
             var request = new RestRequest("api/products", Method.Get);
+            RestResponse response;
 
-            // 2. Выполняем запрос
-            var response = _client.Execute(request);
+            AllureApi.Step("Шаг 1: Отправить GET-запрос на /api/products", () =>
+            {
+                response = _client!.Execute(request);
 
-            // 3. Проверяем, что сервер ответил успешно (код 200 OK)
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK), "Статус-код ответа неверный");
-            Assert.That(response.Content, Is.Not.Null, "Тело ответа не должно быть пустым");
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+                Assert.That(response.Content, Is.Not.Null);
 
-            // 4. Десериализуем JSON-ответ в список объектов Sock
-            var socks = JsonSerializer.Deserialize<List<Sock>>(response.Content!);
+                socks = JsonSerializer.Deserialize<List<Sock>>(response.Content!);
+            });
 
-            // 5. Проверяем, что количество товаров в ответе правильное (у нас их 8)
-            Assert.That(socks, Is.Not.Null);
-            Assert.That(socks.Count, Is.EqualTo(8), "Количество товаров в API-ответе неверное");
+            AllureApi.Step("Шаг 2: Проверить количество товаров в ответе", () =>
+            {
+                Assert.That(socks, Is.Not.Null);
+                Assert.That(socks!.Count, Is.EqualTo(8));
+            });
         }
     }
 }

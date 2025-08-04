@@ -218,3 +218,7 @@ D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\Sock
 D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\RestSharp.dll
 D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\SocksShoppingStore.dll
 D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\SocksShoppingStore.pdb
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\Allure.Net.Commons.dll
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\Allure.NUnit.dll
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\AspectInjector.Broker.dll
+D:\Work\GitHub\SocksShoppingStore\SocksShoppingStore.Tests\bin\Debug\net8.0\MimeTypesMap.dll

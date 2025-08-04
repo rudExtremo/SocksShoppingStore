@@ -1,0 +1,103 @@
+{
+  "uuid": "8a328c7e-65c3-46cc-9342-60be4c2f312b",
+  "historyId": "403e38d4bdb23b07494918d309b068de",
+  "testCaseId": "0c5a5211090940c304a71c87572bd88c",
+  "fullName": "SocksShoppingStore.Tests:SocksShoppingStore.Tests.ShoppingCartTests.AddToCart_SingleItem_UpdatesCartCounter()",
+  "labels": [
+    {
+      "name": "thread",
+      "value": "NonParallelWorker"
+    },
+    {
+      "name": "host",
+      "value": "ALCOTESTER"
+    },
+    {
+      "name": "language",
+      "value": "C#"
+    },
+    {
+      "name": "framework",
+      "value": "NUnit 3"
+    },
+    {
+      "name": "package",
+      "value": "SocksShoppingStore.Tests"
+    },
+    {
+      "name": "testMethod",
+      "value": "AddToCart_SingleItem_UpdatesCartCounter"
+    },
+    {
+      "name": "testClass",
+      "value": "ShoppingCartTests"
+    },
+    {
+      "name": "story",
+      "value": "Добавление товара"
+    },
+    {
+      "name": "epic",
+      "value": "Магазин"
+    },
+    {
+      "name": "suite",
+      "value": "UI Тесты"
+    },
+    {
+      "name": "feature",
+      "value": "Корзина"
+    }
+  ],
+  "links": [],
+  "name": "AddToCart_SingleItem_UpdatesCartCounter",
+  "status": "passed",
+  "stage": "finished",
+  "description": "Тест проверяет, что при добавлении товара в корзину счетчик на иконке обновляется.",
+  "steps": [
+    {
+      "name": "Шаг 1: Открыть главную страницу",
+      "status": "passed",
+      "stage": "finished",
+      "steps": [],
+      "attachments": [],
+      "parameters": [],
+      "start": 1754299565366,
+      "stop": 1754299566364
+    },
+    {
+      "name": "Шаг 2: Проверить, что счетчик корзины равен 0",
+      "status": "passed",
+      "stage": "finished",
+      "steps": [],
+      "attachments": [],
+      "parameters": [],
+      "start": 1754299566364,
+      "stop": 1754299566418
+    },
+    {
+      "name": "Шаг 3: Добавить первый товар в корзину",
+      "status": "passed",
+      "stage": "finished",
+      "steps": [],
+      "attachments": [],
+      "parameters": [],
+      "start": 1754299566419,
+      "stop": 1754299567068
+    },
+    {
+      "name": "Шаг 4: Проверить, что счетчик корзины стал 1",
+      "status": "passed",
+      "stage": "finished",
+      "steps": [],
+      "attachments": [],
+      "parameters": [],
+      "start": 1754299567068,
+      "stop": 1754299567080
+    }
+  ],
+  "attachments": [],
+  "parameters": [],
+  "start": 1754299564379,
+  "stop": 1754299567271
+}

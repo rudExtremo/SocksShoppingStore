@@ -1,0 +1,79 @@
+{
+  "uuid": "d9c871dd-9791-421d-b62e-d52c6d2ea8f7",
+  "historyId": "1c45427f301b24533527ea1fef15c7ee",
+  "testCaseId": "eff40f439bcc52491a9e51827b40a958",
+  "fullName": "SocksShoppingStore.Tests:SocksShoppingStore.Tests.ApiTests.GetAllProducts_ReturnsOkStatusAndCorrectNumberOfItems()",
+  "labels": [
+    {
+      "name": "thread",
+      "value": "NonParallelWorker"
+    },
+    {
+      "name": "host",
+      "value": "ALCOTESTER"
+    },
+    {
+      "name": "language",
+      "value": "C#"
+    },
+    {
+      "name": "framework",
+      "value": "NUnit 3"
+    },
+    {
+      "name": "package",
+      "value": "SocksShoppingStore.Tests"
+    },
+    {
+      "name": "testMethod",
+      "value": "GetAllProducts_ReturnsOkStatusAndCorrectNumberOfItems"
+    },
+    {
+      "name": "testClass",
+      "value": "ApiTests"
+    },
+    {
+      "name": "story",
+      "value": "Каталог товаров"
+    },
+    {
+      "name": "epic",
+      "value": "Магазин"
+    },
+    {
+      "name": "suite",
+      "value": "API Тесты"
+    }
+  ],
+  "links": [],
+  "name": "GetAllProducts_ReturnsOkStatusAndCorrectNumberOfItems",
+  "status": "passed",
+  "stage": "finished",
+  "description": "Тест проверяет, что API возвращает корректный список товаров.",
+  "steps": [
+    {
+      "name": "Шаг 1: Отправить GET-запрос на /api/products",
+      "status": "passed",
+      "stage": "finished",
+      "steps": [],
+      "attachments": [],
+      "parameters": [],
+      "start": 1754299696324,
+      "stop": 1754299696534
+    },
+    {
+      "name": "Шаг 2: Проверить количество товаров в ответе",
+      "status": "passed",
+      "stage": "finished",
+      "steps": [],
+      "attachments": [],
+      "parameters": [],
+      "start": 1754299696534,
+      "stop": 1754299696535
+    }
+  ],
+  "attachments": [],
+  "parameters": [],
+  "start": 1754299696306,
+  "stop": 1754299696538
+}

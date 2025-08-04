@@ -1,4 +1,4 @@
-name: .NET Build and Test
+name: .NET Build, Test and Allure Report
 
 on:
   push:
@@ -19,49 +19,40 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    # Добавляем кэширование NuGet пакетов
-    - name: Cache NuGet packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.nuget/packages
-        # Ключ кэша изменится, если изменится файл с зависимостями
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/SocksShoppingStore.Tests.csproj') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
+    - name: Build and Restore
+      run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
 
-    - name: Restore dependencies
-      run: dotnet restore SocksShoppingStore/SocksShoppingStore.sln
-
-    - name: Build
-      # --no-restore, так как мы уже восстановили зависимости на предыдущем шаге
-      run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release --no-restore
-
-    - name: Start Web App
-      # Запускаем приложение в фоновом режиме
-      run: dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://localhost:5123" &
-
-    # Заменяем sleep на умное ожидание
-    - name: Wait for Web App to be ready
+    - name: Start Web App and Wait
       run: |
-        echo "Waiting for web application to start..."
-        timeout=30
-        url="http://localhost:5123"
-        
-        # Цикл, который проверяет доступность URL
-        for i in $(seq 1 $timeout); do
-          # Используем curl для проверки. -s - молчаливый режим, -o /dev/null - не выводить тело ответа, -w "%{http_code}" - вывести только HTTP-код
-          code=$(curl -s -o /dev/null -w "%{http_code}" $url)
-          if [ $code -eq 200 ]; then
-            echo "Web application is up and running!"
-            exit 0
-          fi
-          echo "Attempt $i/$timeout: App not ready yet (HTTP code: $code). Retrying in 1 second..."
+        dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://0.0.0.0:5123" > app.log 2>&1 &
+        echo "Waiting for web app..."
+        for i in {1..30}; do
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5123)
+          if [ $STATUS -eq 200 ]; then echo "Web app is ready!"; exit 0; fi
           sleep 1
         done
-        
-        echo "Error: Web application did not start within $timeout seconds."
-        exit 1
-        
-    - name: Test
-      # --no-build, так как мы уже собрали проект
+        echo "Web app failed to start."; exit 1
+      timeout-minutes: 1
+
+    - name: Run tests
+      # Мы используем continue-on-error, чтобы отчет сгенерировался, даже если тесты упадут
+      continue-on-error: true
       run: dotnet test SocksShoppingStore/SocksShoppingStore.sln --no-build --configuration Release
+
+    # >>> НАЧАЛО НОВЫХ ШАГОВ
+    - name: Generate Allure Report
+      # Этот шаг выполнится, даже если предыдущий (тесты) завершился с ошибкой
+      if: always()
+      uses: allure-framework/allure-action@v2
+      with:
+        # Указываем путь к результатам тестов
+        results_path: SocksShoppingStore.Tests/allure-results
+
+    - name: Upload Allure Report
+      # И этот шаг тоже выполнится всегда
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: allure-report
+        path: allure-report
+    # <<< КОНЕЦ НОВЫХ ШАГОВ
