@@ -1,4 +1,4 @@
-name: .NET Build, Test and Deploy Allure Report
+name: .NET Build, Test, Deploy to Azure and Report
 
 on:
   push:
@@ -7,9 +7,10 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-# Даем воркфлоу права на запись
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build-and-test:
@@ -23,7 +24,7 @@ jobs:
           dotnet-version: 8.0.x
       - name: Build and Restore
         run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
-      - name: Start Web App and Wait
+      - name: Start Web App
         run: |
           dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://0.0.0.0:5123" &
           sleep 15
@@ -36,12 +37,38 @@ jobs:
         with:
           allure_results: SocksShoppingStore.Tests/allure-results
           allure_report: allure-report
-      
-      - name: Deploy Allure Report to GH Pages
-        # Запускается только для main ветки, чтобы не публиковать отчеты из pull-request'ов
-        if: always() && github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Pages Artifact
+        if: always()
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Директория, которую нужно опубликовать
-          publish_dir: allure-report
+          path: allure-report
+
+  deploy-report:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+
+  deploy-to-azure:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Build and publish
+        run: |
+          dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
+          dotnet publish SocksShoppingStore/SocksShoppingStore.csproj -c Release -o ./publish
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'testsocksshop' # Убедись, что здесь твое имя
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: './publish'
