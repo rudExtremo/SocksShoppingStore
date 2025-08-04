@@ -1,38 +1,38 @@
-﻿// Файл: PageObjects/HomePage.cs
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 
 namespace SocksShoppingStore.Tests.PageObjects
 {
     public class HomePage
     {
         private readonly IWebDriver _driver;
-        // URL главной страницы, который мы будем открывать
-        private readonly string _baseUrl = "http://127.0.0.1:5123";
-        private IWebElement FirstProductAddToCartButton => _driver.FindElement(By.CssSelector(".card .btn-primary"));
-        public HomePage(IWebDriver driver)
+        private readonly string _baseUrl;
+
+        public HomePage(IWebDriver driver, string baseUrl)
         {
             _driver = driver;
+            _baseUrl = baseUrl;
         }
 
-        // Метод для навигации на страницу
+        // --- Элементы страницы ---
+        private IWebElement FirstProductAddToCartButton => _driver.FindElement(By.CssSelector(".card .btn-primary"));
+        private IWebElement CartLink => _driver.FindElement(By.CssSelector("a[href='/Cart']"));
+        public IWebElement CartItemCountBadge => _driver.FindElement(By.CssSelector(".badge"));
+
+        // --- Действия на странице ---
         public void Navigate()
         {
             _driver.Navigate().GoToUrl(_baseUrl);
         }
 
-        // Метод, который возвращает заголовок страницы
-        public string GetPageTitle()
+        public void AddFirstProductToCart()
         {
-            return _driver.Title;
-        }
-        // Метод, который добавляет товар в корзину
-        public void ClickAddToCartButtonForFirstProduct()
-        {
-            // Получаем доступ к исполнителю JavaScript
             IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
-
-            // Выполняем скрипт, который кликает по нашему элементу
             js.ExecuteScript("arguments[0].click();", FirstProductAddToCartButton);
+        }
+
+        public void GoToCart()
+        {
+            CartLink.Click();
         }
     }
 }

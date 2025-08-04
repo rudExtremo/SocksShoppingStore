@@ -1,20 +1,56 @@
-﻿@{
-    ViewData["Title"] = "Корзина";
-    // Получаем имя товара из временных данных
-    var productName = TempData["AddedProductName"] as string;
+﻿<!-- Файл: Views/Cart/Index.cshtml -->
+@model SocksShoppingStore.Models.ShoppingCart
+
+@{
+    ViewData["Title"] = "Ваша корзина";
 }
 
 <h1>@ViewData["Title"]</h1>
 
-@if (!string.IsNullOrEmpty(productName))
+@if (Model.Items.Any())
 {
-    <div class="alert alert-success">
-        Товар "<strong>@productName</strong>" успешно добавлен в корзину!
-    </div>
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Товар</th>
+                <th class="text-center">Цена за шт.</th>
+                <th class="text-center">Количество</th>
+                <th class="text-end">Сумма</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Sock.Name</td>
+                    <td class="text-center">@item.Sock.Price.ToString("C")</td>
+                    <td class="text-center">
+                        <div class="d-inline-flex align-items-center">
+                            <a asp-controller="Cart" asp-action="RemoveFromCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary">-</a>
+                            <span class="mx-2">@item.Quantity</span>
+                            <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary">+</a>
+                        </div>
+                    </td>
+                    <td class="text-end">@((item.Sock.Price * item.Quantity).ToString("C"))</td>
+                    <td class="text-center">
+                        <a asp-controller="Cart" asp-action="DeleteItem" asp-route-id="@item.Sock.Id" class="btn btn-outline-danger btn-sm" title="Удалить товар">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-end"><strong>Итого:</strong></td>
+                <td class="text-end"><strong>@Model.GetTotalSum().ToString("C")</strong></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
 }
 else
 {
-    <div class="alert alert-warning">
-        Ваша корзина пуста.
-    </div>
+    <div class="alert alert-info">Ваша корзина пуста.</div>
 }

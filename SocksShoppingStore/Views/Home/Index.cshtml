@@ -17,7 +17,7 @@
                     <h5 class="card-title">@sock.Name</h5>
                     <p class="card-text">@sock.Description</p>
                     <p class="card-text"><strong>Цена: @sock.Price.ToString("C")</strong></p>
-                    <a asp-controller="Home" asp-action="AddToCart" asp-route-id="@sock.Id" class="btn btn-primary">В корзину</a>
+                    <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@sock.Id" class="btn btn-primary">В корзину</a>
                 </div>
             </div>
         </div>

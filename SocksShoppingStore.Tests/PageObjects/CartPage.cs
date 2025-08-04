@@ -1,5 +1,5 @@
-﻿// Файл: PageObjects/CartPage.cs
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
+using System.Globalization;
 
 namespace SocksShoppingStore.Tests.PageObjects
 {
@@ -12,13 +12,33 @@ namespace SocksShoppingStore.Tests.PageObjects
             _driver = driver;
         }
 
-        // Находим элемент с сообщением об успехе
-        private IWebElement SuccessMessage => _driver.FindElement(By.CssSelector(".alert-success"));
+        // --- Элементы страницы ---
+        private IWebElement FirstItemQuantity => _driver.FindElement(By.XPath("//tbody/tr[1]/td[3]//span"));
+        private IWebElement TotalSumElement => _driver.FindElement(By.XPath("//tfoot//strong[contains(text(),'€')]"));
+        private IWebElement EmptyCartMessage => _driver.FindElement(By.CssSelector(".alert-info"));
+        private IWebElement FirstItemDeleteButton => _driver.FindElement(By.XPath("//tbody/tr[1]/td[5]/a"));
 
-        // Метод для проверки, содержит ли сообщение об успехе имя товара
-        public bool ContainsProduct(string productName)
+        // --- Действия и проверки ---
+        public int GetFirstItemQuantity()
         {
-            return SuccessMessage.Text.Contains(productName);
+            return int.Parse(FirstItemQuantity.Text);
+        }
+
+        public decimal GetTotalSum()
+        {
+            // Убираем символ валюты и пробелы, чтобы получить чистое число
+            string totalText = TotalSumElement.Text.Replace("€", "").Trim();
+            return decimal.Parse(totalText, CultureInfo.GetCultureInfo("fr-FR"));
+        }
+
+        public bool IsCartEmpty()
+        {
+            return EmptyCartMessage.Displayed;
+        }
+
+        public void DeleteFirstItem()
+        {
+            FirstItemDeleteButton.Click();
         }
     }
 }
