@@ -70,13 +70,14 @@ jobs:
       - name: Build and publish
         run: |
           dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
-          dotnet publish SocksShoppingStore/SocksShoppingStore/SocksShoppingStore.csproj -c Release -o ./publish
+          # ИСПРАВЛЕНИЕ ЗДЕСЬ: Убираем лишнюю папку из пути
+          dotnet publish SocksShoppingStore/SocksShoppingStore.csproj -c Release -o ./publish
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v3
         with:
           # Имя твоего App Service в Azure
-          app-name: 'stassocksshop' 
+          app-name: 'testsocksshop' 
           # Используем секрет, который мы создали
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           # Путь к папке с опубликованным приложением
