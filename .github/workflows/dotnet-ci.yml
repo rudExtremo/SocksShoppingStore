@@ -11,20 +11,57 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
 
+    # Добавляем кэширование NuGet пакетов
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        # Ключ кэша изменится, если изменится файл с зависимостями
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/SocksShoppingStore.Tests.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Restore dependencies
+      run: dotnet restore SocksShoppingStore/SocksShoppingStore.sln
+
     - name: Build
-      run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
+      # --no-restore, так как мы уже восстановили зависимости на предыдущем шаге
+      run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release --no-restore
 
     - name: Start Web App
+      # Запускаем приложение в фоновом режиме
+      run: dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://localhost:5123" &
+
+    # Заменяем sleep на умное ожидание
+    - name: Wait for Web App to be ready
       run: |
-        dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://localhost:5123" &
-        sleep 15
-    
+        echo "Waiting for web application to start..."
+        timeout=30
+        url="http://localhost:5123"
+        
+        # Цикл, который проверяет доступность URL
+        for i in $(seq 1 $timeout); do
+          # Используем curl для проверки. -s - молчаливый режим, -o /dev/null - не выводить тело ответа, -w "%{http_code}" - вывести только HTTP-код
+          code=$(curl -s -o /dev/null -w "%{http_code}" $url)
+          if [ $code -eq 200 ]; then
+            echo "Web application is up and running!"
+            exit 0
+          fi
+          echo "Attempt $i/$timeout: App not ready yet (HTTP code: $code). Retrying in 1 second..."
+          sleep 1
+        done
+        
+        echo "Error: Web application did not start within $timeout seconds."
+        exit 1
+        
     - name: Test
+      # --no-build, так как мы уже собрали проект
       run: dotnet test SocksShoppingStore/SocksShoppingStore.sln --no-build --configuration Release
