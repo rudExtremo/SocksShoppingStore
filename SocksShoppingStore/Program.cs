@@ -2,6 +2,8 @@ using System.Globalization;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 using SocksShoppingStore.Middleware;
+using Microsoft.AspNetCore.StaticFiles;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,27 +21,30 @@ var cultureInfo = new CultureInfo("fr-FR");
 CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
 CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
-// Bind FreeTier options from configuration / env vars
+// Bind options from configuration
 builder.Services.Configure<FreeTierOptions>(builder.Configuration.GetSection("FreeTier"));
+builder.Services.Configure<ConcurrencyOptions>(builder.Configuration.GetSection("Concurrency"));
+
+var rateOptions = builder.Configuration.GetSection("RateLimiting").Get<RateOptions>() ?? new RateOptions();
 
 // Rate limiting policies (safe defaults for free tier)
 builder.Services.AddRateLimiter(options =>
 {
-    // Global: 40 req/min per IP
+    // Global per-IP window limiter
     options.GlobalLimiter = httpContext =>
         RateLimitPartition.GetIpAddressLimiter(httpContext, ip => new FixedWindowRateLimiterOptions
         {
-            PermitLimit = 40, // 40 req/min per IP
+            PermitLimit = rateOptions.GlobalPerMinute,
             Window = TimeSpan.FromMinutes(1),
             QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
             QueueLimit = 0
         });
 
-    // API: 20 req/min per IP
+    // API per-IP window limiter
     options.AddPolicy("api", httpContext =>
         RateLimitPartition.GetIpAddressLimiter(httpContext, ip => new FixedWindowRateLimiterOptions
         {
-            PermitLimit = 20, // stricter for API
+            PermitLimit = rateOptions.ApiPerMinute,
             Window = TimeSpan.FromMinutes(1),
             QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
             QueueLimit = 0
@@ -74,7 +79,16 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+// Static files with cache headers
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        // Cache static assets for 7 days to reduce traffic
+        const int days = 7;
+        ctx.Context.Response.Headers["Cache-Control"] = $"public, max-age={days * 24 * 3600}";
+    }
+});
 
 app.UseRouting();
 
@@ -95,6 +109,34 @@ app.MapControllerRoute(
 
 // Lightweight health endpoint (allowed in FreeTier mode)
 app.MapGet("/healthz", () => Results.Ok("OK"));
+
+// Robots.txt to discourage crawling on free tier
+app.MapGet("/robots.txt", () => Results.Text("User-agent: *\nDisallow: /\n", "text/plain"));
+
+// Metrics storage and endpoint
+var metrics = new RequestMetrics(
+    builder.Configuration.GetSection("Status:LatencyWindowSize").Get<int?>() ?? 200);
+
+app.Use(async (ctx, next) =>
+{
+    var sw = System.Diagnostics.Stopwatch.StartNew();
+    try { await next(); }
+    finally
+    {
+        sw.Stop();
+        metrics.Record(ctx.Response.StatusCode, sw.Elapsed.TotalMilliseconds);
+    }
+});
+
+app.MapGet("/_status", (HttpContext ctx) =>
+{
+    // Allowlist by IP
+    var allow = builder.Configuration.GetSection("Status:AllowIPs").Get<string[]>() ?? new[] {"127.0.0.1","::1"};
+    var remoteIp = ctx.Connection.RemoteIpAddress?.ToString() ?? "";
+    if (!allow.Contains(remoteIp)) return Results.StatusCode(StatusCodes.Status403Forbidden);
+    var snapshot = metrics.Snapshot();
+    return Results.Json(snapshot, new JsonSerializerOptions { WriteIndented = true });
+});
 
 app.Run();
 

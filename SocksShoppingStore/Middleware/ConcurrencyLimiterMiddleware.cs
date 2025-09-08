@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,13 +7,16 @@ namespace SocksShoppingStore.Middleware
 {
     public class ConcurrencyLimiterMiddleware
     {
-        // Global in-process cap for concurrent requests
-        private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(10, 10);
+        // In-process cap for concurrent requests
+        private readonly SemaphoreSlim _semaphore;
         private readonly RequestDelegate _next;
+        private readonly int _max;
 
-        public ConcurrencyLimiterMiddleware(RequestDelegate next)
+        public ConcurrencyLimiterMiddleware(RequestDelegate next, IOptions<ConcurrencyOptions> options)
         {
             _next = next;
+            _max = options.Value.MaxConcurrentRequests > 0 ? options.Value.MaxConcurrentRequests : 10;
+            _semaphore = new SemaphoreSlim(_max, _max);
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -36,5 +40,9 @@ namespace SocksShoppingStore.Middleware
             }
         }
     }
-}
 
+    public class ConcurrencyOptions
+    {
+        public int MaxConcurrentRequests { get; set; } = 10;
+    }
+}
