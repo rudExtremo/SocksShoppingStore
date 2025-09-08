@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using SocksShoppingStore.Models;
 using SocksShoppingStore.Data; // Работа с репозиторием продуктов
+using System.Globalization;
+using SocksShoppingStore.Services;
 
 namespace SocksShoppingStore.Controllers
 {
@@ -10,6 +12,10 @@ namespace SocksShoppingStore.Controllers
         {
             // Получаем все товары из репозитория
             var socks = ProductRepository.GetAllSocks();
+
+            // Localize product names/descriptions based on current UI culture
+            var culture = CultureInfo.CurrentUICulture.Name;
+            socks = ProductCatalogLocalizer.Localize(socks, culture);
 
             if (!string.IsNullOrWhiteSpace(q))
             {
@@ -31,4 +37,3 @@ namespace SocksShoppingStore.Controllers
         }
     }
 }
-

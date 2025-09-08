@@ -5,10 +5,13 @@ using SocksShoppingStore.Middleware;
 using Microsoft.AspNetCore.StaticFiles;
 using System.Text.Json;
 using SocksShoppingStore.Controllers;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources"); // UI localization scaffolding
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -18,9 +21,10 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-var cultureInfo = new CultureInfo("fr-FR");
-CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+// Default culture for numbers (we will format prices explicitly as EUR)
+var defaultCulture = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentCulture = defaultCulture;
+CultureInfo.DefaultThreadCurrentUICulture = defaultCulture;
 
 // Bind options from configuration
 builder.Services.Configure<FreeTierOptions>(builder.Configuration.GetSection("FreeTier"));
@@ -94,8 +98,23 @@ app.UseStaticFiles(new StaticFileOptions
 
 app.UseRouting();
 
+// Request localization: support EN/RU via cookie and query string
+var supportedCultures = new[] { new CultureInfo("en"), new CultureInfo("ru") };
+var locOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("en"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+};
+locOptions.AddInitialRequestCultureProvider(new QueryStringRequestCultureProvider());
+locOptions.AddInitialRequestCultureProvider(new CookieRequestCultureProvider());
+app.UseRequestLocalization(locOptions);
+
 // Free-tier guard to avoid accidental costs (can block on Azure)
 app.UseMiddleware<FreeTierGuardMiddleware>();
+
+// Security headers (CSP, frame, sniffing, referrer, permissions)
+app.UseMiddleware<SecurityHeadersMiddleware>();
 
 // Global concurrency limiter (fast-fail over 10 concurrent requests)
 app.UseMiddleware<ConcurrencyLimiterMiddleware>();
