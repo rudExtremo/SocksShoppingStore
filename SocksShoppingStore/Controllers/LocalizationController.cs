@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace SocksShoppingStore.Controllers
 {
@@ -12,11 +13,16 @@ namespace SocksShoppingStore.Controllers
             Response.Cookies.Append(
                 CookieRequestCultureProvider.DefaultCookieName,
                 CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(normalized)),
-                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1), IsEssential = true, HttpOnly = false }
+                new CookieOptions {
+                    Expires = DateTimeOffset.UtcNow.AddYears(1),
+                    IsEssential = true,
+                    HttpOnly = false,
+                    SameSite = SameSiteMode.Lax,
+                    Secure = Request.IsHttps
+                }
             );
             if (string.IsNullOrWhiteSpace(returnUrl) || !Url.IsLocalUrl(returnUrl)) returnUrl = Url.Action("Index", "Home")!;
             return LocalRedirect(returnUrl);
         }
     }
 }
-

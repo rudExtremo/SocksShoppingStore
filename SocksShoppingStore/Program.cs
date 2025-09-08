@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using SocksShoppingStore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.CookiePolicy;
 
 var builder = WebApplication.CreateBuilder(args);
 
