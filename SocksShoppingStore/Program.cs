@@ -4,6 +4,7 @@ using System.Threading.RateLimiting;
 using SocksShoppingStore.Middleware;
 using Microsoft.AspNetCore.StaticFiles;
 using System.Text.Json;
+using SocksShoppingStore.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 // Bind options from configuration
 builder.Services.Configure<FreeTierOptions>(builder.Configuration.GetSection("FreeTier"));
 builder.Services.Configure<ConcurrencyOptions>(builder.Configuration.GetSection("Concurrency"));
+builder.Services.Configure<LegalOptions>(builder.Configuration.GetSection("Legal"));
 
 var rateOptions = builder.Configuration.GetSection("RateLimiting").Get<RateOptions>() ?? new RateOptions();
 

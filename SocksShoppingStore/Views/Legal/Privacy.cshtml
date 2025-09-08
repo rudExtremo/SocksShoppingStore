@@ -1,0 +1,43 @@
+@{
+    ViewData["Title"] = "Privacy Policy";
+    var app = (string)ViewData["ControllerName"]!;
+    var contact = (string)ViewData["ContactEmail"]!;
+}
+
+<h1>Privacy Policy</h1>
+<p>This Privacy Policy describes how @app processes personal data in accordance with the GDPR.</p>
+
+<h2>1. Data controller</h2>
+<p>The data controller is @app. Contact: <a href="mailto:@contact">@contact</a>.</p>
+
+<h2>2. What we collect</h2>
+<ul>
+  <li>Session cookie (essential) for maintaining your shopping cart.</li>
+  <li>Technical logs and minimal metrics (status counts and latency percentiles) for reliability and abuse prevention.</li>
+  <li>No payment data, no analytics tracking, no profiling.</li>
+  <li>No registration and no user accounts.</li>
+  <li>IP address may be processed transiently for rate limiting and allowlisting.</li>
+  <li>Any data you choose to send via email when contacting us.</li>
+  </ul>
+
+<h2>3. Legal basis</h2>
+<p>Processing is based on our legitimate interests (Art. 6(1)(f) GDPR) to operate a secure demo service and your consent where applicable for strictly necessary cookies.</p>
+
+<h2>4. Cookies</h2>
+<p>We use an essential session cookie to keep your cart. It expires after inactivity and cannot be used to track you across sites.</p>
+
+<h2>5. Retention</h2>
+<p>Session data is short-lived. Log and metric data are kept for a minimal duration required to ensure service reliability, then deleted or aggregated.</p>
+
+<h2>6. Your rights</h2>
+<p>You have the right to access, rectify, erase, restrict processing, object, and data portability, as applicable. Contact us at <a href="mailto:@contact">@contact</a>.</p>
+
+<h2>7. Security</h2>
+<p>We implement basic technical measures (HTTPS, rate limiting, free-tier guard) to protect the service.</p>
+
+<h2>8. Transfers</h2>
+<p>No intentional transfers of personal data to third countries, except as technically necessary to host the service and deliver content.</p>
+
+<h2>9. Updates</h2>
+<p>We may update this policy from time to time. The latest version is always available on this page.</p>
+

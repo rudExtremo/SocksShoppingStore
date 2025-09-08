@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Terms of Use";
+    var app = (string)ViewData["ControllerName"]!;
+    var contact = (string)ViewData["ContactEmail"]!;
+}
+
+<h1>Terms of Use</h1>
+<p>Welcome to @app. By accessing or using this site you agree to these Terms of Use.</p>
+
+<h2>1. Service description</h2>
+<p>@app is a demo e-commerce site for socks. It does not process payments or shipments. The cart is session-based and resets when the session expires.</p>
+
+<h2>2. Accounts</h2>
+<p>No user accounts are provided. All browsing is anonymous.</p>
+
+<h2>3. Acceptable use</h2>
+<p>You agree not to abuse the service, including but not limited to excessive automated requests. Server-side rate limiting and concurrency caps are enforced.</p>
+
+<h2>4. Availability</h2>
+<p>The service is provided "as is" and may be rate limited or temporarily unavailable, especially while running on free-tier infrastructure.</p>
+
+<h2>5. Intellectual property</h2>
+<p>Site content and code are provided for demonstration and educational purposes.</p>
+
+<h2>6. Contact</h2>
+<p>For questions contact: <a href="mailto:@contact">@contact</a>.</p>
+
