@@ -49,17 +49,16 @@ builder.Services.AddRateLimiter(options =>
             }));
 
     // API per-IP window limiter
-    options.AddPolicy("api", httpContext =>
-        PartitionedRateLimiter.Create<HttpContext, string>(context =>
-            RateLimitPartition.GetFixedWindowLimiter(
-                partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-                factory: key => new FixedWindowRateLimiterOptions
-                {
-                    PermitLimit = rateOptions.ApiPerMinute,
-                    Window = TimeSpan.FromMinutes(1),
-                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                    QueueLimit = 0
-                })));
+    options.AddPolicy<string>("api", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: key => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = rateOptions.ApiPerMinute,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
 
     // Friendly 429 response
     options.OnRejected = async (context, token) =>
