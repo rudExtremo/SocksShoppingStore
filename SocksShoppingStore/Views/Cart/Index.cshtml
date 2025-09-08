@@ -2,17 +2,17 @@
 @model SocksShoppingStore.Models.ShoppingCart
 
 @{
-    ViewData["Title"] = "Your cart";
+    ViewData["Title"] = T["Cart_Title"];
 }
 
-<div class="d-flex justify-content-between align-items-center"><h1 class="mb-0">@ViewData["Title"]</h1>@if (Model.Items.Any()) { <a asp-controller="Cart" asp-action="Clear" class="btn btn-outline-danger">Clear cart</a> }</div>
+<div class="d-flex justify-content-between align-items-center"><h1 class="mb-0">@ViewData["Title"]</h1>@if (Model.Items.Any()) { <a asp-controller="Cart" asp-action="Clear" class="btn btn-outline-danger">@T["ClearCart"]</a> }</div>
 
 @if (Model.Items.Any())
 {
     <table class="table align-middle">
         <thead>
             <tr>
-                <th>Item</th><th class="text-center">Price per unit</th><th class="text-center">Quantity</th><th class="text-end">Subtotal</th>
+                <th>@T["Item"]</th><th class="text-center">@T["PricePerUnit"]</th><th class="text-center">@T["Quantity"]</th><th class="text-end">@T["Subtotal"]</th>
                 <th></th>
             </tr>
         </thead>
@@ -31,7 +31,7 @@
                     </td>
                     <td class="text-end">@((item.Sock.Price * item.Quantity).ToString("C", new System.Globalization.CultureInfo("fr-FR")))</td>
                     <td class="text-center">
-                        <a asp-controller="Cart" asp-action="DeleteItem" asp-route-id="@item.Sock.Id" class="btn btn-outline-danger btn-sm" title="Remove item">
+                        <a asp-controller="Cart" asp-action="DeleteItem" asp-route-id="@item.Sock.Id" class="btn btn-outline-danger btn-sm" title="@T["RemoveItem"]">
                             <i class="fa-solid fa-trash"></i>
                         </a>
                     </td>
@@ -40,7 +40,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                <td colspan="3" class="text-end"><strong>@T["Total"]:</strong></td>
                 <td class="text-end"><strong>@Model.GetTotalSum().ToString("C")</strong></td>
                 <td></td>
             </tr>
@@ -49,5 +49,5 @@
 }
 else
 {
-    <div class="alert alert-info">Your cart is empty.</div>
+    <div class="alert alert-info">@T["NoItems"]</div>
 }

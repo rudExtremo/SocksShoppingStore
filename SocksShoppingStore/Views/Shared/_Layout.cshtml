@@ -26,13 +26,13 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@T["Nav_Home"]</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Language
+                            <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Language selector">
+                                @T["Nav_Language"]
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
                                 <li>
@@ -58,10 +58,10 @@
                                 var totalItems = cart.GetTotalItems();
                                 var totalSum = cart.GetTotalSum();
                             }
-                            <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">
+                            <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index" aria-label="Cart">
                                 <i class="fa-solid fa-cart-shopping"></i>
-                                Cart <span class="badge bg-primary rounded-pill">@totalItems</span>
-                                <span class="ms-1 text-muted">@totalSum.ToString("C", new System.Globalization.CultureInfo("fr-FR"))</span>
+                                @T["Nav_Cart"] <span class="badge bg-primary rounded-pill" aria-label="Items in cart">@totalItems</span>
+                                <span class="ms-1 text-muted" aria-label="Cart total">@totalSum.ToString("C", new System.Globalization.CultureInfo("fr-FR"))</span>
                             </a>
                         </li>
                     </ul>
@@ -77,16 +77,16 @@
 
     <footer class="border-top footer text-muted">
         <div class="container-fluid text-start px-3">
-            &copy; 2025 - Moseyko Stanislav - <a asp-area="" asp-controller="Legal" asp-action="Terms">Terms of Use</a> | <a asp-controller="Legal" asp-action="Privacy">Privacy Policy</a>
+            &copy; 2025 - Moseyko Stanislav - <a asp-area="" asp-controller="Legal" asp-action="Terms">@T["Footer_Terms"]</a> | <a asp-controller="Legal" asp-action="Privacy">@T["Footer_Privacy"]</a>
         </div>
     </footer>
     <!-- Cookie consent banner (essential cookies only) -->
-    <div id="cookie-consent" class="alert alert-info cookie-consent" role="alert">
+    <div id="cookie-consent" class="alert alert-info cookie-consent" role="alert" aria-live="polite">
         <div class="d-flex justify-content-between align-items-center">
-            <span>We use essential cookies (session and language) to operate this site. No tracking or analytics.</span>
+            <span>@T["Cookie_Text"]</span>
             <div class="ms-3">
-                <a class="btn btn-sm btn-outline-secondary" asp-controller="Legal" asp-action="Privacy">Learn more</a>
-                <button id="cookie-accept" class="btn btn-sm btn-primary ms-2">Accept</button>
+                <a class="btn btn-sm btn-outline-secondary" asp-controller="Legal" asp-action="Privacy">@T["Cookie_LearnMore"]</a>
+                <button id="cookie-accept" class="btn btn-sm btn-primary ms-2">@T["Cookie_Accept"]</button>
             </div>
         </div>
     </div>

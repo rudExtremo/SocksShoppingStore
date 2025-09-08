@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Nav_Home" xml:space="preserve"><value>Главная</value></data>
+  <data name="Nav_Language" xml:space="preserve"><value>Язык</value></data>
+  <data name="Nav_Cart" xml:space="preserve"><value>Корзина</value></data>
+  <data name="Cookie_Text" xml:space="preserve"><value>Мы используем только необходимые cookie (сессия и язык). Никакого трекинга и аналитики.</value></data>
+  <data name="Cookie_LearnMore" xml:space="preserve"><value>Подробнее</value></data>
+  <data name="Cookie_Accept" xml:space="preserve"><value>Принять</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>Условия использования</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>Политика конфиденциальности</value></data>
+  <data name="Home_Title" xml:space="preserve"><value>Добро пожаловать в SocksShoppingStore</value></data>
+  <data name="Home_Lead" xml:space="preserve"><value>Подберите идеальные носки для себя и команды</value></data>
+  <data name="Search_Placeholder" xml:space="preserve"><value>Поиск по названию или описанию</value></data>
+  <data name="Search_Button" xml:space="preserve"><value>Искать</value></data>
+  <data name="Results_For" xml:space="preserve"><value>Результаты по запросу:</value></data>
+  <data name="Found" xml:space="preserve"><value>найдено</value></data>
+  <data name="NoItems" xml:space="preserve"><value>Ничего не найдено. Укоротите запрос, проверьте орфографию или очистите поиск.</value></data>
+  <data name="Details" xml:space="preserve"><value>Подробнее</value></data>
+  <data name="AddToCart" xml:space="preserve"><value>В корзину</value></data>
+  <data name="BackToCatalog" xml:space="preserve"><value>Назад в каталог</value></data>
+  <data name="Price" xml:space="preserve"><value>Цена</value></data>
+  <data name="Cart_Title" xml:space="preserve"><value>Ваша корзина</value></data>
+  <data name="Item" xml:space="preserve"><value>Товар</value></data>
+  <data name="PricePerUnit" xml:space="preserve"><value>Цена за шт.</value></data>
+  <data name="Quantity" xml:space="preserve"><value>Количество</value></data>
+  <data name="Subtotal" xml:space="preserve"><value>Сумма</value></data>
+  <data name="Total" xml:space="preserve"><value>Итого</value></data>
+  <data name="ClearCart" xml:space="preserve"><value>Очистить корзину</value></data>
+  <data name="RemoveItem" xml:space="preserve"><value>Удалить</value></data>
+</root>

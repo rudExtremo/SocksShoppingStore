@@ -10,10 +10,10 @@
     <div class="col-md-6">
         <h1>@Model.Name</h1>
         <p class="lead">@Model.Description</p>
-        <p><strong>Price:</strong> @Model.Price.ToString("C", new System.Globalization.CultureInfo("fr-FR"))</p>
+        <p><strong>@T["Price"]:</strong> @Model.Price.ToString("C", new System.Globalization.CultureInfo("fr-FR"))</p>
         <div class="d-grid gap-2 d-sm-flex">
-            <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@Model.Id" class="btn btn-primary btn-lg">Add to cart</a>
-            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg">Back to catalog</a>
+            <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@Model.Id" class="btn btn-primary btn-lg">@T["AddToCart"]</a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg">@T["BackToCatalog"]</a>
         </div>
     </div>
   </div>

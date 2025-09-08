@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using RestSharp;
+using RestSharp.Serializers.Json;
 using System.Net;
 
 namespace SocksShoppingStore.Tests
@@ -18,7 +19,7 @@ namespace SocksShoppingStore.Tests
             {
                 RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true
             };
-            _client = new RestClient(options);
+            _client = new RestClient(options, configureSerialization: s => s.UseSystemTextJson());
         }
 
         [Test]
@@ -26,9 +27,10 @@ namespace SocksShoppingStore.Tests
         {
             var resp = _client.Execute(new RestRequest("/", Method.Get));
             Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            Assert.That(resp.Headers.Any(h => h.Name == "X-Frame-Options" && (h.Value?.ToString() ?? "").Contains("DENY")), Is.True);
-            Assert.That(resp.Headers.Any(h => h.Name == "X-Content-Type-Options" && (h.Value?.ToString() ?? "").Contains("nosniff")), Is.True);
-            Assert.That(resp.Headers.Any(h => h.Name == "Content-Security-Policy" && (h.Value?.ToString() ?? "").Contains("default-src 'self'")), Is.True);
+            var headers = resp.Headers ?? Array.Empty<HeaderParameter>();
+            Assert.That(headers.Any(h => h.Name == "X-Frame-Options" && (h.Value?.ToString() ?? "").Contains("DENY")), Is.True);
+            Assert.That(headers.Any(h => h.Name == "X-Content-Type-Options" && (h.Value?.ToString() ?? "").Contains("nosniff")), Is.True);
+            Assert.That(headers.Any(h => h.Name == "Content-Security-Policy" && (h.Value?.ToString() ?? "").Contains("default-src 'self'")), Is.True);
         }
 
         [Test]
@@ -38,7 +40,7 @@ namespace SocksShoppingStore.Tests
             req.AddHeader("Cookie", ".AspNetCore.Culture=c=ru|uic=ru");
             var resp = _client.Execute(req);
             Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            Assert.That(resp.Content, Does.Contain("Комфорт разработчика"));
+            Assert.That(resp.Content ?? string.Empty, Does.Contain("Комфорт разработчика"));
         }
 
         [Test]
@@ -46,7 +48,18 @@ namespace SocksShoppingStore.Tests
         {
             var resp = _client.Execute(new RestRequest("/", Method.Get));
             Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            Assert.That(resp.Content, Does.Contain("id=\"cookie-consent\""));
+            Assert.That(resp.Content ?? string.Empty, Does.Contain("id=\"cookie-consent\""));
         }
     }
 }
+
+
+        [Test]
+        public void Home_CspContainsNonce()
+        {
+            var resp = _client.Execute(new RestRequest("/", Method.Get));
+            Assert.That(resp.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.OK));
+            var headers = resp.Headers ?? Array.Empty<HeaderParameter>();
+            var csp = headers.FirstOrDefault(h => h.Name == "Content-Security-Policy")?.Value?.ToString() ?? string.Empty;
+            Assert.That(csp, Does.Contain("script-src 'self' 'nonce-"));
+        }

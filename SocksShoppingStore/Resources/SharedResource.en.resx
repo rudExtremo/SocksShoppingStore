@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Nav_Home" xml:space="preserve"><value>Home</value></data>
+  <data name="Nav_Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Nav_Cart" xml:space="preserve"><value>Cart</value></data>
+  <data name="Cookie_Text" xml:space="preserve"><value>We use essential cookies (session and language) to operate this site. No tracking or analytics.</value></data>
+  <data name="Cookie_LearnMore" xml:space="preserve"><value>Learn more</value></data>
+  <data name="Cookie_Accept" xml:space="preserve"><value>Accept</value></data>
+  <data name="Footer_Terms" xml:space="preserve"><value>Terms of Use</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>Privacy Policy</value></data>
+  <data name="Home_Title" xml:space="preserve"><value>Welcome to SocksShoppingStore</value></data>
+  <data name="Home_Lead" xml:space="preserve"><value>Pick the perfect socks for you and your team</value></data>
+  <data name="Search_Placeholder" xml:space="preserve"><value>Search by name or description</value></data>
+  <data name="Search_Button" xml:space="preserve"><value>Search</value></data>
+  <data name="Results_For" xml:space="preserve"><value>Results for:</value></data>
+  <data name="Found" xml:space="preserve"><value>found</value></data>
+  <data name="NoItems" xml:space="preserve"><value>No items found. Try a shorter query, check spelling, or clear the search box.</value></data>
+  <data name="Details" xml:space="preserve"><value>Details</value></data>
+  <data name="AddToCart" xml:space="preserve"><value>Add to cart</value></data>
+  <data name="BackToCatalog" xml:space="preserve"><value>Back to catalog</value></data>
+  <data name="Price" xml:space="preserve"><value>Price</value></data>
+  <data name="Cart_Title" xml:space="preserve"><value>Your cart</value></data>
+  <data name="Item" xml:space="preserve"><value>Item</value></data>
+  <data name="PricePerUnit" xml:space="preserve"><value>Price per unit</value></data>
+  <data name="Quantity" xml:space="preserve"><value>Quantity</value></data>
+  <data name="Subtotal" xml:space="preserve"><value>Subtotal</value></data>
+  <data name="Total" xml:space="preserve"><value>Total</value></data>
+  <data name="ClearCart" xml:space="preserve"><value>Clear cart</value></data>
+  <data name="RemoveItem" xml:space="preserve"><value>Remove item</value></data>
+</root>

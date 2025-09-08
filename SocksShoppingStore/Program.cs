@@ -7,12 +7,13 @@ using SocksShoppingStore.Controllers;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using SocksShoppingStore;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources"); // UI localization scaffolding
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddViewLocalization().AddDataAnnotationsLocalization();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -120,6 +121,14 @@ app.UseMiddleware<FreeTierGuardMiddleware>();
 // Security headers (CSP, frame, sniffing, referrer, permissions)
 app.UseMiddleware<SecurityHeadersMiddleware>();
 
+// Cookie policy (essential cookies only; secure & samesite sane defaults)
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Lax,
+    HttpOnly = HttpOnlyPolicy.Always,
+    Secure = app.Environment.IsDevelopment() ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always
+});
+
 // Global concurrency limiter (fast-fail over 10 concurrent requests)
 app.UseMiddleware<ConcurrencyLimiterMiddleware>();
 
@@ -132,11 +141,13 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Lightweight health endpoint (allowed in FreeTier mode)
-app.MapGet("/healthz", () => Results.Ok("OK"));
+// Lightweight health endpoint (allowed in FreeTier mode) with short cache
+app.MapGet("/healthz", (HttpContext ctx) => Results.Ok("OK"))
+   .WithMetadata(new ResponseCacheAttribute { Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false });
 
-// Robots.txt to discourage crawling on free tier
-app.MapGet("/robots.txt", () => Results.Text("User-agent: *\nDisallow: /\n", "text/plain"));
+// Robots.txt to discourage crawling on free tier (cache short)
+app.MapGet("/robots.txt", (HttpContext ctx) => Results.Text("User-agent: *\nDisallow: /\n", "text/plain"))
+   .WithMetadata(new ResponseCacheAttribute { Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false });
 
 // Metrics storage and endpoint
 var metrics = new RequestMetrics(
