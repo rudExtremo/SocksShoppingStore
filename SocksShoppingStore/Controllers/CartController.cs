@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using SocksShoppingStore.Models;
 using SocksShoppingStore.Helpers;
-using SocksShoppingStore.Data; // Подключаем наш новый репозиторий
+using SocksShoppingStore.Data; // Repository access
 
 namespace SocksShoppingStore.Controllers
 {
@@ -16,7 +16,6 @@ namespace SocksShoppingStore.Controllers
         public IActionResult AddToCart(int id)
         {
             var cart = HttpContext.Session.Get<ShoppingCart>("Cart") ?? new ShoppingCart();
-            // Получаем товар из единого репозитория
             var sock = ProductRepository.GetSockById(id);
             if (sock != null)
             {
@@ -24,13 +23,11 @@ namespace SocksShoppingStore.Controllers
                 HttpContext.Session.Set("Cart", cart);
             }
 
-            // Если мы добавляем товар из корзины (увеличиваем количество), то остаемся в корзине
             if (Request.Headers["Referer"].ToString().Contains("/Cart"))
             {
                 return RedirectToAction("Index");
             }
 
-            // Если добавляем с главной, остаемся на главной
             return RedirectToAction("Index", "Home");
         }
 
@@ -39,7 +36,7 @@ namespace SocksShoppingStore.Controllers
             var cart = HttpContext.Session.Get<ShoppingCart>("Cart") ?? new ShoppingCart();
             cart.RemoveItem(id);
             HttpContext.Session.Set("Cart", cart);
-            return RedirectToAction("Index"); // Обновляем страницу корзины
+            return RedirectToAction("Index");
         }
 
         public IActionResult DeleteItem(int id)
@@ -47,7 +44,15 @@ namespace SocksShoppingStore.Controllers
             var cart = HttpContext.Session.Get<ShoppingCart>("Cart") ?? new ShoppingCart();
             cart.DeleteItem(id);
             HttpContext.Session.Set("Cart", cart);
-            return RedirectToAction("Index"); // Обновляем страницу корзины
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Clear()
+        {
+            var cart = new ShoppingCart();
+            HttpContext.Session.Set("Cart", cart);
+            return RedirectToAction("Index");
         }
     }
 }
+

@@ -1,21 +1,18 @@
-﻿<!-- Файл: Views/Cart/Index.cshtml -->
+<!-- Файл: Views/Cart/Index.cshtml -->
 @model SocksShoppingStore.Models.ShoppingCart
 
 @{
-    ViewData["Title"] = "Ваша корзина";
+    ViewData["Title"] = "Your cart";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="d-flex justify-content-between align-items-center"><h1 class="mb-0">@ViewData["Title"]</h1>@if (Model.Items.Any()) { <a asp-controller="Cart" asp-action="Clear" class="btn btn-outline-danger">Clear cart</a> }</div>
 
 @if (Model.Items.Any())
 {
     <table class="table align-middle">
         <thead>
             <tr>
-                <th>Товар</th>
-                <th class="text-center">Цена за шт.</th>
-                <th class="text-center">Количество</th>
-                <th class="text-end">Сумма</th>
+                <th>Item</th><th class="text-center">Price per unit</th><th class="text-center">Quantity</th><th class="text-end">Subtotal</th>
                 <th></th>
             </tr>
         </thead>
@@ -24,7 +21,7 @@
             {
                 <tr>
                     <td>@item.Sock.Name</td>
-                    <td class="text-center">@item.Sock.Price.ToString("C")</td>
+                    <td class="text-center">@item.Sock.Price.ToString("C", new System.Globalization.CultureInfo("fr-FR"))</td>
                     <td class="text-center">
                         <div class="d-inline-flex align-items-center">
                             <a asp-controller="Cart" asp-action="RemoveFromCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary">-</a>
@@ -32,9 +29,9 @@
                             <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary">+</a>
                         </div>
                     </td>
-                    <td class="text-end">@((item.Sock.Price * item.Quantity).ToString("C"))</td>
+                    <td class="text-end">@((item.Sock.Price * item.Quantity).ToString("C", new System.Globalization.CultureInfo("fr-FR")))</td>
                     <td class="text-center">
-                        <a asp-controller="Cart" asp-action="DeleteItem" asp-route-id="@item.Sock.Id" class="btn btn-outline-danger btn-sm" title="Удалить товар">
+                        <a asp-controller="Cart" asp-action="DeleteItem" asp-route-id="@item.Sock.Id" class="btn btn-outline-danger btn-sm" title="Remove item">
                             <i class="fa-solid fa-trash"></i>
                         </a>
                     </td>
@@ -43,7 +40,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="3" class="text-end"><strong>Итого:</strong></td>
+                <td colspan="3" class="text-end"><strong>Total:</strong></td>
                 <td class="text-end"><strong>@Model.GetTotalSum().ToString("C")</strong></td>
                 <td></td>
             </tr>
@@ -52,5 +49,5 @@
 }
 else
 {
-    <div class="alert alert-info">Ваша корзина пуста.</div>
+    <div class="alert alert-info">Your cart is empty.</div>
 }
