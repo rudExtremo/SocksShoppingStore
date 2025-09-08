@@ -27,3 +27,12 @@ body {
 /* Cookie banner hidden by default; shown via JS when consent not found */
 #cookie-consent{display:none}
 
+
+
+/* Cookie consent floating box */
+.cookie-consent{position:fixed;bottom:1rem;right:1rem;z-index:1050;max-width:50vw;width:auto;border:1px solid rgba(0,0,0,.125);border-radius:.5rem;box-shadow:0 .5rem 1rem rgba(0,0,0,.15)}
+@media (max-width:576px){.cookie-consent{left:1rem;right:1rem;max-width:90vw}}
+
+/* Hide cookie banner by default; JS shows it on first visit */
+#cookie-consent{display:none}
+
