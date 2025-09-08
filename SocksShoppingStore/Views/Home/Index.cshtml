@@ -1,25 +1,42 @@
-﻿@model List<SocksShoppingStore.Models.Sock>
+@model List<SocksShoppingStore.Models.Sock>
 @{
-    ViewData["Title"] = "Каталог Носков";
+    ViewData["Title"] = "Каталог носков";
+    var q = ViewData["Query"] as string;
 }
 
 <div class="text-center">
-    <h1 class="display-4">Магазин самых лучших носков</h1>
-</div>
+    <h1 class="display-4">Добро пожаловать в SocksShoppingStore</h1>
+    <p class="lead">Выберите идеальные носки для себя и команды</p>
+    <hr />
+    <form method="get" asp-controller="Home" asp-action="Index" class="row g-2 mt-3">
+        <div class="col-md-10">
+            <input type="text" name="q" class="form-control" value="@q" placeholder="Поиск по названию или описанию" />
+        </div>
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-primary">Искать</button>
+        </div>
+    </form>
+    @if (!string.IsNullOrWhiteSpace(q))
+    {
+        <p class="mt-2">Результаты по запросу: <strong>@q</strong> — найдено @Model.Count</p>
+    }
+    <hr />
+  </div>
 
-<div class="row mt-5">
+<div class="row mt-3">
     @foreach (var sock in Model)
     {
         <div class="col-md-4 mb-4">
-            <div class="card">
+            <div class="card h-100">
                 <img src="@sock.ImageUrl" class="card-img-top" alt="@sock.Name" style="height: 300px; object-fit: cover;">
-                <div class="card-body">
+                <div class="card-body d-flex flex-column">
                     <h5 class="card-title">@sock.Name</h5>
                     <p class="card-text">@sock.Description</p>
-                    <p class="card-text"><strong>Цена: @sock.Price.ToString("C")</strong></p>
+                    <p class="card-text mt-auto"><strong>Цена: @sock.Price.ToString("C")</strong></p>
                     <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@sock.Id" class="btn btn-primary">В корзину</a>
                 </div>
             </div>
         </div>
     }
 </div>
+
