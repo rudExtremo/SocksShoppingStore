@@ -20,3 +20,10 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Product card image fixed height */
+.card-img-top.product-card-img{height:300px;object-fit:cover}
+
+/* Cookie banner hidden by default; shown via JS when consent not found */
+#cookie-consent{display:none}
+

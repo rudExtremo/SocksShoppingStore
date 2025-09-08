@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using System.Text;
 
 namespace SocksShoppingStore.Middleware
 {
@@ -37,13 +36,8 @@ namespace SocksShoppingStore.Middleware
                 {
                     context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
                     context.Response.ContentType = "text/html; charset=utf-8";
-                    var html = @"<!doctype html><html lang=\"ru\"><head><meta charset=\"utf-8\"><title>Временно недоступно</title>
-                                <meta name=\"robots\" content=\"noindex\"></head><body>
-                                <h1>Сервис временно недоступен</h1>
-                                <p>Проект запущен в режиме Free Tier. Чтобы избежать расходов, доступ временно ограничён.</p>
-                                <p>Проверьте настройки FreeTier или переменные окружения.</p>
-                                </body></html>";
-                    await context.Response.WriteAsync(html, Encoding.UTF8);
+                    var html = "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><title>Temporarily unavailable</title><meta name=\"robots\" content=\"noindex\"></head><body><h1>Service temporarily unavailable</h1><p>Running in Free Tier mode. Access is restricted to prevent costs.</p><p>Check FreeTier settings or environment variables.</p></body></html>";
+                    await context.Response.WriteAsync(html);
                     return;
                 }
             }

@@ -19,9 +19,9 @@ namespace SocksShoppingStore.Middleware
             headers["X-Content-Type-Options"] = "nosniff";
             headers["Referrer-Policy"] = "no-referrer";
             headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()";
-            // Allow own content; cdnjs for CSS/Fonts; inline styles for Bootstrap helpers
+            // Allow own content; cdnjs for CSS/Fonts; forbid inline styles
             headers["Content-Security-Policy"] =
-                $"default-src 'self'; script-src 'self' 'nonce-{nonce}'; style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; " +
+                $"default-src 'self'; script-src 'self' 'nonce-{nonce}'; style-src 'self' https://cdnjs.cloudflare.com; " +
                 "img-src 'self' data:; font-src 'self' https://cdnjs.cloudflare.com; connect-src 'self'";
 
             await _next(context);
