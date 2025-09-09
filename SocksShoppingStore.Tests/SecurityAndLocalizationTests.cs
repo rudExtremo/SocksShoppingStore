@@ -50,16 +50,16 @@ namespace SocksShoppingStore.Tests
             Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
             Assert.That(resp.Content ?? string.Empty, Does.Contain("id=\"cookie-consent\""));
         }
-    }
-}
-
 
         [Test]
         public void Home_CspContainsNonce()
         {
             var resp = _client.Execute(new RestRequest("/", Method.Get));
-            Assert.That(resp.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.OK));
+            Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
             var headers = resp.Headers ?? Array.Empty<HeaderParameter>();
             var csp = headers.FirstOrDefault(h => h.Name == "Content-Security-Policy")?.Value?.ToString() ?? string.Empty;
             Assert.That(csp, Does.Contain("script-src 'self' 'nonce-"));
         }
+    }
+}
+
