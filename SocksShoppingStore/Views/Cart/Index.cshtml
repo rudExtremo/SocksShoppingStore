@@ -23,10 +23,14 @@
                     <td>@item.Sock.Name</td>
                     <td class="text-center">@Currency.Eur(item.Sock.Price)</td>
                     <td class="text-center">
-                        <div class="d-inline-flex align-items-center">
-                            <a asp-controller="Cart" asp-action="RemoveFromCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary">-</a>
-                            <span class="mx-2">@item.Quantity</span>
-                            <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary">+</a>
+                        <div class="d-flex align-items-center justify-content-center gap-2">
+                            <a asp-controller="Cart" asp-action="RemoveFromCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary" title="@T["Decrease"]">-</a>
+                            <form asp-controller="Cart" asp-action="SetQuantity" method="post" class="d-inline-flex align-items-center" style="min-width: 120px;">
+                                <input type="hidden" name="id" value="@item.Sock.Id" />
+                                <input type="number" name="quantity" min="0" class="form-control form-control-sm text-center" value="@item.Quantity" aria-label="Quantity" />
+                                <button type="submit" class="btn btn-sm btn-outline-secondary ms-2" title="@T["Update"]">@T["Update"]</button>
+                            </form>
+                            <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary" title="@T["Increase"]">+</a>
                         </div>
                     </td>
                     <td class="text-end">@Currency.Eur(item.Sock.Price * item.Quantity)</td>

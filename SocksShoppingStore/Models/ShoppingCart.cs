@@ -35,6 +35,18 @@
             Items.RemoveAll(i => i.Sock.Id == sockId);
         }
 
+        public void SetQuantity(int sockId, int quantity)
+        {
+            var item = Items.FirstOrDefault(i => i.Sock.Id == sockId);
+            if (item == null) return;
+            if (quantity <= 0)
+            {
+                DeleteItem(sockId);
+                return;
+            }
+            item.Quantity = quantity;
+        }
+
         public decimal GetTotalSum()
         {
             return Items.Sum(i => i.Sock.Price * i.Quantity);

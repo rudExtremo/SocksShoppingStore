@@ -41,6 +41,15 @@ namespace SocksShoppingStore.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public IActionResult SetQuantity(int id, int quantity)
+        {
+            var cart = HttpContext.Session.Get<ShoppingCart>("Cart") ?? new ShoppingCart();
+            cart.SetQuantity(id, quantity);
+            HttpContext.Session.Set("Cart", cart);
+            return RedirectToAction("Index");
+        }
+
         public IActionResult DeleteItem(int id)
         {
             var cart = HttpContext.Session.Get<ShoppingCart>("Cart") ?? new ShoppingCart();
