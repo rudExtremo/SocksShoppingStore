@@ -9,6 +9,8 @@ using System.Globalization;
 using SocksShoppingStore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.CookiePolicy;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,12 @@ builder.Services.AddSession(options =>
 var defaultCulture = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentCulture = defaultCulture;
 CultureInfo.DefaultThreadCurrentUICulture = defaultCulture;
+
+// Allow Unicode (incl. Cyrillic) to render unescaped in HTML output
+builder.Services.AddWebEncoders(options =>
+{
+    options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic, UnicodeRanges.Latin1Supplement, UnicodeRanges.GeneralPunctuation);
+});
 
 // Bind options from configuration
 builder.Services.Configure<FreeTierOptions>(builder.Configuration.GetSection("FreeTier"));
