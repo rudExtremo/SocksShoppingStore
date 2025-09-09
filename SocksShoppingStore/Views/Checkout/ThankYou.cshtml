@@ -1,0 +1,19 @@
+@model SocksShoppingStore.Models.Order
+@{
+    ViewData["Title"] = "Thank you";
+}
+
+<div class="text-center py-5">
+  <h1 class="display-5">Thank you for your order!</h1>
+  @if (Model != null)
+  {
+    <p class="lead">Order ID: <code>@Model.Id</code></p>
+    <p>Total: <strong>@SocksShoppingStore.Helpers.Currency.Eur(Model.Total)</strong></p>
+  }
+  else
+  {
+    <p class="lead">Your order has been placed.</p>
+  }
+  <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">Back to catalog</a>
+</div>
+
