@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SocksShoppingStore.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a2bd62b54ee82c91b74f3e7cf3dce3919bd051bb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0fdf7b76a42d7532651a990c4c94b0629e263f20")]
 [assembly: System.Reflection.AssemblyProductAttribute("SocksShoppingStore.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SocksShoppingStore.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
