@@ -7,6 +7,12 @@ namespace SocksShoppingStore.Controllers
 {
     public class CartController : Controller
     {
+        private readonly SocksShoppingStore.Data.IProductRepository _repo;
+        public CartController(SocksShoppingStore.Data.IProductRepository? repo = null)
+        {
+            _repo = repo ?? new SocksShoppingStore.Data.LegacyProductRepository();
+        }
+
         public IActionResult Index()
         {
             var cart = HttpContext.Session.Get<ShoppingCart>("Cart") ?? new ShoppingCart();
@@ -16,7 +22,7 @@ namespace SocksShoppingStore.Controllers
         public IActionResult AddToCart(int id)
         {
             var cart = HttpContext.Session.Get<ShoppingCart>("Cart") ?? new ShoppingCart();
-            var sock = ProductRepository.GetSockById(id);
+            var sock = _repo.GetSockById(id);
             if (sock != null)
             {
                 cart.AddItem(sock);

@@ -15,6 +15,11 @@ namespace SocksShoppingStore.Controllers
     [EnableRateLimiting("api")]
     public class ProductsApiController : ControllerBase
     {
+        private readonly SocksShoppingStore.Data.IProductRepository _repo;
+        public ProductsApiController(SocksShoppingStore.Data.IProductRepository? repo = null)
+        {
+            _repo = repo ?? new SocksShoppingStore.Data.LegacyProductRepository();
+        }
         private static readonly JsonSerializerOptions JsonOpts = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -34,7 +39,7 @@ namespace SocksShoppingStore.Controllers
             string? culture = null)
         {
             // Load and optionally localize
-            var items = ProductRepository.GetAllSocks();
+            var items = _repo.GetAllSocks();
             var cultureKey = NormalizeCulture(culture ?? CultureInfo.CurrentUICulture.Name);
             items = ProductCatalogLocalizer.Localize(items, cultureKey);
 
@@ -102,7 +107,7 @@ namespace SocksShoppingStore.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetProduct(int id, string? culture = null)
         {
-            var sock = ProductRepository.GetSockById(id);
+            var sock = _repo.GetSockById(id);
             if (sock == null) return NotFound();
 
             var cultureKey = NormalizeCulture(culture ?? CultureInfo.CurrentUICulture.Name);

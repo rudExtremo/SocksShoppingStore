@@ -8,6 +8,11 @@ namespace SocksShoppingStore.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly SocksShoppingStore.Data.IProductRepository _repo;
+        public HomeController(SocksShoppingStore.Data.IProductRepository? repo = null)
+        {
+            _repo = repo ?? new SocksShoppingStore.Data.LegacyProductRepository();
+        }
         public IActionResult Index(
             string? q,
             string? sort,
@@ -17,7 +22,7 @@ namespace SocksShoppingStore.Controllers
             int pageSize = 6)
         {
             // Load catalog
-            var socks = ProductRepository.GetAllSocks();
+            var socks = _repo.GetAllSocks();
 
             // Localize product names/descriptions based on current UI culture
             var culture = CultureInfo.CurrentUICulture.Name;
@@ -81,4 +86,3 @@ namespace SocksShoppingStore.Controllers
         }
     }
 }
-
