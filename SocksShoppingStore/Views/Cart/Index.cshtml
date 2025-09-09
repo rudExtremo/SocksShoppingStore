@@ -21,7 +21,7 @@
             {
                 <tr>
                     <td>@item.Sock.Name</td>
-                    <td class="text-center">@item.Sock.Price.ToString("C", new System.Globalization.CultureInfo("fr-FR"))</td>
+                    <td class="text-center">@Currency.Eur(item.Sock.Price)</td>
                     <td class="text-center">
                         <div class="d-inline-flex align-items-center">
                             <a asp-controller="Cart" asp-action="RemoveFromCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary">-</a>
@@ -29,7 +29,7 @@
                             <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary">+</a>
                         </div>
                     </td>
-                    <td class="text-end">@((item.Sock.Price * item.Quantity).ToString("C", new System.Globalization.CultureInfo("fr-FR")))</td>
+                    <td class="text-end">@Currency.Eur(item.Sock.Price * item.Quantity)</td>
                     <td class="text-center">
                         <a asp-controller="Cart" asp-action="DeleteItem" asp-route-id="@item.Sock.Id" class="btn btn-outline-danger btn-sm" title="@T["RemoveItem"]">
                             <i class="fa-solid fa-trash"></i>
@@ -41,7 +41,7 @@
         <tfoot>
             <tr>
                 <td colspan="3" class="text-end"><strong>@T["Total"]:</strong></td>
-                <td class="text-end"><strong>@Model.GetTotalSum().ToString("C", new System.Globalization.CultureInfo("fr-FR"))</strong></td>
+                <td class="text-end"><strong>@Currency.Eur(Model.GetTotalSum())</strong></td>
                 <td></td>
             </tr>
         </tfoot>

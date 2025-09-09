@@ -61,7 +61,7 @@
                             <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index" aria-label="Cart">
                                 <i class="fa-solid fa-cart-shopping"></i>
                                 @T["Nav_Cart"] <span class="badge bg-primary rounded-pill" aria-label="Items in cart">@totalItems</span>
-                                <span class="ms-1 text-muted" aria-label="Cart total">@totalSum.ToString("C", new System.Globalization.CultureInfo("fr-FR"))</span>
+                                <span class="ms-1 text-muted" aria-label="Cart total">@Currency.Eur(totalSum)</span>
                             </a>
                         </li>
                     </ul>
