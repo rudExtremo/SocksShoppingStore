@@ -45,7 +45,9 @@
 ## Services и Data
 
 - `ProductCatalogLocalizer`: подстановка имени/описания товара по культуре (EN по умолчанию, RU карта)
-- `ProductRepository`: список `Sock` в памяти (без БД)
+- `IProductRepository`: абстракция хранилища товаров
+- `LegacyProductRepository`: обёртка над in‑memory списком (по умолчанию)
+- `JsonProductRepository`: опциональное хранение в JSON (настраиваемый путь)
 - `RequestMetrics`: скользящее окно латенсий + счётчики; доступно через `/_status`
 
 ## Конфигурация
@@ -57,3 +59,4 @@
 - `Concurrency`: `MaxConcurrentRequests`
 - `Status`: `AllowIPs`, `LatencyWindowSize`
 - `Legal`: имя контроллера и контактный email
+- `Repository`: провайдер `InMemory|Json` и путь к JSON

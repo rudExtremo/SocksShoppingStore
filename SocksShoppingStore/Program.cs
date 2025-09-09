@@ -41,6 +41,19 @@ builder.Services.Configure<FreeTierOptions>(builder.Configuration.GetSection("Fr
 builder.Services.Configure<ConcurrencyOptions>(builder.Configuration.GetSection("Concurrency"));
 builder.Services.Configure<LegalOptions>(builder.Configuration.GetSection("Legal"));
 
+// Repository provider (InMemory default, optional JSON persistence)
+var repoProvider = builder.Configuration.GetSection("Repository:Provider").Get<string>() ?? "InMemory";
+if (string.Equals(repoProvider, "Json", StringComparison.OrdinalIgnoreCase))
+{
+    var relPath = builder.Configuration.GetSection("Repository:Json:Path").Get<string>() ?? "App_Data/products.json";
+    var absPath = Path.IsPathRooted(relPath) ? relPath : Path.Combine(builder.Environment.ContentRootPath, relPath);
+    builder.Services.AddSingleton<SocksShoppingStore.Data.IProductRepository>(sp => new SocksShoppingStore.Data.JsonProductRepository(absPath));
+}
+else
+{
+    builder.Services.AddSingleton<SocksShoppingStore.Data.IProductRepository, SocksShoppingStore.Data.LegacyProductRepository>();
+}
+
 var rateOptions = builder.Configuration.GetSection("RateLimiting").Get<RateOptions>() ?? new RateOptions();
 
 // Rate limiting policies (safe defaults for free tier)

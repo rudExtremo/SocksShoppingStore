@@ -45,7 +45,9 @@ This is a classic ASP.NET Core MVC app structured by responsibility:
 ## Services and Data
 
 - `ProductCatalogLocalizer`: replaces product names/descriptions per culture (EN default, RU mapped)
-- `ProductRepository`: in‑memory list of `Sock` models (no DB)
+- `IProductRepository`: abstraction for product storage
+- `LegacyProductRepository`: wraps legacy in-memory list (default)
+- `JsonProductRepository`: optional JSON file storage (configurable path)
 - `RequestMetrics`: rolling latency window + counts; exposed via `/_status`
 
 ## Configuration
@@ -57,3 +59,4 @@ This is a classic ASP.NET Core MVC app structured by responsibility:
 - `Concurrency`: `MaxConcurrentRequests`
 - `Status`: `AllowIPs`, `LatencyWindowSize`
 - `Legal`: controller name and contact email
+- `Repository`: provider `InMemory|Json` and JSON path
