@@ -2,3 +2,8 @@
 
 # Ignore local Codex workspace
 .codex/
+
+# Test results and coverage
+**/TestResults/
+**/coverage.*
+
