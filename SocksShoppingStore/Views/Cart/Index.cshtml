@@ -41,7 +41,7 @@
         <tfoot>
             <tr>
                 <td colspan="3" class="text-end"><strong>@T["Total"]:</strong></td>
-                <td class="text-end"><strong>@Model.GetTotalSum().ToString("C")</strong></td>
+                <td class="text-end"><strong>@Model.GetTotalSum().ToString("C", new System.Globalization.CultureInfo("fr-FR"))</strong></td>
                 <td></td>
             </tr>
         </tfoot>

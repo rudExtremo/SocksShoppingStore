@@ -22,13 +22,10 @@
             var item = Items.FirstOrDefault(i => i.Sock.Id == sockId);
             if (item != null)
             {
+                // Do not reduce below 1; use DeleteItem to remove completely
                 if (item.Quantity > 1)
                 {
                     item.Quantity--;
-                }
-                else
-                {
-                    Items.Remove(item);
                 }
             }
         }
