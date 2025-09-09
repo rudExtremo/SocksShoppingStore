@@ -15,26 +15,33 @@
     <h1 class="display-4">@T["Home_Title"]</h1>
     <p class="lead">@T["Home_Lead"]</p>
     <hr />
-    <form method="get" asp-controller="Home" asp-action="Index" class="row g-2 mt-3" role="search" aria-label="Catalog search and filters">
-        <div class="col-lg-5">
-            <input type="text" name="q" class="form-control" value="@q" placeholder="@T["Search_Placeholder"]" aria-label="Search input" />
-        </div>
-        <div class="col-lg-2">
-            <select class="form-select" name="sort" aria-label="Sort">
-                <option value="name_asc" selected="@(Model.Sort=="name_asc")">@T["Sort_Name_Asc"]</option>
-                <option value="name_desc" selected="@(Model.Sort=="name_desc")">@T["Sort_Name_Desc"]</option>
-                <option value="price_asc" selected="@(Model.Sort=="price_asc")">@T["Sort_Price_Asc"]</option>
-                <option value="price_desc" selected="@(Model.Sort=="price_desc")">@T["Sort_Price_Desc"]</option>
-            </select>
-        </div>
-        <div class="col-lg-2">
+    <form method="get" asp-controller="Home" asp-action="Index" class="row g-2 mt-3" role="region" aria-label="Catalog filters">
+        <input type="hidden" name="q" value="@q" />
+        <div class="col-12 col-md-6 d-flex align-items-center gap-2">
+            <strong class="text-nowrap">Price:</strong>
             <input type="number" step="0.01" min="0" name="minPrice" value="@(Model.MinPrice?.ToString("0.00") ?? "")" class="form-control" placeholder="@T["MinPrice"]" aria-label="Min price" />
-        </div>
-        <div class="col-lg-2">
+            <span>—</span>
             <input type="number" step="0.01" min="0" name="maxPrice" value="@(Model.MaxPrice?.ToString("0.00") ?? "")" class="form-control" placeholder="@T["MaxPrice"]" aria-label="Max price" />
         </div>
-        <div class="col-lg-1 d-grid">
-            <button type="submit" class="btn btn-primary">@T["Search_Button"]</button>
+        <div class="col-12 col-md-6 d-flex align-items-center gap-2">
+            <strong class="text-nowrap">Sort:</strong>
+            <div class="btn-group" role="group" aria-label="Sort options">
+                <a class="btn btn-outline-secondary @(Model.Sort=="price_asc"?"active":"")" asp-action="Index" asp-route-q="@Model.Query" asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice" asp-route-sort="price_asc">
+                    <i class="fa-solid fa-arrow-up"></i> price
+                </a>
+                <a class="btn btn-outline-secondary @(Model.Sort=="price_desc"?"active":"")" asp-action="Index" asp-route-q="@Model.Query" asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice" asp-route-sort="price_desc">
+                    <i class="fa-solid fa-arrow-down"></i> price
+                </a>
+                <a class="btn btn-outline-secondary @(Model.Sort=="name_asc"?"active":"")" asp-action="Index" asp-route-q="@Model.Query" asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice" asp-route-sort="name_asc">
+                    <i class="fa-solid fa-arrow-up-a-z"></i> name
+                </a>
+                <a class="btn btn-outline-secondary @(Model.Sort=="name_desc"?"active":"")" asp-action="Index" asp-route-q="@Model.Query" asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice" asp-route-sort="name_desc">
+                    <i class="fa-solid fa-arrow-down-z-a"></i> name
+                </a>
+            </div>
+            <div class="ms-auto d-grid">
+                <button type="submit" class="btn btn-primary">Apply</button>
+            </div>
         </div>
     </form>
     @if (!string.IsNullOrWhiteSpace(q))
