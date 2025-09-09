@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using SocksShoppingStore.Controllers;
+using SocksShoppingStore.Tests.TestDoubles;
 
 namespace SocksShoppingStore.Tests
 {
@@ -30,10 +31,12 @@ namespace SocksShoppingStore.Tests
             var ctx = new DefaultHttpContext();
             controller.ControllerContext = new ControllerContext { HttpContext = ctx };
 
+            // Stub UrlHelper so Url.IsLocalUrl/Action are available
+            controller.Url = new TestUrlHelper(controller.ControllerContext);
+
             var r = controller.Set("ru", "/") as LocalRedirectResult;
             Assert.That(r, Is.Not.Null);
             Assert.That(ctx.Response.Headers["Set-Cookie"].ToString(), Does.Contain(".AspNetCore.Culture"));
         }
     }
 }
-

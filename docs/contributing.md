@@ -21,3 +21,7 @@ Thanks for your interest in improving SocksShoppingStore!
 - Note any security or performance impact
 - If UI, include screenshots or brief notes
 
+## Tests & Coverage
+
+- Run unit tests: `dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj --filter TestCategory=Unit -c Release`
+- Collect coverage (exclude views and Program): `dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter TestCategory=Unit --collect:"XPlat Code Coverage" --settings coverlet.runsettings`

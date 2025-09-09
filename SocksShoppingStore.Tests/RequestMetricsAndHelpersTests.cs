@@ -14,10 +14,13 @@ namespace SocksShoppingStore.Tests
             var m = new RequestMetrics(10);
             var arr = new double[] { 1,2,3,4,5,6,7,8,9,10 };
             for (int i = 0; i < arr.Length; i++) m.Record(200, arr[i]);
-            dynamic snap = m.Snapshot();
-            Assert.That((long)snap.counts.ok, Is.GreaterThan(0));
-            Assert.That((double)snap.latency_ms.p50, Is.GreaterThan(0));
-            Assert.That((int)snap.latency_ms.samples, Is.EqualTo(10));
+            var snap = m.Snapshot();
+            var json = System.Text.Json.JsonSerializer.Serialize(snap);
+            using var doc = System.Text.Json.JsonDocument.Parse(json);
+            var root = doc.RootElement;
+            Assert.That(root.GetProperty("counts").GetProperty("ok").GetInt64(), Is.GreaterThan(0));
+            Assert.That(root.GetProperty("latency_ms").GetProperty("p50").GetDouble(), Is.GreaterThan(0));
+            Assert.That(root.GetProperty("latency_ms").GetProperty("samples").GetInt32(), Is.EqualTo(10));
         }
 
         [Test]
@@ -28,4 +31,3 @@ namespace SocksShoppingStore.Tests
         }
     }
 }
-
