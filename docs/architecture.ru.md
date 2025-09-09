@@ -30,6 +30,12 @@
 - `LegalController`: статичные страницы (TOS/Privacy)
 - `LocalizationController`: POST‑переключение культуры с безопасным возвратом
 
+## UI
+
+- Поиск в шапке: компактный dropdown рядом с переключателем языка
+- Фильтры каталога: Цена (min–max), Сортировка (кнопки с иконками)
+- Ленивая загрузка: кнопка «Load more» запрашивает `/api/products?page=N&pageSize=M` и добавляет карточки на клиенте (без бесконечной прокрутки)
+
 ## Middleware
 
 - `SecurityHeadersMiddleware`: CSP с nonce на запрос, запрет фреймов, `nosniff`, строгие referrer/permissions
@@ -51,4 +57,3 @@
 - `Concurrency`: `MaxConcurrentRequests`
 - `Status`: `AllowIPs`, `LatencyWindowSize`
 - `Legal`: имя контроллера и контактный email
-

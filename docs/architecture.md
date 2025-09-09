@@ -30,6 +30,12 @@ This is a classic ASP.NET Core MVC app structured by responsibility:
 - `LegalController`: static legal pages (TOS/Privacy)
 - `LocalizationController`: POST culture switch with safe local redirect
 
+## UI Notes
+
+- Navbar search: compact dropdown near the language selector
+- Catalog filters: Price (min–max), Sort (buttons with icons)
+- Lazy load: a “Load more” button fetches `/api/products?page=N&pageSize=M` and appends cards client‑side (no infinite scroll)
+
 ## Middleware
 
 - `SecurityHeadersMiddleware`: sets CSP with per‑request nonce, denies framing, `nosniff`, strict referrer and permissions
@@ -51,4 +57,3 @@ This is a classic ASP.NET Core MVC app structured by responsibility:
 - `Concurrency`: `MaxConcurrentRequests`
 - `Status`: `AllowIPs`, `LatencyWindowSize`
 - `Legal`: controller name and contact email
-

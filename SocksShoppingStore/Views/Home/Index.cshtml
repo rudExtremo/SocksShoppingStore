@@ -39,7 +39,8 @@
                     <i class="fa-solid fa-arrow-down-z-a"></i> name
                 </a>
             </div>
-            <div class="ms-auto d-grid">
+            <div class="ms-auto d-flex gap-2">
+                <a class="btn btn-outline-secondary" asp-action="Index" asp-route-q="@Model.Query">Reset</a>
                 <button type="submit" class="btn btn-primary">Apply</button>
             </div>
         </div>

@@ -23,7 +23,8 @@ A quick reference to programmatic entry points, limits, and safe operations.
 - Cart is session-backed; no cross-session persistence
 - No authentication is required; avoid posting sensitive data
 
+- Catalog page uses client-side lazy load: it calls `/api/products?page=N&pageSize=M&q=...&sort=...&minPrice=...&maxPrice=...` to append items.
+
 ## Stability
 
 - Public routes and JSON schema are stable for demos; breaking changes will be reflected in `docs/` and release notes
-
