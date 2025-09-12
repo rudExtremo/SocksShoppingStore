@@ -33,6 +33,9 @@ jobs:
       - name: Build and Restore
         run: dotnet build SocksShoppingStore/SocksShoppingStore.sln --configuration Release
 
+      - name: Grant Execute Permission to Selenium Manager
+        run: chmod +x SocksShoppingStore.Tests/bin/Release/net8.0/selenium-manager/linux/selenium-manager
+
       - name: Start Web App
         run: |
           dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://0.0.0.0:5123" &
