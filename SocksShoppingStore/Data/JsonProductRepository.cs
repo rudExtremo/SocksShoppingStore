@@ -79,7 +79,9 @@ namespace SocksShoppingStore.Data
         {
             var dir = Path.GetDirectoryName(_filePath);
             if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
-            if (!File.Exists(_filePath))
+
+            // Seed file if it doesn't exist or is empty
+            if (!File.Exists(_filePath) || new FileInfo(_filePath).Length == 0)
             {
                 // seed from legacy in-memory repo
                 var seed = new Storage
