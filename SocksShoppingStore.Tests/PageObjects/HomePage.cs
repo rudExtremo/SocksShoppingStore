@@ -1,4 +1,6 @@
-﻿using OpenQA.Selenium;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 
 namespace SocksShoppingStore.Tests.PageObjects
 {
@@ -14,7 +16,7 @@ namespace SocksShoppingStore.Tests.PageObjects
         }
 
         // --- Элементы страницы ---
-        private IWebElement FirstProductAddToCartButton => _driver.FindElement(By.CssSelector(".card .btn-primary"));
+        private By FirstProductAddToCartButtonBy = By.CssSelector(".card .btn-primary");
         private IWebElement CartLink => _driver.FindElement(By.CssSelector("a[href='/Cart']"));
         public IWebElement CartItemCountBadge => _driver.FindElement(By.CssSelector(".badge"));
 
@@ -26,8 +28,11 @@ namespace SocksShoppingStore.Tests.PageObjects
 
         public void AddFirstProductToCart()
         {
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            var button = wait.Until(ExpectedConditions.ElementToBeClickable(FirstProductAddToCartButtonBy));
+
             IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
-            js.ExecuteScript("arguments[0].click();", FirstProductAddToCartButton);
+            js.ExecuteScript("arguments[0].click();", button);
         }
 
         public void GoToCart()

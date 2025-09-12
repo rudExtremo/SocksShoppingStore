@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using Allure.NUnit.Attributes;
-using System.Threading;
+
 using Allure.Net.Commons;
 
 namespace SocksShoppingStore.Tests
@@ -29,7 +29,7 @@ namespace SocksShoppingStore.Tests
             AllureApi.Step("Шаг 3: Добавить первый товар в корзину", () =>
             {
                 HomePage!.AddFirstProductToCart();
-                Thread.Sleep(500);
+                
             });
 
             AllureApi.Step("Шаг 4: Проверить, что счетчик корзины стал 1", () =>
@@ -47,9 +47,9 @@ namespace SocksShoppingStore.Tests
             {
                 HomePage!.Navigate();
                 HomePage.AddFirstProductToCart();
-                Thread.Sleep(500);
+                
                 HomePage.AddFirstProductToCart();
-                Thread.Sleep(500);
+                
             });
 
             AllureApi.Step("Шаг 2: Перейти в корзину", () =>
