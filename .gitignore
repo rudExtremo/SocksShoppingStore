@@ -7,3 +7,13 @@
 **/TestResults/
 **/coverage.*
 
+# Allure test reports
+**/allure-results/
+**/allure-report/
+
+# Rider files
+.idea/
+
+# Test runner files
+*.trx
+
