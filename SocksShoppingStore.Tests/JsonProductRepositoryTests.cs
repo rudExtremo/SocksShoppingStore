@@ -1,10 +1,12 @@
 using NUnit.Framework;
+using Allure.NUnit;
 using SocksShoppingStore.Data;
 using SocksShoppingStore.Models;
 
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
+    [AllureNUnit]
     [Category("Unit")]
     public class JsonProductRepositoryTests
     {

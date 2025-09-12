@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Allure.NUnit;
 using RestSharp;
 using RestSharp.Serializers.Json;
 using System.Net;
@@ -6,6 +7,7 @@ using System.Net;
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
+    [AllureNUnit]
     public class SecurityAndLocalizationTests
     {
         private RestClient _client = null!;

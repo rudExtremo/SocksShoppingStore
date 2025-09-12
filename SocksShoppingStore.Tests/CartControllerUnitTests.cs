@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
+using Allure.NUnit;
 using SocksShoppingStore.Controllers;
 using SocksShoppingStore.Models;
 using SocksShoppingStore.Tests.TestDoubles;
@@ -8,6 +9,7 @@ using SocksShoppingStore.Tests.TestDoubles;
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
+    [AllureNUnit]
     [Category("Unit")]
     public class CartControllerUnitTests
     {

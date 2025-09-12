@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
+using Allure.NUnit;
 using SocksShoppingStore.Middleware;
 using System.Threading.Tasks;
 
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
+    [AllureNUnit]
     [Category("Unit")]
     public class MiddlewareTests
     {

@@ -1,9 +1,11 @@
 using NUnit.Framework;
+using Allure.NUnit;
 using SocksShoppingStore.Models;
 
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
+    [AllureNUnit]
     [Category("Unit")]
     public class ShoppingCartUnitTests
     {

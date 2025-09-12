@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Allure.NUnit;
 using SocksShoppingStore;
 using SocksShoppingStore.Controllers;
 using SocksShoppingStore.Models;
@@ -6,6 +7,7 @@ using SocksShoppingStore.Models;
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
+    [AllureNUnit]
     [Category("Unit")]
     public class ModelsAndOptionsTests
     {

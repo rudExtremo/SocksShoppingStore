@@ -1,10 +1,12 @@
 using NUnit.Framework;
+using Allure.NUnit;
 using SocksShoppingStore;
 using SocksShoppingStore.Helpers;
 
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
+    [AllureNUnit]
     [Category("Unit")]
     public class RequestMetricsAndHelpersTests
     {

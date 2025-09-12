@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
+using Allure.NUnit;
 using SocksShoppingStore.Helpers;
 using SocksShoppingStore.Models;
 using SocksShoppingStore.Tests.TestDoubles;
@@ -7,6 +8,7 @@ using SocksShoppingStore.Tests.TestDoubles;
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
+    [AllureNUnit]
     [Category("Unit")]
     public class SessionHelperTests
     {
