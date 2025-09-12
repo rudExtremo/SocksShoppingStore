@@ -9,7 +9,7 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [Category("Unit")]
+    [Category("UI-Smoke")]
     public class HomeControllerTests
     {
         private static HomeController Create()

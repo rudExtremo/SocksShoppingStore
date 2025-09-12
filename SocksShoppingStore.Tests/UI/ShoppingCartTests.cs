@@ -6,6 +6,8 @@ using Allure.Net.Commons;
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
+    [AllureNUnit]
+    [Category("UI-Smoke")]
     [AllureEpic("Магазин")]
     [AllureSuite("UI Тесты")]
     [AllureFeature("Корзина")]

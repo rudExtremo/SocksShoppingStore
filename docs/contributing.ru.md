@@ -24,18 +24,28 @@
 | **Сканирование безопасности (ZAP)** | GitHub Actions      | При каждом коммите/PR           |
 | **UI-тесты (Полная регрессия)** | Локальная машина         | Перед важными слияниями, по расписанию |
 
-### Запуск тестов
+### Запуск тестов локально
 
-*   **Запустить быстрый набор тестов для CI (Unit и Integration):**
+Вы можете запускать различные наборы тестов локально, используя фильтры. Убедитесь, что веб-приложение запущено в отдельном терминале (`dotnet run --project SocksShoppingStore`).
+
+*   **Запустить быстрые тесты (аналогично CI на ветке `dev`):**
     ```shell
-    dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj --filter "TestCategory=Unit|TestCategory=Integration" -c Release
+    dotnet test --filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke|TestCategory=UI-Smoke"
     ```
-*   **Запустить все тесты локально (включая полную UI-регрессию):**
+*   **Запустить полный набор UI-регрессионных тестов:**
     ```shell
-    dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release
+    dotnet test --filter "TestCategory=UI-Regression"
     ```
-*   **Собрать покрытие кода:**
+*   **Запустить все тесты (аналогично CI в Pull Request):**
     ```shell
-    dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=Unit|TestCategory=Integration" --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+    dotnet test
+    ```
+*   **Запустить тесты определенной категории:**
+    ```shell
+    dotnet test --filter "TestCategory=Unit"
+    ```
+*   **Собрать покрытие кода (для быстрых тестов):**
+    ```shell
+    dotnet test --filter "TestCategory=Unit|TestCategory=Integration" --collect:"XPlat Code Coverage" --settings coverlet.runsettings
     ```
 

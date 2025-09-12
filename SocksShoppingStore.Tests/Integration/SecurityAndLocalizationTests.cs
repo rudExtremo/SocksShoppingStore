@@ -8,6 +8,7 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [Category("Integration")]
     public class SecurityAndLocalizationTests
     {
         private RestClient _client = null!;

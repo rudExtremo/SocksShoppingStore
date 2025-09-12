@@ -10,7 +10,7 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [Category("Unit")]
+    [Category("UI-Smoke")]
     public class LegalAndLocalizationControllerTests
     {
         [Test]

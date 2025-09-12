@@ -47,17 +47,27 @@ The optimal strategy is a hybrid approach to test execution, balancing rapid fee
 | **Security Scans (ZAP)**   | GitHub Actions                  | On every commit/PR              |
 | **UI Tests (Full Regression)** | Local Machine               | Before major merges, on a schedule |
 
-### Running Tests
+### Running Tests Locally
 
-*   **Run fast CI suite (Unit & Integration):**
+You can run different sets of tests locally using filters. First, ensure the web application is running in a separate terminal (`dotnet run --project SocksShoppingStore`).
+
+*   **Run Fast Tests (mirroring the `dev` branch CI job):**
     ```shell
-    dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj --filter "TestCategory=Unit|TestCategory=Integration" -c Release
+    dotnet test --filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke|TestCategory=UI-Smoke"
     ```
-*   **Run all tests locally (including full UI regression):**
+*   **Run Full UI Regression Tests:**
     ```shell
-    dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release
+    dotnet test --filter "TestCategory=UI-Regression"
     ```
-*   **Collect code coverage:**
+*   **Run All Tests (mirroring the Pull Request CI job):**
     ```shell
-    dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=Unit|TestCategory=Integration" --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+    dotnet test
+    ```
+*   **Run a Specific Category:**
+    ```shell
+    dotnet test --filter "TestCategory=Unit"
+    ```
+*   **Collect Code Coverage (on fast tests):**
+    ```shell
+    dotnet test --filter "TestCategory=Unit|TestCategory=Integration" --collect:"XPlat Code Coverage" --settings coverlet.runsettings
     ```

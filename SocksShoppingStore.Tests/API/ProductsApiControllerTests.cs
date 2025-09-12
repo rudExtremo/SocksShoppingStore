@@ -8,7 +8,7 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [Category("Unit")]
+    [Category("API-Smoke")]
     public class ProductsApiControllerTests
     {
         private static ProductsApiController CreateController(DefaultHttpContext? ctx = null)

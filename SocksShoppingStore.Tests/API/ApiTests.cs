@@ -13,6 +13,7 @@ namespace SocksShoppingStore.Tests
     [AllureNUnit]
     [AllureEpic("Магазин")]
     [AllureSuite("API Тесты")]
+    [Category("API-Smoke")]
     public class ApiTests
     {
         private RestClient? _client;
