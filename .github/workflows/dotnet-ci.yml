@@ -40,6 +40,8 @@ jobs:
 
       - name: Run tests
         continue-on-error: true
+        env:
+          RUN_UI_TESTS: 1
         run: dotnet test SocksShoppingStore/SocksShoppingStore.sln --no-build --configuration Release
       
       # Этот шаг поможет нам увидеть, где на самом деле создается папка allure-results
