@@ -49,8 +49,15 @@ jobs:
         run: dotnet restore SocksShoppingStore/SocksShoppingStore.sln
       - name: Start app (HTTP)
         run: |
+          dotnet build SocksShoppingStore/SocksShoppingStore.csproj -c Release
           nohup bash -c "ASPNETCORE_URLS=http://127.0.0.1:5123 dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --no-build" >/dev/null 2>&1 &
-          for i in {1..30}; do nc -z 127.0.0.1 5123 && echo up && break || sleep 1; done
+          echo "Waiting for app on http://127.0.0.1:5123/healthz ..."
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:5123/healthz >/dev/null; then echo "App is up"; break; fi
+            sleep 1
+          done
+          # Fail if not up
+          curl -fsS http://127.0.0.1:5123/healthz >/dev/null
       - name: Run full test suite (incl. UI)
         env:
           BASE_URL: http://127.0.0.1:5123
@@ -111,8 +118,14 @@ jobs:
         run: dotnet restore SocksShoppingStore/SocksShoppingStore.sln
       - name: Start app (HTTP)
         run: |
+          dotnet build SocksShoppingStore/SocksShoppingStore.csproj -c Release
           nohup bash -c "ASPNETCORE_URLS=http://127.0.0.1:5123 dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --no-build" >/dev/null 2>&1 &
-          for i in {1..30}; do nc -z 127.0.0.1 5123 && echo up && break || sleep 1; done
+          echo "Waiting for app on http://127.0.0.1:5123/healthz ..."
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:5123/healthz >/dev/null; then echo "App is up"; break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:5123/healthz >/dev/null
       - name: Run UI smoke tests
         env:
           BASE_URL: http://127.0.0.1:5123
