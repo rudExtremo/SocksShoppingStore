@@ -9,6 +9,7 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     [AllureNUnit]
     [Category("API-Smoke")]
+    [Category("Positive")]
     public class ProductsApiControllerTests
     {
         private static ProductsApiController CreateController(DefaultHttpContext? ctx = null)

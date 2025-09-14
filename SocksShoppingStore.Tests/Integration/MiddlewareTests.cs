@@ -12,6 +12,7 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     [AllureNUnit]
     [Category("Integration")]
+    [Category("Security")]
     public class MiddlewareTests
     {
         [Test]

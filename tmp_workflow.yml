@@ -72,21 +72,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: allure-report
           publish_branch: gh-pages
-      - name: Verify Allure Pages
-        if: success()
-        shell: bash
-        env:
-          OWNER: ${{ github.repository_owner }}
-        run: |
-          REPO_NAME=${GITHUB_REPOSITORY#*/}
-          URL="https://${OWNER}.github.io/${REPO_NAME}"
-          echo "Checking ${URL}..."
-          for i in {1..20}; do
-            if curl -fsSL "$URL/index.html" >/dev/null; then echo "Allure available at $URL"; exit 0; fi
-            sleep 3
-          done
-          echo "Allure report not reachable at $URL" >&2
-          exit 1
       - name: Upload coverage artifacts
         if: always()
         uses: actions/upload-artifact@v4

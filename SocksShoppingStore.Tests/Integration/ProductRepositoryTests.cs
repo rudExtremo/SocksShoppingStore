@@ -7,6 +7,7 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     [AllureNUnit]
     [Category("Integration")]
+    [Category("Positive")]
     public class ProductRepositoryTests
     {
         [Test]

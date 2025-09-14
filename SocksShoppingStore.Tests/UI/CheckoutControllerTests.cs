@@ -13,6 +13,7 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     [AllureNUnit]
     [Category("UI-Regression")]
+    [Category("Positive")]
     public class CheckoutControllerTests
     {
         private static (CheckoutController ctrl, DefaultHttpContext ctx) Create()

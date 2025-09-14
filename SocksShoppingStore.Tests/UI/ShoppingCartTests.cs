@@ -9,6 +9,7 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     [AllureNUnit]
     [Category("UI-Smoke")]
+    [Category("Positive")]
     [AllureEpic("Магазин")]
     [AllureSuite("UI Тесты")]
     [AllureFeature("Корзина")]

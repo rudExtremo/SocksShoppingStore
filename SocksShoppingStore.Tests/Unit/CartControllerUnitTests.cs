@@ -11,6 +11,7 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     [AllureNUnit]
     [Category("Unit")]
+    [Category("Positive")]
     public class CartControllerUnitTests
     {
         private static (CartController ctrl, TestSession session) Create()

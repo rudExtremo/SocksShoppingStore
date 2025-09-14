@@ -9,6 +9,7 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     [AllureNUnit]
     [Category("UI-Smoke")]
+    [Category("Positive")]
     public class ProductsControllerTests
     {
         [Test]
