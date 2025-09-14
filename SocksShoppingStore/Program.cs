@@ -198,3 +198,4 @@ app.MapGet("/_status", (HttpContext ctx) =>
 
 app.Run();
 
+public partial class Program { }

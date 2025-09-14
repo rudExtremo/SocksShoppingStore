@@ -8,7 +8,12 @@ This section provides a comprehensive list of test scenarios for the enhanced ap
     *   **Unit Tests (NUnit):** Focus on individual methods in controllers, services, and models.
     *   **Integration Tests (NUnit):** Test the interaction between components, especially the repository's interaction with the `products.json` file.
     *   **API Tests:** Directly test the RESTful API for correctness, performance, and security.
-    *   **End-to-End (UI) Tests (Selenium):** Simulate full user scenarios through the web interface.
+*   **End-to-End (UI) Tests (Selenium):** Simulate full user scenarios through the web interface.
+*   **Execution Modes:**
+    *   Local fast runs: Unit + Integration/API via `WebApplicationFactory` (no external server required)
+    *   Local UI runs: start app locally (`https` profile), run Selenium against `BASE_URL`
+    *   CI dev branch: fast suite (Unit + Integration + API-Smoke), Allure results archived
+    *   CI main branch: full regression (incl. UI), coverage export, Allure published to GitHub Pages
 *   **Coverage Goals:** High code coverage (>80%) for unit/integration tests. For UI/API tests, the focus is on requirements coverage, ensuring every user story and feature is tested.
 
 ## Positive Test Scenarios ("Happy Path")
@@ -69,6 +74,42 @@ This section provides a comprehensive list of test scenarios for the enhanced ap
     *   Use browser emulation to test the responsive design on popular mobile resolutions (e.g., iPhone 12, Samsung Galaxy S21).
 
 ## Test Coverage Matrix
+
+## CI/CD Flow and Allure Reporting
+
+- GitHub Actions workflow: `.github/workflows/test-and-report.yml`
+- Branch `dev`:
+  - Runs Unit, Integration, API-Smoke only (fast feedback)
+  - Uploads Allure results as artifacts
+- Branch `main`:
+  - Runs full regression incl. UI
+  - Generates Allure report and publishes to GitHub Pages (branch `gh-pages`)
+- Manual UI run:
+  - Trigger `workflow_dispatch` with `run_ui=true` to validate new UI tests independently of default dev pipeline
+
+## Test Categories and Filters
+
+Common categories used to slice runs in CI and locally:
+
+- By layer: `Unit`, `Integration`, `API-Smoke`, `UI-Smoke` (extend with `UI-Reg` if needed)
+- By intent: `Positive`, `Negative`, `Security`, `Performance`, `Accessibility`
+
+Examples:
+- `--filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke"`
+- `--filter "TestCategory=UI-Smoke"`
+
+## Centralized Test Settings
+
+- File: `SocksShoppingStore.Tests/appsettings.Test.json` with keys:
+  - `BaseUrl`, `RunUi`, `IgnoreCertErrors`, `UseTestFactory`
+- Environment overrides: `BASE_URL`, `RUN_UI_TESTS`, `IGNORE_CERT_ERRORS`, `USE_TEST_FACTORY`
+- Integration/API default to `WebApplicationFactory<Program>` when `UseTestFactory=true` (recommended for speed/stability)
+
+## UI/UX Notes for Tests
+
+- Add to Cart UX: stays on the current page by default.
+  - Controller accepts `returnUrl` (preferred), otherwise redirects back to validated `Referer`.
+  - UI tests navigate explicitly to the Cart when needed.
 
 This matrix visualizes the overall testing strategy, showing which test types provide primary coverage for each feature.
 

@@ -1,9 +1,28 @@
+# Visual Studio / Rider specific
+.vs/
+.idea/
+*.suo
+*.user
+
+# Build output
+**/[Oo]bj/
+**/[Bb]in/
+
+# Test results and coverage
+**/TestResults/
+**/coverage.*
+*.trx
+docs/test-coverage-report.md
+
+# Allure test reports
+**/allure-results/
+**/allure-report/
+
+# Local tool caches
 *.cache
 
 # Ignore local Codex workspace
 .codex/
 
-# Test results and coverage
-**/TestResults/
-**/coverage.*
-
+# Log files
+[Ll]og/

@@ -41,4 +41,16 @@ For Russian-language docs, see `README.ru.md` and `docs/*/*.ru.md` counterparts.
 ## License
 
 See `LICENSE`.
+## CI / Reports
+
+- CI Workflows: `.github/workflows/test-and-report.yml`
+- Branches:
+  - `dev`: fast tests (Unit + Integration + API-Smoke), Allure artifacts
+  - `main`: full regression (incl. UI), coverage export, Allure report published to GitHub Pages
+- Allure Report (GitHub Pages): https://rudExtremo.github.io/SocksShoppingStore (first publish occurs after a successful main run)
+
+Badges:
+
+![CI Dev](https://github.com/rudExtremo/SocksShoppingStore/actions/workflows/test-and-report.yml/badge.svg?branch=dev)
+![CI Main](https://github.com/rudExtremo/SocksShoppingStore/actions/workflows/test-and-report.yml/badge.svg?branch=main)
 

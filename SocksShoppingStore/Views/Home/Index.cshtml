@@ -71,7 +71,7 @@
                     <p class="card-text mt-auto"><strong>@T["Price"]: @Currency.Eur(sock.Price)</strong></p>
                     <div class="d-flex gap-2">
                         <a asp-controller="Products" asp-action="Details" asp-route-id="@sock.Id" class="btn btn-outline-secondary">@T["Details"]</a>
-                        <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@sock.Id" class="btn btn-primary">@T["AddToCart"]</a>
+                        <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@sock.Id" asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)" class="btn btn-primary">@T["AddToCart"]</a>
                     </div>
                 </div>
             </div>

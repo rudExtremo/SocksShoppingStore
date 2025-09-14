@@ -10,7 +10,6 @@ using System.IO;
 
 namespace SocksShoppingStore.Tests
 {
-    [AllureNUnit]
     public class BaseTest
     {
         protected IWebDriver? Driver;
@@ -20,10 +19,8 @@ namespace SocksShoppingStore.Tests
         [SetUp]
         public void Setup()
         {
-            bool isCi = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI"));
-            bool runUi = string.Equals(Environment.GetEnvironmentVariable("RUN_UI_TESTS"), "1", StringComparison.Ordinal);
-
-            if (isCi && !runUi)
+            bool runUi = TestSettings.RunUi;
+            if (!runUi)
             {
                 Assert.Ignore("Skipping UI tests on CI. Set RUN_UI_TESTS=1 to enable.");
                 return;
@@ -34,6 +31,12 @@ namespace SocksShoppingStore.Tests
             options.AddArgument("--no-sandbox");
             options.AddArgument("--disable-dev-shm-usage");
             options.AddArgument("--disable-gpu");
+            if (TestSettings.IgnoreCertErrors)
+            {
+                // Allow self-signed dev cert only when explicitly enabled
+                options.AddArgument("--ignore-certificate-errors");
+                options.AddArgument("--allow-insecure-localhost");
+            }
 
             try
             {
@@ -41,7 +44,7 @@ namespace SocksShoppingStore.Tests
             }
             catch (Exception ex)
             {
-                if (isCi && !runUi)
+                if (!runUi)
                 {
                     Assert.Ignore($"Skipping UI tests: {ex.GetType().Name}: {ex.Message}");
                     return;
@@ -52,7 +55,7 @@ namespace SocksShoppingStore.Tests
             Driver.Manage().Window.Maximize();
             Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
 
-            string baseUrl = isCi ? "http://127.0.0.1:5123" : "https://localhost:7068";
+            string baseUrl = TestSettings.BaseUrl;
 
             HomePage = new HomePage(Driver, baseUrl);
             CartPage = new CartPage(Driver);

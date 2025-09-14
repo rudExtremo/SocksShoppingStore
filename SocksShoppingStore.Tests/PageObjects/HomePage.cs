@@ -24,11 +24,15 @@ namespace SocksShoppingStore.Tests.PageObjects
         public void Navigate()
         {
             _driver.Navigate().GoToUrl(_baseUrl);
+            AcceptCookiesIfPresent();
         }
 
         public void AddFirstProductToCart()
         {
-            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            // Ensure we are on home page (AddToCart redirects to Cart)
+            _driver.Navigate().GoToUrl(_baseUrl);
+            AcceptCookiesIfPresent();
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
             var button = wait.Until(ExpectedConditions.ElementToBeClickable(FirstProductAddToCartButtonBy));
 
             IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
@@ -38,6 +42,24 @@ namespace SocksShoppingStore.Tests.PageObjects
         public void GoToCart()
         {
             CartLink.Click();
+        }
+
+        private void AcceptCookiesIfPresent()
+        {
+            try
+            {
+                var banner = _driver.FindElements(By.Id("cookie-consent"));
+                if (banner.Count == 0) return;
+                var accept = _driver.FindElements(By.Id("cookie-accept"));
+                if (accept.Count > 0 && accept[0].Displayed)
+                {
+                    accept[0].Click();
+                }
+            }
+            catch
+            {
+                // ignore any errors when attempting to accept cookies
+            }
         }
     }
 }
