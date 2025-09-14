@@ -78,7 +78,19 @@ jobs:
             /p:CoverletOutputFormat=cobertura%2Copencover
       - name: Copy Allure results for report
         if: always()
-        run: cp -r SocksShoppingStore.Tests/bin/Release/net8.0/allure-results ./allure-results
+        run: |
+          mkdir -p allure-results
+          echo "Aggregating Allure results from all projects..."
+          FOUND=$(find . -type d -name 'allure-results' | wc -l)
+          echo "Found $FOUND allure-results directories:"
+          find . -type d -name 'allure-results' -print
+          # Merge all allure-results into a single folder
+          for d in $(find . -type d -name 'allure-results'); do
+            echo "Merging $d"
+            cp -r "$d"/. ./allure-results/ 2>/dev/null || true
+            cp -r "$d"/* ./allure-results/ 2>/dev/null || true
+          done
+          echo "Files in merged allure-results: $(ls -1 allure-results | wc -l)"
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@v1.8
         with:
@@ -156,4 +168,3 @@ jobs:
           path: |
             allure-results
             **/allure-results
-

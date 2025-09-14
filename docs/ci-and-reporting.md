@@ -28,7 +28,7 @@ Centralized test settings live in `SocksShoppingStore.Tests/appsettings.Test.jso
 ## Allure
 
 - Raw results are collected under `allure-results` (see `SocksShoppingStore.Tests/allureConfig.json`).
-- On `main`, the workflow builds an Allure HTML report and publishes it to GitHub Pages.
+- On `main`, the workflow aggregates all `**/allure-results` into a single folder, builds an Allure HTML report, and publishes it to GitHub Pages.
 - URL: https://rudExtremo.github.io/SocksShoppingStore
 
 ## Local Tips

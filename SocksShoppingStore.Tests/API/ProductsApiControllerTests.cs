@@ -43,6 +43,7 @@ namespace SocksShoppingStore.Tests
             Assert.That(result, Is.InstanceOf<ContentResult>());
             var content = (ContentResult)result;
             Assert.That(content.ContentType, Does.StartWith("application/json"));
+            AllureApi.AddAttachment("api-products.json", "application/json", System.Text.Encoding.UTF8.GetBytes(content.Content ?? string.Empty));
 
             // Headers
             Assert.That(ctx.Response.Headers.ContainsKey("ETag"), Is.True);

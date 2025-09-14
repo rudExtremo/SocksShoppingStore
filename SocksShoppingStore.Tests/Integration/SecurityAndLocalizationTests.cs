@@ -62,6 +62,8 @@ namespace SocksShoppingStore.Tests
                 Assert.That(headers.Contains("X-Frame-Options"), Is.True);
                 Assert.That(headers.Contains("X-Content-Type-Options"), Is.True);
                 Assert.That(headers.Contains("Content-Security-Policy"), Is.True);
+                var headerDump = string.Join("\n", headers.Select(h => $"{h.Key}: {string.Join(",", h.Value)}"));
+                AllureApi.AddAttachment("home-headers.txt", "text/plain", System.Text.Encoding.UTF8.GetBytes(headerDump));
             }
             else
             {
@@ -71,6 +73,8 @@ namespace SocksShoppingStore.Tests
                 Assert.That(headers.Any(h => h.Name == "X-Frame-Options" && (h.Value?.ToString() ?? "").Contains("DENY")), Is.True);
                 Assert.That(headers.Any(h => h.Name == "X-Content-Type-Options" && (h.Value?.ToString() ?? "").Contains("nosniff")), Is.True);
                 Assert.That(headers.Any(h => h.Name == "Content-Security-Policy" && (h.Value?.ToString() ?? "").Contains("default-src 'self'")), Is.True);
+                var headerDump = string.Join("\n", headers.Select(h => $"{h.Name}: {h.Value}"));
+                AllureApi.AddAttachment("home-headers.txt", "text/plain", System.Text.Encoding.UTF8.GetBytes(headerDump));
             }
         }
 
@@ -85,6 +89,7 @@ namespace SocksShoppingStore.Tests
                 Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
                 var content = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
                 Assert.That(content, Does.Contain("Комфорт разработчика"));
+                AllureApi.AddAttachment("details-ru.html", "text/html", System.Text.Encoding.UTF8.GetBytes(content));
             }
             else
             {
@@ -93,6 +98,7 @@ namespace SocksShoppingStore.Tests
                 var resp = _rsClient!.Execute(req);
                 Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
                 Assert.That(resp.Content ?? string.Empty, Does.Contain("Комфорт разработчика"));
+                AllureApi.AddAttachment("details-ru.html", "text/html", System.Text.Encoding.UTF8.GetBytes(resp.Content ?? string.Empty));
             }
         }
 
@@ -105,12 +111,14 @@ namespace SocksShoppingStore.Tests
                 Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
                 var content = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
                 Assert.That(content, Does.Contain("id=\"cookie-consent\""));
+                AllureApi.AddAttachment("home-cookie.html", "text/html", System.Text.Encoding.UTF8.GetBytes(content));
             }
             else
             {
                 var resp = _rsClient!.Execute(new RestRequest("/", Method.Get));
                 Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
                 Assert.That(resp.Content ?? string.Empty, Does.Contain("id=\"cookie-consent\""));
+                AllureApi.AddAttachment("home-cookie.html", "text/html", System.Text.Encoding.UTF8.GetBytes(resp.Content ?? string.Empty));
             }
         }
 
@@ -122,6 +130,8 @@ namespace SocksShoppingStore.Tests
                 var resp = _httpClient.GetAsync("/").GetAwaiter().GetResult();
                 Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
                 Assert.That(resp.Headers.Contains("Content-Security-Policy"), Is.True);
+                var csp = string.Join(",", resp.Headers.GetValues("Content-Security-Policy"));
+                AllureApi.AddAttachment("home-csp.txt", "text/plain", System.Text.Encoding.UTF8.GetBytes(csp));
             }
             else
             {
@@ -130,6 +140,7 @@ namespace SocksShoppingStore.Tests
                 var headers = resp.Headers ?? Array.Empty<HeaderParameter>();
                 var csp = headers.FirstOrDefault(h => h.Name == "Content-Security-Policy")?.Value?.ToString() ?? string.Empty;
                 Assert.That(csp, Does.Contain("script-src 'self' 'nonce-"));
+                AllureApi.AddAttachment("home-csp.txt", "text/plain", System.Text.Encoding.UTF8.GetBytes(csp));
             }
         }
     }
