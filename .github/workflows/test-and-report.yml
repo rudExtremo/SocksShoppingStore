@@ -76,10 +76,13 @@ jobs:
             /p:CollectCoverage=true \
             /p:CoverletOutput=./SocksShoppingStore.Tests/TestResults/Coverage/coverage \
             /p:CoverletOutputFormat=cobertura%2Copencover
+      - name: Copy Allure results for report
+        if: always()
+        run: cp -r SocksShoppingStore.Tests/bin/Release/net8.0/allure-results ./allure-results
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@v1.8
         with:
-          allure_results: '**/allure-results'
+          allure_results: 'allure-results'
           allure_report: allure-report
           github_run_num: ${{ github.run_number }}
       - name: Deploy Allure Report to GitHub Pages
