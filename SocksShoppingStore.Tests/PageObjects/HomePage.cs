@@ -16,7 +16,7 @@ namespace SocksShoppingStore.Tests.PageObjects
         }
 
         // --- Элементы страницы ---
-        private By FirstProductAddToCartButtonBy = By.CssSelector(".card .btn-primary");
+        private By FirstProductAddToCartButtonBy = By.CssSelector("#catalog-grid .card a.btn.btn-primary[href*='/Cart/AddToCart']");
         private By CatalogGridBy = By.CssSelector("#catalog-grid");
         private IWebElement CartLink => _driver.FindElement(By.CssSelector("a[href='/Cart']"));
         public IWebElement CartItemCountBadge => _driver.FindElement(By.CssSelector(".badge"));
@@ -34,10 +34,26 @@ namespace SocksShoppingStore.Tests.PageObjects
             _driver.Navigate().GoToUrl(_baseUrl);
             EnsurePageReady();
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(30));
-            IWebElement button = wait.Until(ExpectedConditions.ElementToBeClickable(FirstProductAddToCartButtonBy));
-
-            IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
-            js.ExecuteScript("arguments[0].click();", button);
+            // Wait until at least one AddToCart anchor is present
+            wait.Until(ExpectedConditions.ElementExists(FirstProductAddToCartButtonBy));
+            var button = _driver.FindElement(FirstProductAddToCartButtonBy);
+            try
+            {
+                IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
+                js.ExecuteScript("arguments[0].scrollIntoView({block:'center'});", button);
+                wait.Until(ExpectedConditions.ElementToBeClickable(button));
+                js.ExecuteScript("arguments[0].click();", button);
+            }
+            catch (NoSuchElementException)
+            {
+                // Retry once after ensuring page and cookies
+                EnsurePageReady();
+                var btn2 = _driver.FindElement(FirstProductAddToCartButtonBy);
+                IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
+                js.ExecuteScript("arguments[0].scrollIntoView({block:'center'});", btn2);
+                wait.Until(ExpectedConditions.ElementToBeClickable(btn2));
+                js.ExecuteScript("arguments[0].click();", btn2);
+            }
         }
 
         public void GoToCart()
@@ -77,7 +93,7 @@ namespace SocksShoppingStore.Tests.PageObjects
         private void EnsurePageReady()
         {
             // Wait catalog grid present; then handle cookie and small settle delay
-            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
             wait.Until(ExpectedConditions.ElementExists(CatalogGridBy));
             AcceptCookiesIfPresent();
         }
