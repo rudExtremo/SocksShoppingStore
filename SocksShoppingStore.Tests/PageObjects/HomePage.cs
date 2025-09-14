@@ -16,7 +16,7 @@ namespace SocksShoppingStore.Tests.PageObjects
         }
 
         // --- Элементы страницы ---
-        private By FirstProductAddToCartButtonBy = By.CssSelector("#catalog-grid .card a.btn.btn-primary[href*='/Cart/AddToCart']");
+        private By FirstProductAddToCartButtonBy = By.CssSelector("#catalog-grid .card .btn.btn-primary");
         private By CatalogGridBy = By.CssSelector("#catalog-grid");
         private IWebElement CartLink => _driver.FindElement(By.CssSelector("a[href='/Cart']"));
         public IWebElement CartItemCountBadge => _driver.FindElement(By.CssSelector(".badge"));
@@ -34,7 +34,7 @@ namespace SocksShoppingStore.Tests.PageObjects
             _driver.Navigate().GoToUrl(_baseUrl);
             EnsurePageReady();
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(30));
-            // Wait until at least one AddToCart anchor is present
+            // Wait until at least one AddToCart button is present
             wait.Until(ExpectedConditions.ElementExists(FirstProductAddToCartButtonBy));
             var button = _driver.FindElement(FirstProductAddToCartButtonBy);
             try
