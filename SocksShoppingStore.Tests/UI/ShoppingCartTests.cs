@@ -1,7 +1,6 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Allure.NUnit;
 using Allure.NUnit.Attributes;
-
 using Allure.Net.Commons;
 
 namespace SocksShoppingStore.Tests
@@ -14,11 +13,12 @@ namespace SocksShoppingStore.Tests
     [AllureEpic("Магазин")]
     [AllureSuite("UI Тесты")]
     [AllureFeature("Корзина")]
+    [AllureSeverity(SeverityLevel.critical)]
     public class ShoppingCartTests : BaseTest
     {
         [Test]
         [AllureStory("Добавление товара")]
-        [AllureDescription("Тест проверяет, что при добавлении товара в корзину счетчик на иконке обновляется.")]
+        [AllureDescription("Тест проверяет, что при добавлении товара в корзину счётчик на иконке обновляется.")]
         public void AddToCart_SingleItem_UpdatesCartCounter()
         {
             AllureApi.Step("Шаг 1: Открыть главную страницу", () =>
@@ -26,7 +26,7 @@ namespace SocksShoppingStore.Tests
                 HomePage!.Navigate();
             });
 
-            AllureApi.Step("Шаг 2: Проверить, что счетчик корзины равен 0", () =>
+            AllureApi.Step("Шаг 2: Проверить, что счётчик корзины равен 0", () =>
             {
                 Assert.That(HomePage!.CartItemCountBadge.Text, Is.EqualTo("0"));
             });
@@ -34,10 +34,9 @@ namespace SocksShoppingStore.Tests
             AllureApi.Step("Шаг 3: Добавить первый товар в корзину", () =>
             {
                 HomePage!.AddFirstProductToCart();
-                
             });
 
-            AllureApi.Step("Шаг 4: Проверить, что счетчик корзины стал 1", () =>
+            AllureApi.Step("Шаг 4: Проверить, что счётчик корзины стал 1", () =>
             {
                 Assert.That(HomePage!.CartItemCountBadge.Text, Is.EqualTo("1"));
             });
@@ -53,9 +52,7 @@ namespace SocksShoppingStore.Tests
             {
                 HomePage!.Navigate();
                 HomePage.AddFirstProductToCart();
-                
                 HomePage.AddFirstProductToCart();
-                
             });
 
             AllureApi.Step("Шаг 2: Перейти в корзину", () =>
@@ -66,7 +63,6 @@ namespace SocksShoppingStore.Tests
             AllureApi.Step("Шаг 3: Проверить количество и итоговую сумму", () =>
             {
                 Assert.That(CartPage!.GetFirstItemQuantity(), Is.EqualTo(2));
-                // Default sort is name_asc => first product is "Analyst Focus" (3.20€)
                 decimal expectedSum = 6.40m;
                 Assert.That(CartPage.GetTotalSum(), Is.EqualTo(expectedSum).Within(0.01m));
             });
@@ -79,3 +75,4 @@ namespace SocksShoppingStore.Tests
         }
     }
 }
+

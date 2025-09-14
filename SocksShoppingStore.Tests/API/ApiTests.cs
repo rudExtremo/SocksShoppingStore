@@ -13,10 +13,10 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [Allure.NUnit.Attributes.AllureLabel("package", "SocksShoppingStore.Tests.API")]
-    [Allure.NUnit.Attributes.AllureEpic("Магазин")]
+    [AllureLabel("package", "SocksShoppingStore.Tests.API")]
     [AllureEpic("Магазин")]
     [AllureSuite("API Тесты")]
+    [AllureSeverity(SeverityLevel.normal)]
     [Category("API-Smoke")]
     [Category("Positive")]
     public class ApiTests
@@ -55,6 +55,7 @@ namespace SocksShoppingStore.Tests
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
                 var content = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
                 var socks = JsonSerializer.Deserialize<List<Sock>>(content!);
+                AllureApi.AddAttachment("products.json", "application/json", System.Text.Encoding.UTF8.GetBytes(content));
                 Assert.That(socks, Is.Not.Null);
                 Assert.That(socks!.Count, Is.EqualTo(8));
             }
@@ -72,6 +73,7 @@ namespace SocksShoppingStore.Tests
                     Assert.That(response.Content, Is.Not.Null);
 
                     socks = JsonSerializer.Deserialize<List<Sock>>(response.Content!);
+                    AllureApi.AddAttachment("products.json", "application/json", System.Text.Encoding.UTF8.GetBytes(response.Content!));
                 });
 
                 AllureApi.Step("Шаг 2: Проверить количество товаров в ответе", () =>
@@ -83,4 +85,5 @@ namespace SocksShoppingStore.Tests
         }
     }
 }
+
 

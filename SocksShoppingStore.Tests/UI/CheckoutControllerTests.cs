@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Allure.NUnit;
 using Allure.NUnit.Attributes;
+using Allure.Net.Commons;
 using SocksShoppingStore.Controllers;
 using SocksShoppingStore.Helpers;
 using SocksShoppingStore.Models;
@@ -17,6 +18,7 @@ namespace SocksShoppingStore.Tests
     [AllureSuite("UI Тесты")]
     [AllureFeature("Оформление заказа")]
     [AllureLabel("package", "SocksShoppingStore.Tests.UI")]
+    [AllureSeverity(SeverityLevel.critical)]
     [Category("UI-Regression")]
     [Category("Positive")]
     public class CheckoutControllerTests
