@@ -2,12 +2,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using SocksShoppingStore.Controllers;
 
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("Магазин")]
+    [AllureSuite("API Тесты")]
+    [AllureFeature("Каталог товаров")]
+    [AllureLabel("package", "SocksShoppingStore.Tests.API")]
     [Category("API-Smoke")]
     [Category("Positive")]
     public class ProductsApiControllerTests

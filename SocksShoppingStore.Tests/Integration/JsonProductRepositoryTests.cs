@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using SocksShoppingStore.Data;
 using SocksShoppingStore.Models;
 
@@ -7,6 +8,10 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("Магазин")]
+    [AllureSuite("Интеграционные тесты")]
+    [AllureFeature("Каталог товаров")]
+    [AllureLabel("package", "SocksShoppingStore.Tests.Integration")]
     [Category("Integration")]
     [Category("Positive")]
     public class JsonProductRepositoryTests

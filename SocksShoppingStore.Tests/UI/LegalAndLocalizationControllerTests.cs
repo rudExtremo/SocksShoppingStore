@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using SocksShoppingStore.Controllers;
 using SocksShoppingStore.Tests.TestDoubles;
 
@@ -10,6 +11,10 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("Магазин")]
+    [AllureSuite("UI Тесты")]
+    [AllureFeature("Локализация")]
+    [AllureLabel("package", "SocksShoppingStore.Tests.UI")]
     [Category("UI-Smoke")]
     [Category("Positive")]
     public class LegalAndLocalizationControllerTests

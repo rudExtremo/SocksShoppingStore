@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using SocksShoppingStore.Helpers;
 using SocksShoppingStore.Models;
 using SocksShoppingStore.Tests.TestDoubles;
@@ -9,6 +10,10 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("Магазин")]
+    [AllureSuite("Юнит-тесты")]
+    [AllureFeature("Сессия")] 
+    [AllureLabel("package", "SocksShoppingStore.Tests.Unit")]
     [Category("Unit")]
     [Category("Positive")]
     public class SessionHelperTests

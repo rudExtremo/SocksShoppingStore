@@ -13,6 +13,8 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [Allure.NUnit.Attributes.AllureLabel("package", "SocksShoppingStore.Tests.API")]
+    [Allure.NUnit.Attributes.AllureEpic("Магазин")]
     [AllureEpic("Магазин")]
     [AllureSuite("API Тесты")]
     [Category("API-Smoke")]

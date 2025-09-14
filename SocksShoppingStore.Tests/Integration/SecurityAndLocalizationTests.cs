@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using RestSharp;
 using RestSharp.Serializers.Json;
 using System.Net;
@@ -10,6 +11,11 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("Магазин")]
+    [AllureSuite("Интеграционные тесты")]
+    [AllureFeature("Безопасность")]
+    [AllureFeature("Локализация")]
+    [AllureLabel("package", "SocksShoppingStore.Tests.Integration")]
     [Category("Integration")]
     [Category("Security")]
     public class SecurityAndLocalizationTests

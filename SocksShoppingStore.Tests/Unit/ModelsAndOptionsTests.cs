@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using SocksShoppingStore;
 using SocksShoppingStore.Controllers;
 using SocksShoppingStore.Models;
@@ -8,6 +9,10 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("Магазин")]
+    [AllureSuite("Юнит-тесты")]
+    [AllureFeature("Модели/Опции")]
+    [AllureLabel("package", "SocksShoppingStore.Tests.Unit")]
     [Category("Unit")]
     [Category("Positive")]
     public class ModelsAndOptionsTests

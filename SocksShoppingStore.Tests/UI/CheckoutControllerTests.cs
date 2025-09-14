@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using SocksShoppingStore.Controllers;
 using SocksShoppingStore.Helpers;
 using SocksShoppingStore.Models;
@@ -12,6 +13,10 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("Магазин")]
+    [AllureSuite("UI Тесты")]
+    [AllureFeature("Оформление заказа")]
+    [AllureLabel("package", "SocksShoppingStore.Tests.UI")]
     [Category("UI-Regression")]
     [Category("Positive")]
     public class CheckoutControllerTests

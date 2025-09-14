@@ -8,6 +8,7 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureLabel("package", "SocksShoppingStore.Tests.UI")]
     [Category("UI-Smoke")]
     [Category("Positive")]
     [AllureEpic("Магазин")]

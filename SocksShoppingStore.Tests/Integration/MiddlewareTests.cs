@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using SocksShoppingStore.Middleware;
 using System.Threading.Tasks;
 
@@ -11,6 +12,11 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("Магазин")]
+    [AllureSuite("Интеграционные тесты")]
+    [AllureFeature("Безопасность")]
+    [AllureFeature("Ограничения")]
+    [AllureLabel("package", "SocksShoppingStore.Tests.Integration")]
     [Category("Integration")]
     [Category("Security")]
     public class MiddlewareTests

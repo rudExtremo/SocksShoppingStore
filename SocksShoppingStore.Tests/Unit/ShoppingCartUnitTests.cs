@@ -1,11 +1,16 @@
 using NUnit.Framework;
 using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using SocksShoppingStore.Models;
 
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("Магазин")]
+    [AllureSuite("Юнит-тесты")]
+    [AllureFeature("Корзина")]
+    [AllureLabel("package", "SocksShoppingStore.Tests.Unit")]
     [Category("Unit")]
     [Category("Positive")]
     public class ShoppingCartUnitTests
