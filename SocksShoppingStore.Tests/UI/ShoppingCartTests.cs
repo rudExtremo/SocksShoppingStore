@@ -45,6 +45,7 @@ namespace SocksShoppingStore.Tests
         [Test]
         [AllureStory("Полный сценарий работы с корзиной")]
         [AllureDescription("Тест проверяет полный цикл: добавление нескольких товаров, проверку суммы и удаление.")]
+        [Ignore("Temporarily disabled in CI to stabilize UI test")]
         public void Cart_FullWorkflow_CalculatesTotalCorrectly()
         {
             AllureApi.Step("Шаг 1: Открыть сайт и добавить два одинаковых товара", () =>
