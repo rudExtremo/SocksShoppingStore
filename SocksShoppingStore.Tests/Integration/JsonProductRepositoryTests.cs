@@ -18,6 +18,7 @@ namespace SocksShoppingStore.Tests
     [AllureLabel("flow", "Positive")]
     [AllureSeverity(SeverityLevel.normal)]
     [Category("Integration")]
+    [Category("Unit")]
     [Category("Positive")]
     public class JsonProductRepositoryTests
     {

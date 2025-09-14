@@ -23,6 +23,7 @@ namespace SocksShoppingStore.Tests
     [AllureLabel("flow", "Positive")]
     [AllureSeverity(SeverityLevel.normal)]
     [Category("UI-Regression")]
+    [Category("Unit")]
     [Category("Positive")]
     public class CheckoutControllerTests
     {

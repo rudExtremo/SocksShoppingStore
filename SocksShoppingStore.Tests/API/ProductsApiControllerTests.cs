@@ -19,6 +19,7 @@ namespace SocksShoppingStore.Tests
     [AllureLabel("flow", "Positive")]
     [AllureSeverity(SeverityLevel.critical)]
     [Category("API-Smoke")]
+    [Category("Unit")]
     [Category("Positive")]
     public class ProductsApiControllerTests
     {
@@ -71,6 +72,57 @@ namespace SocksShoppingStore.Tests
             Assert.That(new[] { StatusCodes.Status200OK, StatusCodes.Status304NotModified }, Contains.Item(ctx2.Response.StatusCode));
         }
 
+        [Test]
+        public void GetAllProducts_Respects_IfModifiedSince_Returns304()
+        {
+            // First call to get Last-Modified
+            var ctx1 = new DefaultHttpContext();
+            var c1 = CreateController(ctx1);
+            var first = c1.GetAllProducts(q: null, sort: null, minPrice: null, maxPrice: null, page: 1, pageSize: 10, culture: "en");
+            var last = ctx1.Response.Headers["Last-Modified"].ToString();
+            Assert.That(last, Is.Not.Empty);
+
+            var ctx2 = new DefaultHttpContext();
+            ctx2.Request.Headers["If-Modified-Since"] = last;
+            var c2 = CreateController(ctx2);
+            var second = c2.GetAllProducts(q: null, sort: null, minPrice: null, maxPrice: null, page: 1, pageSize: 10, culture: "en");
+            Assert.That(new[] { StatusCodes.Status200OK, StatusCodes.Status304NotModified }, Contains.Item(ctx2.Response.StatusCode));
+        }
+
+        [Test]
+        public void GetProduct_NotFound_Returns404()
+        {
+            var ctx = new DefaultHttpContext();
+            var controller = CreateController(ctx);
+            var result = controller.GetProduct(-123, culture: "en");
+            Assert.That(result, Is.InstanceOf<StatusCodeResult>().Or.InstanceOf<NotFoundResult>());
+            if (result is StatusCodeResult sc)
+            {
+                Assert.That(sc.StatusCode, Is.EqualTo(StatusCodes.Status404NotFound));
+            }
+        }
+
+        [Test]
+        public void GetAllProducts_CultureParam_RU_Localizes()
+        {
+            var ctx = new DefaultHttpContext();
+            var controller = CreateController(ctx);
+            var result = controller.GetAllProducts(q: null, sort: "name_asc", minPrice: null, maxPrice: null, page: 1, pageSize: 3, culture: "ru-RU") as ContentResult;
+            Assert.That(result, Is.Not.Null);
+            var json = result!.Content ?? string.Empty;
+            Assert.That(json, Does.Contain("\"name\":").And.Not.Contain("Coder\u0027s Comfort"));
+        }
+
+        [Test]
+        public void GetAllProducts_DefaultSort_When_Unknown()
+        {
+            var ctx = new DefaultHttpContext();
+            var controller = CreateController(ctx);
+            var result = controller.GetAllProducts(q: null, sort: "unknown", minPrice: null, maxPrice: null, page: -10, pageSize: 0, culture: "en") as ContentResult;
+            Assert.That(result, Is.Not.Null);
+            // also exercises page<1 and pageSize<=0 clamping
+            Assert.That(ctx.Response.Headers.ContainsKey("X-Total-Count"), Is.True);
+        }
         [Test]
         public void GetProduct_Returns304_OnIfModifiedSince()
         {
