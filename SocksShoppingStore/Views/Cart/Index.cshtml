@@ -9,7 +9,7 @@
 
 @if (Model.Items.Any())
 {
-    <table class="table align-middle">
+    <table class="table align-middle" id="cart-table">
         <thead>
             <tr>
                 <th>@T["Item"]</th><th class="text-center">@T["PricePerUnit"]</th><th class="text-center">@T["Quantity"]</th><th class="text-end">@T["Subtotal"]</th>
@@ -19,21 +19,17 @@
         <tbody>
             @foreach (var item in Model.Items)
             {
-                <tr>
+                <tr data-id="@item.Sock.Id">
                     <td>@item.Sock.Name</td>
                     <td class="text-center">@Currency.Eur(item.Sock.Price)</td>
                     <td class="text-center">
                         <div class="d-flex align-items-center justify-content-center gap-2">
-                            <a asp-controller="Cart" asp-action="RemoveFromCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary" title="@T["Decrease"]">-</a>
-                            <form asp-controller="Cart" asp-action="SetQuantity" method="post" class="d-inline-flex align-items-center" style="min-width: 120px;">
-                                <input type="hidden" name="id" value="@item.Sock.Id" />
-                                <input type="number" name="quantity" min="0" class="form-control form-control-sm text-center" value="@item.Quantity" aria-label="Quantity" />
-                                <button type="submit" class="btn btn-sm btn-outline-secondary ms-2" title="@T["Update"]">@T["Update"]</button>
-                            </form>
-                            <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary" title="@T["Increase"]">+</a>
+                            <a asp-controller="Cart" asp-action="RemoveFromCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary" title="@T["Decrease"]" data-action="dec">-</a>
+                            <input type="number" name="quantity" min="0" class="form-control form-control-sm text-center" value="@item.Quantity" aria-label="Quantity" style="min-width: 72px;" />
+                            <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary" title="@T["Increase"]" data-action="inc">+</a>
                         </div>
                     </td>
-                    <td class="text-end">@Currency.Eur(item.Sock.Price * item.Quantity)</td>
+                    <td class="text-end" data-subtotal>@Currency.Eur(item.Sock.Price * item.Quantity)</td>
                     <td class="text-center">
                         <a asp-controller="Cart" asp-action="DeleteItem" asp-route-id="@item.Sock.Id" class="btn btn-outline-danger btn-sm" title="@T["RemoveItem"]">
                             <i class="fa-solid fa-trash"></i>
@@ -45,13 +41,13 @@
         <tfoot>
             <tr>
                 <td colspan="3" class="text-end"><strong>@T["Total"]:</strong></td>
-                <td class="text-end"><strong>@Currency.Eur(Model.GetTotalSum())</strong></td>
+                <td class="text-end"><strong id="cart-total-sum">@Currency.Eur(Model.GetTotalSum())</strong></td>
                 <td></td>
             </tr>
         </tfoot>
     </table>
     <div class="d-flex justify-content-end">
-        <a asp-controller="Checkout" asp-action="Index" class="btn btn-success">Proceed to Checkout</a>
+        <a asp-controller="Checkout" asp-action="Index" class="btn btn-success">@T["ProceedToCheckout"]</a>
     </div>
 }
 else

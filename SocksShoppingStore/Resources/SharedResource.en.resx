@@ -31,4 +31,38 @@
   <data name="Total" xml:space="preserve"><value>Total</value></data>
   <data name="ClearCart" xml:space="preserve"><value>Clear cart</value></data>
   <data name="RemoveItem" xml:space="preserve"><value>Remove item</value></data>
+  <data name="Catalog_Title" xml:space="preserve"><value>Socks catalog</value></data>
+  <data name="Min" xml:space="preserve"><value>min</value></data>
+  <data name="Max" xml:space="preserve"><value>max</value></data>
+  <data name="MinPriceAria" xml:space="preserve"><value>Min price</value></data>
+  <data name="MaxPriceAria" xml:space="preserve"><value>Max price</value></data>
+  <data name="Sort" xml:space="preserve"><value>Sort</value></data>
+  <data name="Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Reset" xml:space="preserve"><value>Reset</value></data>
+  <data name="Apply" xml:space="preserve"><value>Apply</value></data>
+  <data name="LoadMore" xml:space="preserve"><value>Load more</value></data>
+  <data name="Loading" xml:space="preserve"><value>Loading...</value></data>
+  <data name="AllItemsLoaded" xml:space="preserve"><value>All items loaded</value></data>
+  <data name="ProceedToCheckout" xml:space="preserve"><value>Proceed to Checkout</value></data>
+  <data name="Increase" xml:space="preserve"><value>Increase</value></data>
+  <data name="Decrease" xml:space="preserve"><value>Decrease</value></data>
+  <data name="Checkout_Title" xml:space="preserve"><value>Checkout</value></data>
+  <data name="BackToCart" xml:space="preserve"><value>Back to cart</value></data>
+  <data name="ReviewOrder" xml:space="preserve"><value>Review order</value></data>
+  <data name="CorrectErrorsAbove" xml:space="preserve"><value>Please correct the errors above.</value></data>
+  <data name="FullName" xml:space="preserve"><value>Full name</value></data>
+  <data name="Email" xml:space="preserve"><value>Email</value></data>
+  <data name="AddressLine1" xml:space="preserve"><value>Address line 1</value></data>
+  <data name="AddressLine2" xml:space="preserve"><value>Address line 2</value></data>
+  <data name="City" xml:space="preserve"><value>City</value></data>
+  <data name="PostalCode" xml:space="preserve"><value>Postal code</value></data>
+  <data name="Country" xml:space="preserve"><value>Country</value></data>
+  <data name="ShippingDetails" xml:space="preserve"><value>Shipping details</value></data>
+  <data name="Address" xml:space="preserve"><value>Address</value></data>
+  <data name="EditDetails" xml:space="preserve"><value>Edit details</value></data>
+  <data name="ConfirmOrder" xml:space="preserve"><value>Confirm order</value></data>
+  <data name="ThankYou_Title" xml:space="preserve"><value>Thank you</value></data>
+  <data name="ThankYou_ForYourOrder" xml:space="preserve"><value>Thank you for your order!</value></data>
+  <data name="ThankYou_OrderPlaced" xml:space="preserve"><value>Your order has been placed.</value></data>
+  <data name="OrderId" xml:space="preserve"><value>Order ID</value></data>
 </root>

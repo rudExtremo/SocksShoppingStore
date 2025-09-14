@@ -1,19 +1,18 @@
 @model SocksShoppingStore.Models.Order
 @{
-    ViewData["Title"] = "Thank you";
+    ViewData["Title"] = T["ThankYou_Title"];
 }
 
 <div class="text-center py-5">
-  <h1 class="display-5">Thank you for your order!</h1>
+  <h1 class="display-5">@T["ThankYou_ForYourOrder"]</h1>
   @if (Model != null)
   {
-    <p class="lead">Order ID: <code>@Model.Id</code></p>
-    <p>Total: <strong>@SocksShoppingStore.Helpers.Currency.Eur(Model.Total)</strong></p>
+    <p class="lead">@T["OrderId"]: <code>@Model.Id</code></p>
+    <p>@T["Total"]: <strong>@SocksShoppingStore.Helpers.Currency.Eur(Model.Total)</strong></p>
   }
   else
   {
-    <p class="lead">Your order has been placed.</p>
+    <p class="lead">@T["ThankYou_OrderPlaced"]</p>
   }
-  <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">Back to catalog</a>
+  <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">@T["BackToCatalog"]</a>
 </div>
-

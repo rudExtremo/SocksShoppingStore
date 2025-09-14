@@ -23,6 +23,7 @@ body {
 
 /* Product card image fixed height */
 .card-img-top.product-card-img{height:300px;object-fit:cover}
+@media (max-width: 576px){.card-img-top.product-card-img{height:200px}}
 
 /* Cookie banner hidden by default; shown via JS when consent not found */
 #cookie-consent{display:none}
@@ -35,4 +36,7 @@ body {
 
 /* Hide cookie banner by default; JS shows it on first visit */
 #cookie-consent{display:none}
+
+/* Wrap sort buttons on small screens */
+.btn-group[role="group"]{flex-wrap:wrap}
 

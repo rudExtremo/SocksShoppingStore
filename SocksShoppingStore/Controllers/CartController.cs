@@ -29,6 +29,18 @@ namespace SocksShoppingStore.Controllers
                 HttpContext.Session.Set("Cart", cart);
             }
 
+            var accept = Request.Headers["Accept"].ToString();
+            if (!string.IsNullOrEmpty(accept) && accept.Contains("application/json", StringComparison.OrdinalIgnoreCase))
+            {
+                var item = cart.Items.FirstOrDefault(i => i.Sock.Id == id);
+                return Json(new
+                {
+                    totalItems = cart.GetTotalItems(),
+                    totalSum = cart.GetTotalSum(),
+                    item = item == null ? null : new { id = item.Sock.Id, quantity = item.Quantity, price = item.Sock.Price, subtotal = item.Sock.Price * item.Quantity }
+                });
+            }
+
             // Prefer explicit returnUrl if provided and is local
             if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
@@ -59,6 +71,17 @@ namespace SocksShoppingStore.Controllers
             var cart = HttpContext.Session.Get<ShoppingCart>("Cart") ?? new ShoppingCart();
             cart.RemoveItem(id);
             HttpContext.Session.Set("Cart", cart);
+            var accept = Request.Headers["Accept"].ToString();
+            if (!string.IsNullOrEmpty(accept) && accept.Contains("application/json", StringComparison.OrdinalIgnoreCase))
+            {
+                var item = cart.Items.FirstOrDefault(i => i.Sock.Id == id);
+                return Json(new
+                {
+                    totalItems = cart.GetTotalItems(),
+                    totalSum = cart.GetTotalSum(),
+                    item = item == null ? new { id = id, quantity = 0, price = 0m, subtotal = 0m } : new { id = item.Sock.Id, quantity = item.Quantity, price = item.Sock.Price, subtotal = item.Sock.Price * item.Quantity }
+                });
+            }
             return RedirectToAction("Index");
         }
 
@@ -68,6 +91,17 @@ namespace SocksShoppingStore.Controllers
             var cart = HttpContext.Session.Get<ShoppingCart>("Cart") ?? new ShoppingCart();
             cart.SetQuantity(id, quantity);
             HttpContext.Session.Set("Cart", cart);
+            var accept = Request.Headers["Accept"].ToString();
+            if (!string.IsNullOrEmpty(accept) && accept.Contains("application/json", StringComparison.OrdinalIgnoreCase))
+            {
+                var item = cart.Items.FirstOrDefault(i => i.Sock.Id == id);
+                return Json(new
+                {
+                    totalItems = cart.GetTotalItems(),
+                    totalSum = cart.GetTotalSum(),
+                    item = item == null ? new { id = id, quantity = 0, price = 0m, subtotal = 0m } : new { id = item.Sock.Id, quantity = item.Quantity, price = item.Sock.Price, subtotal = item.Sock.Price * item.Quantity }
+                });
+            }
             return RedirectToAction("Index");
         }
 
@@ -76,6 +110,16 @@ namespace SocksShoppingStore.Controllers
             var cart = HttpContext.Session.Get<ShoppingCart>("Cart") ?? new ShoppingCart();
             cart.DeleteItem(id);
             HttpContext.Session.Set("Cart", cart);
+            var accept = Request.Headers["Accept"].ToString();
+            if (!string.IsNullOrEmpty(accept) && accept.Contains("application/json", StringComparison.OrdinalIgnoreCase))
+            {
+                return Json(new
+                {
+                    totalItems = cart.GetTotalItems(),
+                    totalSum = cart.GetTotalSum(),
+                    item = new { id = id, quantity = 0, price = 0m, subtotal = 0m }
+                });
+            }
             return RedirectToAction("Index");
         }
 
@@ -83,6 +127,11 @@ namespace SocksShoppingStore.Controllers
         {
             var cart = new ShoppingCart();
             HttpContext.Session.Set("Cart", cart);
+            var accept = Request.Headers["Accept"].ToString();
+            if (!string.IsNullOrEmpty(accept) && accept.Contains("application/json", StringComparison.OrdinalIgnoreCase))
+            {
+                return Json(new { totalItems = 0, totalSum = 0m });
+            }
             return RedirectToAction("Index");
         }
     }

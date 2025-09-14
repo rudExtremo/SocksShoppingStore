@@ -1,22 +1,22 @@
 @model SocksShoppingStore.Models.Order
 @{
-    ViewData["Title"] = "Review order";
+    ViewData["Title"] = T["ReviewOrder"];
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <div class="card mb-3">
-  <div class="card-header">Shipping details</div>
+  <div class="card-header">@T["ShippingDetails"]</div>
   <div class="card-body">
-    <p class="mb-1"><strong>Name:</strong> @Model.CustomerName</p>
-    <p class="mb-1"><strong>Email:</strong> @Model.Email</p>
-    <p class="mb-0"><strong>Address:</strong> @Model.AddressLine1 @Model.AddressLine2<br/>@Model.City, @Model.PostalCode, @Model.Country</p>
+    <p class="mb-1"><strong>@T["Name"]:</strong> @Model.CustomerName</p>
+    <p class="mb-1"><strong>@T["Email"]:</strong> @Model.Email</p>
+    <p class="mb-0"><strong>@T["Address"]:</strong> @Model.AddressLine1 @Model.AddressLine2<br/>@Model.City, @Model.PostalCode, @Model.Country</p>
   </div>
 </div>
 
 <table class="table align-middle">
   <thead>
-    <tr><th>Item</th><th class="text-center">Qty</th><th class="text-end">Price</th></tr>
+    <tr><th>@T["Item"]</th><th class="text-center">@T["Quantity"]</th><th class="text-end">@T["Price"]</th></tr>
   </thead>
   <tbody>
   @foreach(var it in Model.Items)
@@ -30,7 +30,7 @@
   </tbody>
   <tfoot>
     <tr>
-      <td colspan="2" class="text-end"><strong>Total</strong></td>
+      <td colspan="2" class="text-end"><strong>@T["Total"]</strong></td>
       <td class="text-end"><strong>@SocksShoppingStore.Helpers.Currency.Eur(Model.Total)</strong></td>
     </tr>
   </tfoot>
@@ -39,8 +39,7 @@
 <form asp-action="Confirm" method="post">
   @Html.AntiForgeryToken()
   <div class="d-grid d-sm-flex gap-2">
-    <a asp-action="Index" class="btn btn-outline-secondary">Edit details</a>
-    <button type="submit" class="btn btn-success">Confirm order</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">@T["EditDetails"]</a>
+    <button type="submit" class="btn btn-success">@T["ConfirmOrder"]</button>
   </div>
 </form>
-
