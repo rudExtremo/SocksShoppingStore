@@ -17,6 +17,7 @@ namespace SocksShoppingStore.Tests.PageObjects
 
         // --- Элементы страницы ---
         private By FirstProductAddToCartButtonBy = By.CssSelector(".card .btn-primary");
+        private By CatalogGridBy = By.CssSelector("#catalog-grid");
         private IWebElement CartLink => _driver.FindElement(By.CssSelector("a[href='/Cart']"));
         public IWebElement CartItemCountBadge => _driver.FindElement(By.CssSelector(".badge"));
 
@@ -24,16 +25,16 @@ namespace SocksShoppingStore.Tests.PageObjects
         public void Navigate()
         {
             _driver.Navigate().GoToUrl(_baseUrl);
-            AcceptCookiesIfPresent();
+            EnsurePageReady();
         }
 
         public void AddFirstProductToCart()
         {
             // Ensure we are on home page (AddToCart redirects to Cart)
             _driver.Navigate().GoToUrl(_baseUrl);
-            AcceptCookiesIfPresent();
-            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
-            var button = wait.Until(ExpectedConditions.ElementToBeClickable(FirstProductAddToCartButtonBy));
+            EnsurePageReady();
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(30));
+            IWebElement button = wait.Until(ExpectedConditions.ElementToBeClickable(FirstProductAddToCartButtonBy));
 
             IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
             js.ExecuteScript("arguments[0].click();", button);
@@ -48,18 +49,37 @@ namespace SocksShoppingStore.Tests.PageObjects
         {
             try
             {
-                var banner = _driver.FindElements(By.Id("cookie-consent"));
-                if (banner.Count == 0) return;
+                // Wait briefly for banner to appear, then accept
+                var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
+                wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
                 var accept = _driver.FindElements(By.Id("cookie-accept"));
-                if (accept.Count > 0 && accept[0].Displayed)
+                if (accept.Count == 0)
                 {
-                    accept[0].Click();
+                    try { wait.Until(d => d.FindElements(By.Id("cookie-accept")).Count > 0); }
+                    catch { /* ignore timeout */ }
+                    accept = _driver.FindElements(By.Id("cookie-accept"));
+                }
+                if (accept.Count > 0)
+                {
+                    var el = accept[0];
+                    if (el.Displayed)
+                    {
+                        el.Click();
+                    }
                 }
             }
             catch
             {
                 // ignore any errors when attempting to accept cookies
             }
+        }
+
+        private void EnsurePageReady()
+        {
+            // Wait catalog grid present; then handle cookie and small settle delay
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(CatalogGridBy));
+            AcceptCookiesIfPresent();
         }
     }
 }
