@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Allure.Net.Commons;
 using NUnit.Framework;
 using Allure.NUnit;
 using Allure.NUnit.Attributes;
@@ -11,10 +12,14 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [AllureEpic("Магазин")]
-    [AllureSuite("UI Тесты")]
-    [AllureFeature("Локализация")]
+    [AllureEpic("Store")]
+    [AllureSuite("UI Tests")]
+    [AllureFeature("Localization")]
     [AllureLabel("package", "SocksShoppingStore.Tests.UI")]
+    [AllureLabel("area", "UI")]
+    [AllureLabel("type", "Functional")]
+    [AllureLabel("flow", "Positive")]
+    [AllureSeverity(SeverityLevel.critical)]
     [Category("UI-Smoke")]
     [Category("Positive")]
     public class LegalAndLocalizationControllerTests

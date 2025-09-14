@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using Allure.NUnit;
 using Allure.NUnit.Attributes;
+using Allure.Net.Commons;
 using SocksShoppingStore.Controllers;
 using SocksShoppingStore.Tests.TestDoubles;
 
@@ -10,10 +11,14 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [AllureEpic("Магазин")]
-    [AllureSuite("UI Тесты")]
-    [AllureFeature("Главная страница")]
+    [AllureEpic("Store")]
+    [AllureSuite("UI Tests")]
+    [AllureFeature("Home")]
     [AllureLabel("package", "SocksShoppingStore.Tests.UI")]
+    [AllureLabel("area", "UI")]
+    [AllureLabel("type", "Functional")]
+    [AllureLabel("flow", "Positive")]
+    [AllureSeverity(SeverityLevel.critical)]
     [Category("UI-Smoke")]
     [Category("Positive")]
     public class HomeControllerTests

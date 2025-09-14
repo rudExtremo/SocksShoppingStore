@@ -14,9 +14,12 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     [AllureNUnit]
     [AllureLabel("package", "SocksShoppingStore.Tests.API")]
-    [AllureEpic("Магазин")]
-    [AllureSuite("API Тесты")]
-    [AllureSeverity(SeverityLevel.normal)]
+    [AllureEpic("Store")]
+    [AllureSuite("API Tests")]
+    [AllureLabel("area", "API")]
+    [AllureLabel("type", "Functional")]
+    [AllureLabel("flow", "Positive")]
+    [AllureSeverity(SeverityLevel.critical)]
     [Category("API-Smoke")]
     [Category("Positive")]
     public class ApiTests
@@ -45,8 +48,8 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        [AllureStory("Каталог товаров")]
-        [AllureDescription("Тест проверяет, что API возвращает корректный список товаров.")]
+        [AllureStory("Product Catalog")]
+        [AllureDescription("Verifies API returns correct product list.")]
         public void GetAllProducts_ReturnsOkStatusAndCorrectNumberOfItems()
         {
             if (_httpClient != null)
@@ -65,7 +68,7 @@ namespace SocksShoppingStore.Tests
                 var request = new RestRequest("api/products", Method.Get);
                 RestResponse response;
 
-                AllureApi.Step("Шаг 1: Отправить GET-запрос на /api/products", () =>
+                AllureApi.Step("Step 1: Send GET /api/products", () =>
                 {
                     response = _client!.Execute(request);
 
@@ -76,7 +79,7 @@ namespace SocksShoppingStore.Tests
                     AllureApi.AddAttachment("products.json", "application/json", System.Text.Encoding.UTF8.GetBytes(response.Content!));
                 });
 
-                AllureApi.Step("Шаг 2: Проверить количество товаров в ответе", () =>
+                AllureApi.Step("Step 2: Validate items count", () =>
                 {
                     Assert.That(socks, Is.Not.Null);
                     Assert.That(socks!.Count, Is.EqualTo(8));

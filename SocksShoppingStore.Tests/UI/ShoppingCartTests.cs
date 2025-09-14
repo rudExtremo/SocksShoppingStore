@@ -10,64 +10,67 @@ namespace SocksShoppingStore.Tests
     [AllureLabel("package", "SocksShoppingStore.Tests.UI")]
     [Category("UI-Smoke")]
     [Category("Positive")]
-    [AllureEpic("Магазин")]
-    [AllureSuite("UI Тесты")]
-    [AllureFeature("Корзина")]
+    [AllureEpic("Store")]
+    [AllureSuite("UI Tests")]
+    [AllureFeature("Cart")]
+    [AllureLabel("area", "UI")]
+    [AllureLabel("type", "Functional")]
+    [AllureLabel("flow", "Positive")]
     [AllureSeverity(SeverityLevel.critical)]
     public class ShoppingCartTests : BaseTest
     {
         [Test]
-        [AllureStory("Добавление товара")]
-        [AllureDescription("Тест проверяет, что при добавлении товара в корзину счётчик на иконке обновляется.")]
+        [AllureStory("Add item to cart")]
+        [AllureDescription("Verifies cart icon counter updates after adding item.")]
         public void AddToCart_SingleItem_UpdatesCartCounter()
         {
-            AllureApi.Step("Шаг 1: Открыть главную страницу", () =>
+            AllureApi.Step("Step 1: Open home page", () =>
             {
                 HomePage!.Navigate();
             });
 
-            AllureApi.Step("Шаг 2: Проверить, что счётчик корзины равен 0", () =>
+            AllureApi.Step("Step 2: Ensure cart counter equals 0", () =>
             {
                 Assert.That(HomePage!.CartItemCountBadge.Text, Is.EqualTo("0"));
             });
 
-            AllureApi.Step("Шаг 3: Добавить первый товар в корзину", () =>
+            AllureApi.Step("Step 3: Add first product to cart", () =>
             {
                 HomePage!.AddFirstProductToCart();
             });
 
-            AllureApi.Step("Шаг 4: Проверить, что счётчик корзины стал 1", () =>
+            AllureApi.Step("Step 4: Ensure cart counter equals 1", () =>
             {
                 Assert.That(HomePage!.CartItemCountBadge.Text, Is.EqualTo("1"));
             });
         }
 
         [Test]
-        [AllureStory("Полный сценарий работы с корзиной")]
-        [AllureDescription("Тест проверяет полный цикл: добавление нескольких товаров, проверку суммы и удаление.")]
+        [AllureStory("Cart full workflow")]
+        [AllureDescription("End-to-end: add items, validate total, delete items.")]
         [Ignore("Temporarily disabled in CI to stabilize UI test")]
         public void Cart_FullWorkflow_CalculatesTotalCorrectly()
         {
-            AllureApi.Step("Шаг 1: Открыть сайт и добавить два одинаковых товара", () =>
+            AllureApi.Step("Step 1: Open site and add two identical items", () =>
             {
                 HomePage!.Navigate();
                 HomePage.AddFirstProductToCart();
                 HomePage.AddFirstProductToCart();
             });
 
-            AllureApi.Step("Шаг 2: Перейти в корзину", () =>
+            AllureApi.Step("Step 2: Navigate to Cart", () =>
             {
                 HomePage!.GoToCart();
             });
 
-            AllureApi.Step("Шаг 3: Проверить количество и итоговую сумму", () =>
+            AllureApi.Step("Step 3: Validate quantity and total sum", () =>
             {
                 Assert.That(CartPage!.GetFirstItemQuantity(), Is.EqualTo(2));
                 decimal expectedSum = 6.40m;
                 Assert.That(CartPage.GetTotalSum(), Is.EqualTo(expectedSum).Within(0.01m));
             });
 
-            AllureApi.Step("Шаг 4: Удалить товар и проверить, что корзина пуста", () =>
+            AllureApi.Step("Step 4: Delete item and ensure cart is empty", () =>
             {
                 CartPage!.DeleteFirstItem();
                 Assert.That(CartPage.IsCartEmpty(), Is.True);
@@ -75,4 +78,3 @@ namespace SocksShoppingStore.Tests
         }
     }
 }
-

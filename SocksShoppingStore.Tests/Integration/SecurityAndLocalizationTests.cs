@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Allure.NUnit;
 using Allure.NUnit.Attributes;
+using Allure.Net.Commons;
 using RestSharp;
 using RestSharp.Serializers.Json;
 using System.Net;
@@ -11,11 +12,15 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [AllureEpic("Магазин")]
-    [AllureSuite("Интеграционные тесты")]
-    [AllureFeature("Безопасность")]
-    [AllureFeature("Локализация")]
+    [AllureEpic("Store")]
+    [AllureSuite("Integration Tests")]
+    [AllureFeature("Security")]
+    [AllureFeature("Localization")]
     [AllureLabel("package", "SocksShoppingStore.Tests.Integration")]
+    [AllureLabel("area", "Integration")]
+    [AllureLabel("type", "Security")]
+    [AllureLabel("flow", "Positive")]
+    [AllureSeverity(SeverityLevel.normal)]
     [Category("Integration")]
     [Category("Security")]
     public class SecurityAndLocalizationTests

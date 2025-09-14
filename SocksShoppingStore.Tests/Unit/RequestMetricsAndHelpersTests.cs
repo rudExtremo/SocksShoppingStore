@@ -8,10 +8,13 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [AllureEpic("Магазин")]
-    [AllureSuite("Юнит-тесты")]
-    [AllureFeature("Метрики")]
+    [AllureEpic("Store")]
+    [AllureSuite("Unit Tests")]
+    [AllureFeature("Metrics")]
     [AllureLabel("package", "SocksShoppingStore.Tests.Unit")]
+    [AllureLabel("area", "Unit")]
+    [AllureLabel("type", "Functional")]
+    [AllureLabel("flow", "Positive")]
     [Category("Unit")]
     [Category("Positive")]
     public class RequestMetricsAndHelpersTests
@@ -39,3 +42,4 @@ namespace SocksShoppingStore.Tests
         }
     }
 }
+

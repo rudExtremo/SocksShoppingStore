@@ -36,6 +36,7 @@ Centralized test settings live in `SocksShoppingStore.Tests/appsettings.Test.jso
 - Fast suite (no external server required):
   - `setx USE_TEST_FACTORY 1`
   - `dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke"`
+  - Scope mapping: Allure Severity → Smoke=critical, Regression=normal
 
 - UI locally (trusted dev cert):
   - `dotnet dev-certs https --trust`

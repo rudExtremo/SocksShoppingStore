@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using Allure.NUnit;
 using Allure.NUnit.Attributes;
+using Allure.Net.Commons;
 using SocksShoppingStore.Middleware;
 using System.Threading.Tasks;
 
@@ -12,11 +13,15 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [AllureEpic("Магазин")]
-    [AllureSuite("Интеграционные тесты")]
-    [AllureFeature("Безопасность")]
-    [AllureFeature("Ограничения")]
+    [AllureEpic("Store")]
+    [AllureSuite("Integration Tests")]
+    [AllureFeature("Security")]
+    [AllureFeature("Limits")]
     [AllureLabel("package", "SocksShoppingStore.Tests.Integration")]
+    [AllureLabel("area", "Integration")]
+    [AllureLabel("type", "Security")]
+    [AllureLabel("flow", "Positive")]
+    [AllureSeverity(SeverityLevel.normal)]
     [Category("Integration")]
     [Category("Security")]
     public class MiddlewareTests
@@ -77,4 +82,3 @@ namespace SocksShoppingStore.Tests
         }
     }
 }
-

@@ -8,10 +8,13 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [AllureEpic("Магазин")]
-    [AllureSuite("Юнит-тесты")]
-    [AllureFeature("Каталог товаров")]
+    [AllureEpic("Store")]
+    [AllureSuite("Unit Tests")]
+    [AllureFeature("Product Catalog")]
     [AllureLabel("package", "SocksShoppingStore.Tests.Unit")]
+    [AllureLabel("area", "Unit")]
+    [AllureLabel("type", "Functional")]
+    [AllureLabel("flow", "Positive")]
     [Category("Unit")]
     [Category("Positive")]
     public class ProductCatalogLocalizerTests
@@ -37,3 +40,4 @@ namespace SocksShoppingStore.Tests
         }
     }
 }
+

@@ -14,11 +14,14 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [AllureEpic("Магазин")]
-    [AllureSuite("UI Тесты")]
-    [AllureFeature("Оформление заказа")]
+    [AllureEpic("Store")]
+    [AllureSuite("UI Tests")]
+    [AllureFeature("Checkout")]
     [AllureLabel("package", "SocksShoppingStore.Tests.UI")]
-    [AllureSeverity(SeverityLevel.critical)]
+    [AllureLabel("area", "UI")]
+    [AllureLabel("type", "Functional")]
+    [AllureLabel("flow", "Positive")]
+    [AllureSeverity(SeverityLevel.normal)]
     [Category("UI-Regression")]
     [Category("Positive")]
     public class CheckoutControllerTests
@@ -110,4 +113,3 @@ namespace SocksShoppingStore.Tests
         }
     }
 }
-

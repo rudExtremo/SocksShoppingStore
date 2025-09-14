@@ -3,15 +3,20 @@ using Allure.NUnit;
 using Allure.NUnit.Attributes;
 using SocksShoppingStore.Data;
 using SocksShoppingStore.Models;
+using Allure.Net.Commons;
 
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [AllureEpic("Магазин")]
-    [AllureSuite("Интеграционные тесты")]
-    [AllureFeature("Каталог товаров")]
+    [AllureEpic("Store")]
+    [AllureSuite("Integration Tests")]
+    [AllureFeature("Product Catalog")]
     [AllureLabel("package", "SocksShoppingStore.Tests.Integration")]
+    [AllureLabel("area", "Integration")]
+    [AllureLabel("type", "Functional")]
+    [AllureLabel("flow", "Positive")]
+    [AllureSeverity(SeverityLevel.normal)]
     [Category("Integration")]
     [Category("Positive")]
     public class JsonProductRepositoryTests
@@ -44,4 +49,3 @@ namespace SocksShoppingStore.Tests
         }
     }
 }
-
