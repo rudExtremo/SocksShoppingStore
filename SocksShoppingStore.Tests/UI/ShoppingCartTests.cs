@@ -63,8 +63,9 @@ namespace SocksShoppingStore.Tests
             AllureApi.Step("Шаг 3: Проверить количество и итоговую сумму", () =>
             {
                 Assert.That(CartPage!.GetFirstItemQuantity(), Is.EqualTo(2));
-                decimal expectedSum = 7.00m;
-                Assert.That(CartPage.GetTotalSum(), Is.EqualTo(expectedSum));
+                // Default sort is name_asc => first product is "Analyst Focus" (3.20€)
+                decimal expectedSum = 6.40m;
+                Assert.That(CartPage.GetTotalSum(), Is.EqualTo(expectedSum).Within(0.01m));
             });
 
             AllureApi.Step("Шаг 4: Удалить товар и проверить, что корзина пуста", () =>

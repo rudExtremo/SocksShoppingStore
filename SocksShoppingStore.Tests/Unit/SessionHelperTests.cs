@@ -10,6 +10,7 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     [AllureNUnit]
     [Category("Unit")]
+    [Category("Positive")]
     public class SessionHelperTests
     {
         [Test]
@@ -28,4 +29,3 @@ namespace SocksShoppingStore.Tests
         }
     }
 }
-

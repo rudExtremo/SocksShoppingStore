@@ -19,7 +19,7 @@ namespace SocksShoppingStore.Controllers
             return View(cart);
         }
 
-        public IActionResult AddToCart(int id)
+        public IActionResult AddToCart(int id, string? returnUrl = null)
         {
             var cart = HttpContext.Session.Get<ShoppingCart>("Cart") ?? new ShoppingCart();
             var sock = _repo.GetSockById(id);
@@ -29,14 +29,29 @@ namespace SocksShoppingStore.Controllers
                 HttpContext.Session.Set("Cart", cart);
             }
 
-            var referer = Request.Headers["Referer"].ToString();
-            if (!string.IsNullOrEmpty(referer) && referer.Contains("/Cart"))
+            // Prefer explicit returnUrl if provided and is local
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
-                return RedirectToAction("Index");
+                return LocalRedirect(returnUrl);
             }
 
-            // Default to staying within the cart when context is unclear
-            return RedirectToAction("Index");
+            // Fallback to Referer when safe and not from Cart
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrEmpty(referer))
+            {
+                // Convert absolute referer to a local path if it points to our host
+                if (Uri.TryCreate(referer, UriKind.Absolute, out var refUri))
+                {
+                    var localPath = refUri.PathAndQuery;
+                    if (Url.IsLocalUrl(localPath) && !localPath.StartsWith("/Cart", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return LocalRedirect(localPath);
+                    }
+                }
+            }
+
+            // Final fallback: go home
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult RemoveFromCart(int id)

@@ -9,6 +9,7 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     [AllureNUnit]
     [Category("Unit")]
+    [Category("Positive")]
     public class ModelsAndOptionsTests
     {
         [Test]
@@ -37,4 +38,3 @@ namespace SocksShoppingStore.Tests
         }
     }
 }
-

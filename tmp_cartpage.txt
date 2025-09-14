@@ -12,21 +12,21 @@ namespace SocksShoppingStore.Tests.PageObjects
             _driver = driver;
         }
 
-        // Locators
-        private IWebElement FirstItemQuantityInput => _driver.FindElement(By.CssSelector("tbody tr:first-child td:nth-child(3) input[name='quantity']"));
-        private IWebElement TotalSumElement => _driver.FindElement(By.XPath("//tfoot//td[contains(@class,'text-end')][last()]/strong"));
-        private IWebElement EmptyCartMessage => _driver.FindElement(By.CssSelector(".alert.alert-info"));
+        // --- Элементы страницы ---
+        private IWebElement FirstItemQuantity => _driver.FindElement(By.XPath("//tbody/tr[1]/td[3]//span"));
+        private IWebElement TotalSumElement => _driver.FindElement(By.XPath("//tfoot//strong[contains(text(),'€')]"));
+        private IWebElement EmptyCartMessage => _driver.FindElement(By.CssSelector(".alert-info"));
         private IWebElement FirstItemDeleteButton => _driver.FindElement(By.XPath("//tbody/tr[1]/td[5]/a"));
 
-        // Actions / Queries
+        // --- Действия и проверки ---
         public int GetFirstItemQuantity()
         {
-            return int.Parse(FirstItemQuantityInput.GetAttribute("value"));
+            return int.Parse(FirstItemQuantity.Text);
         }
 
         public decimal GetTotalSum()
         {
-            // Parse like "3,50 €" using fr-FR (comma decimals)
+            // Убираем символ валюты и пробелы, чтобы получить чистое число
             string totalText = TotalSumElement.Text.Replace("€", "").Trim();
             return decimal.Parse(totalText, CultureInfo.GetCultureInfo("fr-FR"));
         }
