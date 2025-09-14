@@ -50,12 +50,14 @@ jobs:
       - name: Start app (HTTP)
         run: |
           dotnet build SocksShoppingStore/SocksShoppingStore.csproj -c Release
-          nohup bash -c "ASPNETCORE_URLS=http://127.0.0.1:5123 dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --no-build" >/dev/null 2>&1 &
+          nohup bash -c "ASPNETCORE_ENVIRONMENT=Development dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --no-build --urls http://127.0.0.1:5123" > app.log 2>&1 &
           echo "Waiting for app on http://127.0.0.1:5123/healthz ..."
           for i in {1..60}; do
             if curl -fsS http://127.0.0.1:5123/healthz >/dev/null; then echo "App is up"; break; fi
             sleep 1
           done
+          echo '---- app.log (last 200 lines) ----'
+          tail -n 200 app.log || true
           # Fail if not up
           curl -fsS http://127.0.0.1:5123/healthz >/dev/null
       - name: Run full test suite (incl. UI)
@@ -119,12 +121,14 @@ jobs:
       - name: Start app (HTTP)
         run: |
           dotnet build SocksShoppingStore/SocksShoppingStore.csproj -c Release
-          nohup bash -c "ASPNETCORE_URLS=http://127.0.0.1:5123 dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --no-build" >/dev/null 2>&1 &
+          nohup bash -c "ASPNETCORE_ENVIRONMENT=Development dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --no-build --urls http://127.0.0.1:5123" > app.log 2>&1 &
           echo "Waiting for app on http://127.0.0.1:5123/healthz ..."
           for i in {1..60}; do
             if curl -fsS http://127.0.0.1:5123/healthz >/dev/null; then echo "App is up"; break; fi
             sleep 1
           done
+          echo '---- app.log (last 200 lines) ----'
+          tail -n 200 app.log || true
           curl -fsS http://127.0.0.1:5123/healthz >/dev/null
       - name: Run UI smoke tests
         env:
