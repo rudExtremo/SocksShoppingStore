@@ -58,7 +58,10 @@ jobs:
           IGNORE_CERT_ERRORS: '0'
           USE_TEST_FACTORY: '1'
         run: |
-          dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --logger "trx;LogFileName=main.trx" /p:CollectCoverage=true /p:CoverletOutput=./TestResults/Coverage/ /p:CoverletOutputFormat="cobertura,opencover"
+          dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --logger "trx;LogFileName=main.trx" \
+            /p:CollectCoverage=true \
+            /p:CoverletOutput=./SocksShoppingStore.Tests/TestResults/Coverage/coverage \
+            /p:CoverletOutputFormat=cobertura%2Copencover
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@v1.8
         with:
