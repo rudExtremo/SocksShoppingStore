@@ -8,7 +8,7 @@
 
           <!-- Scope coverage to API surface and its dependencies -->
           <Include>
-            [SocksShoppingStore]SocksShoppingStore.Controllers.ProductsApiController*;[SocksShoppingStore]SocksShoppingStore.Services.*;[SocksShoppingStore]SocksShoppingStore.Data.*;[SocksShoppingStore]SocksShoppingStore.Middleware.*
+            [SocksShoppingStore]SocksShoppingStore.Controllers.ProductsApiController*;[SocksShoppingStore]SocksShoppingStore.Services.*;[SocksShoppingStore]SocksShoppingStore.Data.*;[SocksShoppingStore]SocksShoppingStore.Middleware.*;[SocksShoppingStore]SocksShoppingStore.RequestMetrics*
           </Include>
           <IncludeTestAssembly>false</IncludeTestAssembly>
 
@@ -21,4 +21,3 @@
     </DataCollectors>
   </DataCollectionRunSettings>
 </RunSettings>
-
