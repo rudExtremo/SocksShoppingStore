@@ -13,10 +13,10 @@ namespace SocksShoppingStore.Tests.PageObjects
         }
 
         // Locators
-        private IWebElement FirstItemQuantityInput => _driver.FindElement(By.CssSelector("tbody tr:first-child td:nth-child(3) input[name='quantity']"));
-        private IWebElement TotalSumElement => _driver.FindElement(By.XPath("//tfoot//td[contains(@class,'text-end')][last()]/strong"));
+        private IWebElement FirstItemQuantityInput => _driver.FindElement(By.CssSelector("tbody tr:first-child .cart-qty-input"));
+        private IWebElement TotalSumElement => _driver.FindElement(By.CssSelector("#cart-total-sum"));
         private IWebElement EmptyCartMessage => _driver.FindElement(By.CssSelector(".alert.alert-info"));
-        private IWebElement FirstItemDeleteButton => _driver.FindElement(By.XPath("//tbody/tr[1]/td[5]/a"));
+        private IWebElement FirstItemDeleteButton => _driver.FindElement(By.CssSelector("tbody tr:first-child .actions-cell a.btn-outline-danger"));
 
         // Actions / Queries
         public int GetFirstItemQuantity()
@@ -26,8 +26,8 @@ namespace SocksShoppingStore.Tests.PageObjects
 
         public decimal GetTotalSum()
         {
-            // Parse like "3,50 €" using fr-FR (comma decimals)
-            string totalText = TotalSumElement.Text.Replace("€", "").Trim();
+            // Parse like "€3,50" using fr-FR (comma decimals)
+            string totalText = TotalSumElement.Text.Replace("€", "").Replace("?", "").Trim();
             return decimal.Parse(totalText, CultureInfo.GetCultureInfo("fr-FR"));
         }
 

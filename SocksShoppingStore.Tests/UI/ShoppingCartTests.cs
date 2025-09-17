@@ -42,6 +42,12 @@ Expected: Counter updates from 0 to 1.")]
 
             AllureApi.Step("Step 4: Verify counter becomes 1", () =>
             {
+                var sw = System.Diagnostics.Stopwatch.StartNew();
+                while (sw.Elapsed < TimeSpan.FromSeconds(10))
+                {
+                    if (HomePage!.CartItemCountBadge.Text == "1") break;
+                    System.Threading.Thread.Sleep(200);
+                }
                 Assert.That(HomePage!.CartItemCountBadge.Text, Is.EqualTo("1"));
             });
         }
@@ -84,4 +90,3 @@ Expected: Quantity equals 2; total equals 6.40; after delete the cart is empty."
         }
     }
 }
-

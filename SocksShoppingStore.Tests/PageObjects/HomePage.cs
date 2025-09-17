@@ -16,9 +16,9 @@ namespace SocksShoppingStore.Tests.PageObjects
         }
 
         // --- Элементы страницы ---
-        private By FirstProductAddToCartButtonBy = By.CssSelector(".card .btn-primary");
+        private By FirstProductAddToCartButtonBy = By.CssSelector(".product-card .js-add-to-cart");
         private IWebElement CartLink => _driver.FindElement(By.CssSelector("a[href='/Cart']"));
-        public IWebElement CartItemCountBadge => _driver.FindElement(By.CssSelector(".badge"));
+        public IWebElement CartItemCountBadge => _driver.FindElement(By.CssSelector(".cart-count"));
 
         // --- Действия на странице ---
         public void Navigate()
@@ -29,14 +29,12 @@ namespace SocksShoppingStore.Tests.PageObjects
 
         public void AddFirstProductToCart()
         {
-            // Ensure we are on home page (AddToCart redirects to Cart)
+            // Ensure we are on home page (AddToCart redirects back to the page)
             _driver.Navigate().GoToUrl(_baseUrl);
             AcceptCookiesIfPresent();
-            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
             var button = wait.Until(ExpectedConditions.ElementToBeClickable(FirstProductAddToCartButtonBy));
-
-            IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
-            js.ExecuteScript("arguments[0].click();", button);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", button);
         }
 
         public void GoToCart()
