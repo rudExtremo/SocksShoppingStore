@@ -113,5 +113,53 @@ Expected: At least one response has status 429 Too Many Requests.")]
             }
             Assert.That(statuses.Any(s => s == 429), "Expected at least one 429 due to rate limit.");
         }
+
+        [Test]
+        [Category("Negative")]
+        [AllureStory("Rate Limiting")]
+        [AllureDescription(@"What: When client sends Accept: application/json and exceeds API rate limit, the 429 response is JSON.
+Steps:
+1) Issue > ApiPerMinute requests to /api/products with Accept=application/json.
+Expected: Receive 429 Too Many Requests with application/json body containing 'error' and 'message'.")]
+        public void ProductsApi_RateLimit_ReturnsJson_WhenAcceptJson()
+        {
+            const int attempts = 25;
+            if (_httpClient != null)
+            {
+                _httpClient.DefaultRequestHeaders.Accept.Clear();
+                _httpClient.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+                for (int i = 0; i < attempts; i++)
+                {
+                    var resp = _httpClient.GetAsync("api/products").GetAwaiter().GetResult();
+                    if ((int)resp.StatusCode == 429)
+                    {
+                        var ct = resp.Content.Headers.ContentType?.MediaType ?? string.Empty;
+                        var body = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                        StringAssert.Contains("application/json", ct);
+                        StringAssert.Contains("\"error\"", body);
+                        StringAssert.Contains("\"message\"", body);
+                        return;
+                    }
+                }
+                Assert.Fail("Expected a 429 response but none received");
+            }
+            else
+            {
+                var req = new RestRequest("api/products", Method.Get);
+                req.AddHeader("Accept", "application/json");
+                for (int i = 0; i < attempts; i++)
+                {
+                    var resp = _client!.Execute(req);
+                    if ((int)resp.StatusCode == 429)
+                    {
+                        StringAssert.Contains("application/json", resp.ContentType ?? string.Empty);
+                        StringAssert.Contains("\"error\"", resp.Content ?? string.Empty);
+                        StringAssert.Contains("\"message\"", resp.Content ?? string.Empty);
+                        return;
+                    }
+                }
+                Assert.Fail("Expected a 429 response but none received");
+            }
+        }
     }
 }
