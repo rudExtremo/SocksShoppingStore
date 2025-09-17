@@ -1,13 +1,13 @@
 # Actual Test Coverage
 
-Updated: 2025-09-17T19:56:04.8120920+01:00
+Updated: 2025-09-17T20:10:00+01:00
 
 Methodology:
 - dotnet test per category with `--settings coverlet.runsettings`
 - Collector: XPlat Code Coverage, format: Cobertura
 
 ## Unit
-- Total: 19.43% lines, 13.67% branches (138/710 sp; 58/424 bp)
+- Total: 68.03% lines, 46.46% branches (447/657 sp; 197/424 bp)
 - Source: SocksShoppingStore.Tests/TestResults/*/coverage.cobertura.xml
 
 ## Integration
