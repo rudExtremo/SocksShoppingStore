@@ -45,13 +45,8 @@ jobs:
         run: |
           dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release \
             --filter "TestCategory=API-Smoke" \
-            /p:CollectCoverage=true \
-            /p:CoverletOutput=./TestResults/CoverageApi/ \
-            /p:CoverletOutputFormat=cobertura \
-            \
-            /p:Include="[SocksShoppingStore]SocksShoppingStore.Controllers.ProductsApiController*;[SocksShoppingStore]SocksShoppingStore.Services.*;[SocksShoppingStore]SocksShoppingStore.Data.*;[SocksShoppingStore]SocksShoppingStore.Middleware.*;[SocksShoppingStore]SocksShoppingStore.RequestMetrics*" \
-            /p:Exclude="[SocksShoppingStore]Program;[SocksShoppingStore]AspNetCoreGeneratedDocument.*" \
-            /p:ExcludeByFile="**/Program.cs;**/*.cshtml;**/Views/*"
+            --settings coverlet.api.runsettings \
+            --results-directory SocksShoppingStore.Tests/TestResults/CoverageApi
       - name: Upload Allure results
         if: always()
         uses: actions/upload-artifact@v4
