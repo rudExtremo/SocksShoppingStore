@@ -20,7 +20,9 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Restore
-        run: dotnet restore
+        run: |
+          dotnet restore SocksShoppingStore/SocksShoppingStore.csproj
+          dotnet restore SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj
       - name: Run fast tests (Unit + Integration + API-Smoke)
         env:
           BASE_URL: http://127.0.0.1:5123
@@ -82,7 +84,9 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Restore
-        run: dotnet restore
+        run: |
+          dotnet restore SocksShoppingStore/SocksShoppingStore.csproj
+          dotnet restore SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj
       - name: Install coverlet.console tool
         run: dotnet tool update --global coverlet.console
       - name: Start app (HTTP)
@@ -167,7 +171,9 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Restore
-        run: dotnet restore
+        run: |
+          dotnet restore SocksShoppingStore/SocksShoppingStore.csproj
+          dotnet restore SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj
       - name: Start app (HTTP)
         run: |
           nohup bash -c "ASPNETCORE_URLS=http://127.0.0.1:5123 dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --no-build" >/dev/null 2>&1 &
