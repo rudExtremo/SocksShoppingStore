@@ -76,5 +76,21 @@ namespace SocksShoppingStore.Tests
 
             Driver?.Quit();
         }
+
+        protected void AcceptCookiesIfPresent()
+        {
+            if (Driver == null) return;
+            try
+            {
+                var banner = Driver.FindElements(By.Id("cookie-consent"));
+                if (banner.Count == 0) return;
+                var accept = Driver.FindElements(By.Id("cookie-accept"));
+                if (accept.Count > 0 && accept[0].Displayed)
+                {
+                    accept[0].Click();
+                }
+            }
+            catch { }
+        }
     }
 }
