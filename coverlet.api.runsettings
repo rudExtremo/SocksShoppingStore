@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+
+          <!-- Scope coverage to API surface and its dependencies -->
+          <Include>
+            [SocksShoppingStore]SocksShoppingStore.Controllers.ProductsApiController*;[SocksShoppingStore]SocksShoppingStore.Services.*;[SocksShoppingStore]SocksShoppingStore.Data.*;[SocksShoppingStore]SocksShoppingStore.Middleware.*
+          </Include>
+          <IncludeTestAssembly>false</IncludeTestAssembly>
+
+          <Exclude>[SocksShoppingStore]Program;[SocksShoppingStore]AspNetCoreGeneratedDocument.*</Exclude>
+          <ExcludeByFile>**/Program.cs;**/*.cshtml;**/Views/*</ExcludeByFile>
+          <ExcludeByAttribute>Obsolete|GeneratedCodeAttribute|CompilerGeneratedAttribute|ExcludeFromCodeCoverage</ExcludeByAttribute>
+          <SkipAutoProps>true</SkipAutoProps>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>
+
