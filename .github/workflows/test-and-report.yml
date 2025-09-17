@@ -95,7 +95,10 @@ jobs:
           IGNORE_CERT_ERRORS: '0'
           USE_TEST_FACTORY: '1'
         run: |
-          dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --logger "trx;LogFileName=main.trx" /p:CollectCoverage=true /p:CoverletOutput=./TestResults/Coverage/ /p:CoverletOutputFormat="cobertura,opencover"
+          dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release \
+            --logger "trx;LogFileName=main.trx" \
+            --settings coverlet.runsettings \
+            --results-directory SocksShoppingStore.Tests/TestResults/Coverage
       - name: UI coverage (instrument server with coverlet) and run UI smoke
         if: success()
         shell: bash
