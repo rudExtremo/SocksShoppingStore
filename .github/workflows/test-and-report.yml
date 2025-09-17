@@ -83,6 +83,8 @@ jobs:
           dotnet-version: '8.0.x'
       - name: Restore
         run: dotnet restore
+      - name: Install coverlet.console tool
+        run: dotnet tool update --global coverlet.console
       - name: Start app (HTTP)
         run: |
           nohup bash -c "ASPNETCORE_URLS=http://127.0.0.1:5123 dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --no-build" >/dev/null 2>&1 &
@@ -95,6 +97,29 @@ jobs:
           USE_TEST_FACTORY: '1'
         run: |
           dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --logger "trx;LogFileName=main.trx" /p:CollectCoverage=true /p:CoverletOutput=./TestResults/Coverage/ /p:CoverletOutputFormat="cobertura,opencover"
+      - name: UI coverage (instrument server with coverlet) and run UI smoke
+        if: success()
+        shell: bash
+        env:
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          dotnet build SocksShoppingStore/SocksShoppingStore.csproj -c Release
+          COVERLET=~/.dotnet/tools/coverlet
+          APPDLL="SocksShoppingStore/bin/Release/net8.0/SocksShoppingStore.dll"
+          $COVERLET "$APPDLL" \
+            --target "dotnet" \
+            --targetargs "$APPDLL --urls http://127.0.0.1:5123" \
+            --format cobertura \
+            --output "coverage-ui/coverage.cobertura.xml" \
+            --include "[SocksShoppingStore]SocksShoppingStore.Controllers.*;[SocksShoppingStore]SocksShoppingStore.Services.*;[SocksShoppingStore]SocksShoppingStore.Data.*;[SocksShoppingStore]SocksShoppingStore.Middleware.*;[SocksShoppingStore]SocksShoppingStore.RequestMetrics*" \
+            --exclude "[SocksShoppingStore]AspNetCoreGeneratedDocument.*" \
+            --exclude-by-file "**/*.cshtml;**/Views/*" &
+          # wait for health
+          for i in {1..30}; do curl -fsSL "http://127.0.0.1:5123/healthz" >/dev/null && echo up && break || sleep 1; done
+          BASE_URL=http://127.0.0.1:5123 RUN_UI_TESTS=1 IGNORE_CERT_ERRORS=0 USE_TEST_FACTORY=0 \
+          dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=UI-Smoke" --logger "trx;LogFileName=ui-coverage.trx"
+          # stop server (coverlet target)
+          pkill -f "SocksShoppingStore.dll" || true
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@v1.8
         with:
@@ -131,6 +156,7 @@ jobs:
           path: |
             SocksShoppingStore.Tests/TestResults/Coverage
             **/coverage.opencover.xml
+            coverage-ui/coverage.cobertura.xml
 
   manual-ui:
     if: github.event_name == 'workflow_dispatch' && inputs.run_ui == 'true'
