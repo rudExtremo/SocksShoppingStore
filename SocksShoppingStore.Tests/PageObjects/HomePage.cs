@@ -64,11 +64,11 @@ namespace SocksShoppingStore.Tests.PageObjects
             var priceEls = _driver.FindElements(By.CssSelector(".product-card .card-text strong"));
             foreach (var el in priceEls)
             {
-                var text = el.Text.Replace("€", "").Replace("?", "").Trim();
-                if (decimal.TryParse(text, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.GetCultureInfo("fr-FR"), out var val))
-                {
-                    list.Add(val);
-                }
+                var text = el.Text;
+                var m = System.Text.RegularExpressions.Regex.Match(text, "\\d+[,.]\\d{2}");
+                if (!m.Success) continue;
+                var num = m.Value.Replace('.', ',');
+                if (decimal.TryParse(num, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.GetCultureInfo("fr-FR"), out var val)) list.Add(val);
             }
             return list;
         }
@@ -94,9 +94,42 @@ namespace SocksShoppingStore.Tests.PageObjects
 
         public void OpenFirstProductDetails()
         {
+            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            wait.Until(d => d.FindElements(By.CssSelector(".product-card a[href*='/Products/Details']")).Count > 0);
             var link = _driver.FindElement(By.CssSelector(".product-card a[href*='/Products/Details']"));
             link.Click();
         }
+
+        public string GetHeaderCartTotal()
+        {
+            var nav = _driver.FindElement(By.CssSelector("a[aria-label='Cart']"));
+            var el = nav.FindElements(By.CssSelector(".cart-total, .ms-1.text-muted"));
+            return el.Count > 0 ? el[0].Text : string.Empty;
+        }
+
+        // Filters and sorting helpers
+        public void SetPriceFilter(string? min, string? max)
+        {
+            var minInput = _driver.FindElement(By.CssSelector("input[name='minPrice']"));
+            var maxInput = _driver.FindElement(By.CssSelector("input[name='maxPrice']"));
+            minInput.Clear(); if (!string.IsNullOrEmpty(min)) minInput.SendKeys(min);
+            maxInput.Clear(); if (!string.IsNullOrEmpty(max)) maxInput.SendKeys(max);
+        }
+
+        public void ClickApplyFilters()
+        {
+            _driver.FindElement(By.CssSelector("button.btn-filter[type='submit']")).Click();
+        }
+
+        public void ClickResetFilters()
+        {
+            _driver.FindElement(By.CssSelector("a.btn.btn-outline-secondary.btn-filter"))?.Click();
+        }
+
+        public void ClickSortPriceAsc() => _driver.FindElement(By.CssSelector("a.btn-sort[href*='sort=price_asc']")).Click();
+        public void ClickSortPriceDesc() => _driver.FindElement(By.CssSelector("a.btn-sort[href*='sort=price_desc']")).Click();
+        public void ClickSortNameAsc() => _driver.FindElement(By.CssSelector("a.btn-sort[href*='sort=name_asc']")).Click();
+        public void ClickSortNameDesc() => _driver.FindElement(By.CssSelector("a.btn-sort[href*='sort=name_desc']")).Click();
 
         private void AcceptCookiesIfPresent()
         {
