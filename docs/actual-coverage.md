@@ -11,7 +11,7 @@ Methodology:
 - Source: SocksShoppingStore.Tests/TestResults/*/coverage.cobertura.xml
 
 ## Integration
-- Total: 48.73% lines, 31.60% branches (346/710 sp; 134/424 bp)
+- Total: 61.33% lines, 40.80% branches (403/657 sp; 173/424 bp)
 - Source: SocksShoppingStore.Tests/TestResults/*/coverage.cobertura.xml
 
 ## API
