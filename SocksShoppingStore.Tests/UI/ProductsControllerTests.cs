@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using SocksShoppingStore.Controllers;
 
 namespace SocksShoppingStore.Tests
@@ -13,7 +14,11 @@ namespace SocksShoppingStore.Tests
     public class ProductsControllerTests
     {
         [Test]
-        public void Details_NotFound_WhenMissing()
+        [AllureDescription(@"What: Verify 'Details' returns NotFound for a missing product.
+Steps:
+1) Call Details with invalid id (-1).
+Expected: NotFoundResult.")]
+        public void Products_Details_ReturnsNotFound_WhenMissing()
         {
             var c = new ProductsController();
             var result = c.Details(-1);
@@ -21,7 +26,11 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void Details_ReturnsView_WithSockModel()
+        [AllureDescription(@"What: Verify 'Details' returns a view with a Sock model for a valid id.
+Steps:
+1) Call Details with id=1.
+Expected: ViewResult with model of type Sock.")]
+        public void Products_Details_ReturnsView_WithSockModel()
         {
             var c = new ProductsController();
             c.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };

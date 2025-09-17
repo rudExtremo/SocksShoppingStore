@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using SocksShoppingStore.Controllers;
 using SocksShoppingStore.Helpers;
 using SocksShoppingStore.Models;
@@ -26,7 +27,11 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void Get_Index_Returns_View()
+        [AllureDescription(@"What: Verify GET /Checkout returns a view with model.
+Steps:
+1) Invoke Index().
+Expected: ViewResult with CheckoutViewModel.")]
+        public void Checkout_GetIndex_ReturnsView()
         {
             var (c, _) = Create();
             var r = c.Index() as ViewResult;
@@ -35,7 +40,12 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void Post_Index_Invalid_Model_Returns_View_WithErrors()
+        [AllureDescription(@"What: Verify POST /Checkout with invalid model returns view with errors.
+Steps:
+1) Prepare invalid model and add ModelState error.
+2) Post Index(model).
+Expected: ViewResult; ModelState invalid.")]
+        public void Checkout_PostIndex_InvalidModel_ReturnsViewWithErrors()
         {
             var (c, ctx) = Create();
             // Cart empty -> ModelState error
@@ -47,7 +57,12 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void Post_Index_Valid_Sets_OrderDraft_And_Redirects_To_Review()
+        [AllureDescription(@"What: Verify valid POST /Checkout stores order draft and redirects to Review.
+Steps:
+1) Put one item into the session cart.
+2) Post valid Index(model).
+Expected: Redirect to Review; 'OrderDraft' present in session with 1 item.")]
+        public void Checkout_PostIndex_Valid_SetsOrderDraft_AndRedirectsToReview()
         {
             var (c, ctx) = Create();
             // Put one item to cart
@@ -73,7 +88,12 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void Review_With_Draft_Returns_View()
+        [AllureDescription(@"What: Verify Review returns a view when draft exists in session.
+Steps:
+1) Seed 'OrderDraft' in session.
+2) Call Review().
+Expected: ViewResult not null.")]
+        public void Checkout_Review_WithDraft_ReturnsView()
         {
             var (c, ctx) = Create();
             ctx.Session.Set("OrderDraft", new Order { CustomerName = "X" });
@@ -82,7 +102,12 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void Confirm_Finalizes_Order_Clears_Cart_And_Redirects()
+        [AllureDescription(@"What: Verify Confirm finalizes order, clears cart, and redirects to ThankYou.
+Steps:
+1) Seed cart and 'OrderDraft' in session.
+2) Call Confirm().
+Expected: Redirect to ThankYou; cart emptied; LastOrder set with total=2.")]
+        public void Checkout_Confirm_FinalizesOrder_ClearsCart_AndRedirects()
         {
             var (c, ctx) = Create();
             // Cart with item and draft

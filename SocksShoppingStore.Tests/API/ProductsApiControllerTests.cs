@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using SocksShoppingStore.Controllers;
 
 namespace SocksShoppingStore.Tests
@@ -23,7 +24,12 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void GetAllProducts_SetsCachingHeaders_AndReturnsJson()
+        [AllureDescription(@"What: Verify GET /api/products returns JSON and sets caching headers.
+Steps:
+1) Call controller GetAllProducts.
+2) Inspect ContentResult and response headers.
+Expected: Content-Type starts with application/json; ETag, Last-Modified and Cache-Control present; X-Total-Count is numeric.")]
+        public void ProductsApi_GetAll_SetsCachingHeaders_AndReturnsJson()
         {
             var ctx = new DefaultHttpContext();
             var controller = CreateController(ctx);
@@ -42,7 +48,12 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void GetAllProducts_Respects_IfNoneMatch_Returns304()
+        [AllureDescription(@"What: Validate If-None-Match behavior for GetAllProducts.
+Steps:
+1) First call to obtain ETag.
+2) Second call with If-None-Match header.
+Expected: ETag is stable; status is either 200 or 304 (environment dependent).")]
+        public void ProductsApi_GetAll_Respects_IfNoneMatch_Returns304()
         {
             // First call to get ETag
             var ctx1 = new DefaultHttpContext();
@@ -61,7 +72,12 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void GetProduct_Returns304_OnIfModifiedSince()
+        [AllureDescription(@"What: Validate If-Modified-Since behavior for GetProduct.
+Steps:
+1) First call to obtain Last-Modified.
+2) Second call with If-Modified-Since header.
+Expected: Status is either 200 or 304 (environment dependent).")]
+        public void ProductsApi_GetById_Returns304_OnIfModifiedSince()
         {
             var ctx1 = new DefaultHttpContext();
             var c1 = CreateController(ctx1);

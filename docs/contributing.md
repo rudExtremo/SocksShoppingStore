@@ -67,7 +67,8 @@ You can run different sets of tests locally using filters. First, ensure the web
     ```shell
     dotnet test --filter "TestCategory=Unit"
     ```
+*   **Test Conventions:** See `docs/test-conventions.md` for naming, categories, and required Allure metadata.
 *   **Collect Code Coverage (on fast tests):**
     ```shell
-    dotnet test --filter "TestCategory=Unit|TestCategory=Integration" --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+    dotnet test --filter "TestCategory=Unit|TestCategory=Integration" --settings coverlet.runsettings
     ```

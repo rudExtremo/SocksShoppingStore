@@ -13,8 +13,8 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [AllureEpic("Магазин")]
-    [AllureSuite("API Тесты")]
+    [AllureEpic("SocksShoppingStore")]
+    [AllureSuite("API")]
     [Category("API-Smoke")]
     [Category("Positive")]
     public class ApiTests
@@ -43,9 +43,13 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        [AllureStory("Каталог товаров")]
-        [AllureDescription("Тест проверяет, что API возвращает корректный список товаров.")]
-        public void GetAllProducts_ReturnsOkStatusAndCorrectNumberOfItems()
+        [AllureStory("Products API")]
+        [AllureDescription(@"What: Verify /api/products returns 200 and expected number of items.
+Steps:
+1) Issue GET /api/products (via HttpClient or RestClient).
+2) Deserialize response to list of Sock.
+Expected: HTTP 200; list is not null; count equals 8.")]
+        public void ProductsApi_GetAll_ReturnsOk_AndExpectedCount()
         {
             if (_httpClient != null)
             {
@@ -62,7 +66,7 @@ namespace SocksShoppingStore.Tests
                 var request = new RestRequest("api/products", Method.Get);
                 RestResponse response;
 
-                AllureApi.Step("Шаг 1: Отправить GET-запрос на /api/products", () =>
+                AllureApi.Step("Step 1: GET /api/products", () =>
                 {
                     response = _client!.Execute(request);
 
@@ -72,7 +76,7 @@ namespace SocksShoppingStore.Tests
                     socks = JsonSerializer.Deserialize<List<Sock>>(response.Content!);
                 });
 
-                AllureApi.Step("Шаг 2: Проверить количество товаров в ответе", () =>
+                AllureApi.Step("Step 2: Validate list not null and size", () =>
                 {
                     Assert.That(socks, Is.Not.Null);
                     Assert.That(socks!.Count, Is.EqualTo(8));

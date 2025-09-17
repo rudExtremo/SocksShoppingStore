@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using SocksShoppingStore.Controllers;
 using SocksShoppingStore.Tests.TestDoubles;
 
@@ -15,7 +16,12 @@ namespace SocksShoppingStore.Tests
     public class LegalAndLocalizationControllerTests
     {
         [Test]
-        public void Legal_Privacy_Sets_ViewData_FromOptions()
+        [AllureDescription(@"What: Verify Privacy view receives ViewData values from options.
+Steps:
+1) Instantiate LegalController with options.
+2) Call Privacy().
+Expected: ViewData contains configured ControllerName and ContactEmail.")]
+        public void Legal_Privacy_SetsViewData_FromOptions()
         {
             var opts = Options.Create(new LegalOptions { ControllerName = "TestApp", ContactEmail = "test@example.com" });
             var controller = new LegalController(opts);
@@ -28,6 +34,10 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
+        [AllureDescription(@"What: Verify Localization.Set writes culture cookie and redirects locally.
+Steps:
+1) Call Set('ru','/').
+Expected: Response 'Set-Cookie' contains .AspNetCore.Culture; LocalRedirect result.")]
         public void Localization_Set_WritesCookie_AndRedirects()
         {
             var controller = new LocalizationController();

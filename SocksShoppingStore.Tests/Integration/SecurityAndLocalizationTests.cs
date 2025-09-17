@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Allure.NUnit;
+using Allure.NUnit.Attributes;
 using RestSharp;
 using RestSharp.Serializers.Json;
 using System.Net;
@@ -41,7 +42,11 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void Home_HasSecurityHeaders()
+        [AllureDescription(@"What: Verify home page responds with core security headers.
+Steps:
+1) GET '/'.
+Expected: X-Frame-Options, X-Content-Type-Options, and Content-Security-Policy headers are present.")]
+        public void Home_Has_SecurityHeaders()
         {
             if (_httpClient != null)
             {
@@ -64,6 +69,10 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
+        [AllureDescription(@"What: Ensure RU culture cookie affects product details localization.
+Steps:
+1) GET '/Products/Details/1' with '.AspNetCore.Culture=c=ru|uic=ru'.
+Expected: The page contains Russian localized strings.")]
         public void Products_Details_Localized_RU()
         {
             if (_httpClient != null)
@@ -86,7 +95,11 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void CookieBanner_PresentOnHome()
+        [AllureDescription(@"What: Check presence of cookie consent banner on Home.
+Steps:
+1) GET '/'.
+Expected: HTML contains element with id 'cookie-consent'.")]
+        public void Home_Has_CookieBanner()
         {
             if (_httpClient != null)
             {
@@ -104,7 +117,11 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void Home_CspContainsNonce()
+        [AllureDescription(@"What: Verify CSP header contains a per-request nonce on Home.
+Steps:
+1) GET '/'.
+Expected: 'Content-Security-Policy' header exists and contains ""script-src 'self' 'nonce-...'"".")]
+        public void Home_Csp_ContainsNonce()
         {
             if (_httpClient != null)
             {

@@ -89,7 +89,7 @@ This section provides a comprehensive list of test scenarios for the enhanced ap
 
 ## Test Categories and Filters
 
-Common categories used to slice runs in CI and locally:
+Common categories used to slice runs in CI and locally (see also `docs/test-conventions.md`):
 
 - By layer: `Unit`, `Integration`, `API-Smoke`, `UI-Smoke` (extend with `UI-Reg` if needed)
 - By intent: `Positive`, `Negative`, `Security`, `Performance`, `Accessibility`

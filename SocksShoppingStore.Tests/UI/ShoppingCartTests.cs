@@ -1,7 +1,6 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Allure.NUnit;
 using Allure.NUnit.Attributes;
-
 using Allure.Net.Commons;
 
 namespace SocksShoppingStore.Tests
@@ -10,66 +9,74 @@ namespace SocksShoppingStore.Tests
     [AllureNUnit]
     [Category("UI-Smoke")]
     [Category("Positive")]
-    [AllureEpic("Магазин")]
-    [AllureSuite("UI Тесты")]
-    [AllureFeature("Корзина")]
+    [AllureEpic("SocksShoppingStore")]
+    [AllureSuite("UI")]
+    [AllureFeature("Shopping Cart")]
     public class ShoppingCartTests : BaseTest
     {
         [Test]
-        [AllureStory("Добавление товара")]
-        [AllureDescription("Тест проверяет, что при добавлении товара в корзину счетчик на иконке обновляется.")]
-        public void AddToCart_SingleItem_UpdatesCartCounter()
+        [AllureStory("Cart Counter")]
+        [AllureDescription(@"What: Verify header cart counter increments after adding a single item.
+Steps:
+1) Open Home page.
+2) Ensure the header cart counter displays 0.
+3) Click 'Add to Cart' on the first product.
+4) Return to header and read the cart counter.
+Expected: Counter updates from 0 to 1.")]
+        public void Cart_AddSingleItem_UpdatesHeaderCounter()
         {
-            AllureApi.Step("Шаг 1: Открыть главную страницу", () =>
+            AllureApi.Step("Step 1: Open Home page", () =>
             {
                 HomePage!.Navigate();
             });
 
-            AllureApi.Step("Шаг 2: Проверить, что счетчик корзины равен 0", () =>
+            AllureApi.Step("Step 2: Verify counter is 0", () =>
             {
                 Assert.That(HomePage!.CartItemCountBadge.Text, Is.EqualTo("0"));
             });
 
-            AllureApi.Step("Шаг 3: Добавить первый товар в корзину", () =>
+            AllureApi.Step("Step 3: Add first product to cart", () =>
             {
                 HomePage!.AddFirstProductToCart();
-                
             });
 
-            AllureApi.Step("Шаг 4: Проверить, что счетчик корзины стал 1", () =>
+            AllureApi.Step("Step 4: Verify counter becomes 1", () =>
             {
                 Assert.That(HomePage!.CartItemCountBadge.Text, Is.EqualTo("1"));
             });
         }
 
         [Test]
-        [AllureStory("Полный сценарий работы с корзиной")]
-        [AllureDescription("Тест проверяет полный цикл: добавление нескольких товаров, проверку суммы и удаление.")]
-        public void Cart_FullWorkflow_CalculatesTotalCorrectly()
+        [AllureStory("Cart Workflow")]
+        [AllureDescription(@"What: Validate cart end-to-end workflow and total calculation.
+Steps:
+1) From Home, add the first product twice (qty=2).
+2) Navigate to the Cart page.
+3) Read the first item's quantity and the total sum.
+4) Delete the first item and verify the cart becomes empty.
+Expected: Quantity equals 2; total equals 6.40; after delete the cart is empty.")]
+        public void Cart_AddTwice_VerifyQuantityAndTotal_ThenDelete()
         {
-            AllureApi.Step("Шаг 1: Открыть сайт и добавить два одинаковых товара", () =>
+            AllureApi.Step("Step 1: Add two items from Home", () =>
             {
                 HomePage!.Navigate();
                 HomePage.AddFirstProductToCart();
-                
                 HomePage.AddFirstProductToCart();
-                
             });
 
-            AllureApi.Step("Шаг 2: Перейти в корзину", () =>
+            AllureApi.Step("Step 2: Go to Cart", () =>
             {
                 HomePage!.GoToCart();
             });
 
-            AllureApi.Step("Шаг 3: Проверить количество и итоговую сумму", () =>
+            AllureApi.Step("Step 3: Verify qty and total", () =>
             {
                 Assert.That(CartPage!.GetFirstItemQuantity(), Is.EqualTo(2));
-                // Default sort is name_asc => first product is "Analyst Focus" (3.20€)
                 decimal expectedSum = 6.40m;
                 Assert.That(CartPage.GetTotalSum(), Is.EqualTo(expectedSum).Within(0.01m));
             });
 
-            AllureApi.Step("Шаг 4: Удалить товар и проверить, что корзина пуста", () =>
+            AllureApi.Step("Step 4: Delete item and verify empty", () =>
             {
                 CartPage!.DeleteFirstItem();
                 Assert.That(CartPage.IsCartEmpty(), Is.True);
@@ -77,3 +84,4 @@ namespace SocksShoppingStore.Tests
         }
     }
 }
+
