@@ -32,7 +32,9 @@ Expected: Counter updates from 0 to 1.")]
 
             AllureApi.Step("Step 2: Verify counter is 0", () =>
             {
-                Assert.That(HomePage!.CartItemCountBadge.Text, Is.EqualTo("0"));
+                var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver!, TimeSpan.FromSeconds(10));
+                wait.Until(d => HomePage!.CartItemCountBadge.Displayed);
+                Assert.That(HomePage.CartItemCountBadge.Text, Is.EqualTo("0"));
             });
 
             AllureApi.Step("Step 3: Add first product to cart", () =>

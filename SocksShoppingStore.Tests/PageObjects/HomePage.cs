@@ -18,7 +18,7 @@ namespace SocksShoppingStore.Tests.PageObjects
         // --- Элементы страницы ---
         private By FirstProductAddToCartButtonBy = By.CssSelector(".product-card .js-add-to-cart");
         private IWebElement CartLink => _driver.FindElement(By.CssSelector("a[href='/Cart']"));
-        public IWebElement CartItemCountBadge => _driver.FindElement(By.CssSelector(".cart-count"));
+        public IWebElement CartItemCountBadge => _driver.FindElement(By.CssSelector("a[aria-label='Cart'] .cart-count, a[aria-label='Cart'] .badge"));
 
         // --- Действия на странице ---
         public void Navigate()
