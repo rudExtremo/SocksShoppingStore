@@ -1,24 +1,24 @@
 # Actual Test Coverage
 
-Updated: 2025-09-14T00:45:15.7183019+01:00
+Updated: 2025-09-17T20:10:00+01:00
 
-Commands:
-- dotnet test -c Release (per category)
-- coverlet.console => opencover xml
+Methodology:
+- dotnet test per category with `--settings coverlet.runsettings`
+- Collector: XPlat Code Coverage, format: Cobertura
 
 ## Unit
-- Total: 19,21% lines, 10,69% branches (127/661 sp; 43/402 bp)
-- Artifact: coverage/unit/coverage.opencover.xml
+- Total: 68.03% lines, 46.46% branches (447/657 sp; 197/424 bp)
+- Source: SocksShoppingStore.Tests/TestResults/*/coverage.cobertura.xml
 
 ## Integration
-- Total: 18,91% lines, 5,97% branches (125/661 sp; 24/402 bp)
-- Artifact: coverage/integration/coverage.opencover.xml
+- Total: 61.33% lines, 40.80% branches (403/657 sp; 173/424 bp)
+- Source: SocksShoppingStore.Tests/TestResults/*/coverage.cobertura.xml
 
 ## API
-- Total: 15,58% lines, 8,2% branches (103/661 sp; 33/402 bp)
-- Artifact: coverage/api/coverage.opencover.xml
+- Total: 37.88% lines, 16.27% branches (269/710 sp; 69/424 bp)
+- Source: SocksShoppingStore.Tests/TestResults/*/coverage.cobertura.xml
 
 ## UI
-- Total: 17,85% lines, 8,7% branches (118/661 sp; 35/402 bp)
-- Artifact: coverage/ui/coverage.opencover.xml
+- Total: 16.61% lines, 8.25% branches (118/710 sp; 35/424 bp)
+- Source: SocksShoppingStore.Tests/TestResults/*/coverage.cobertura.xml
 

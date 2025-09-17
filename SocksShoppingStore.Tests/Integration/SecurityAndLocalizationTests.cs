@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using Allure.NUnit;
 using Allure.NUnit.Attributes;
-using Allure.Net.Commons;
 using RestSharp;
 using RestSharp.Serializers.Json;
 using System.Net;
@@ -12,15 +11,6 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [AllureEpic("Store")]
-    [AllureSuite("Integration Tests")]
-    [AllureFeature("Security")]
-    [AllureFeature("Localization")]
-    [AllureLabel("package", "SocksShoppingStore.Tests.Integration")]
-    [AllureLabel("area", "Integration")]
-    [AllureLabel("type", "Security")]
-    [AllureLabel("flow", "Positive")]
-    [AllureSeverity(SeverityLevel.normal)]
     [Category("Integration")]
     [Category("Security")]
     public class SecurityAndLocalizationTests
@@ -52,7 +42,11 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void Home_HasSecurityHeaders()
+        [AllureDescription(@"What: Verify home page responds with core security headers.
+Steps:
+1) GET '/'.
+Expected: X-Frame-Options, X-Content-Type-Options, and Content-Security-Policy headers are present.")]
+        public void Home_Has_SecurityHeaders()
         {
             if (_httpClient != null)
             {
@@ -62,8 +56,6 @@ namespace SocksShoppingStore.Tests
                 Assert.That(headers.Contains("X-Frame-Options"), Is.True);
                 Assert.That(headers.Contains("X-Content-Type-Options"), Is.True);
                 Assert.That(headers.Contains("Content-Security-Policy"), Is.True);
-                var headerDump = string.Join("\n", headers.Select(h => $"{h.Key}: {string.Join(",", h.Value)}"));
-                AllureApi.AddAttachment("home-headers.txt", "text/plain", System.Text.Encoding.UTF8.GetBytes(headerDump));
             }
             else
             {
@@ -73,12 +65,14 @@ namespace SocksShoppingStore.Tests
                 Assert.That(headers.Any(h => h.Name == "X-Frame-Options" && (h.Value?.ToString() ?? "").Contains("DENY")), Is.True);
                 Assert.That(headers.Any(h => h.Name == "X-Content-Type-Options" && (h.Value?.ToString() ?? "").Contains("nosniff")), Is.True);
                 Assert.That(headers.Any(h => h.Name == "Content-Security-Policy" && (h.Value?.ToString() ?? "").Contains("default-src 'self'")), Is.True);
-                var headerDump = string.Join("\n", headers.Select(h => $"{h.Name}: {h.Value}"));
-                AllureApi.AddAttachment("home-headers.txt", "text/plain", System.Text.Encoding.UTF8.GetBytes(headerDump));
             }
         }
 
         [Test]
+        [AllureDescription(@"What: Ensure RU culture cookie affects product details localization.
+Steps:
+1) GET '/Products/Details/1' with '.AspNetCore.Culture=c=ru|uic=ru'.
+Expected: The page contains Russian localized strings.")]
         public void Products_Details_Localized_RU()
         {
             if (_httpClient != null)
@@ -89,7 +83,6 @@ namespace SocksShoppingStore.Tests
                 Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
                 var content = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
                 Assert.That(content, Does.Contain("Комфорт разработчика"));
-                AllureApi.AddAttachment("details-ru.html", "text/html", System.Text.Encoding.UTF8.GetBytes(content));
             }
             else
             {
@@ -98,12 +91,15 @@ namespace SocksShoppingStore.Tests
                 var resp = _rsClient!.Execute(req);
                 Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
                 Assert.That(resp.Content ?? string.Empty, Does.Contain("Комфорт разработчика"));
-                AllureApi.AddAttachment("details-ru.html", "text/html", System.Text.Encoding.UTF8.GetBytes(resp.Content ?? string.Empty));
             }
         }
 
         [Test]
-        public void CookieBanner_PresentOnHome()
+        [AllureDescription(@"What: Check presence of cookie consent banner on Home.
+Steps:
+1) GET '/'.
+Expected: HTML contains element with id 'cookie-consent'.")]
+        public void Home_Has_CookieBanner()
         {
             if (_httpClient != null)
             {
@@ -111,27 +107,27 @@ namespace SocksShoppingStore.Tests
                 Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
                 var content = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
                 Assert.That(content, Does.Contain("id=\"cookie-consent\""));
-                AllureApi.AddAttachment("home-cookie.html", "text/html", System.Text.Encoding.UTF8.GetBytes(content));
             }
             else
             {
                 var resp = _rsClient!.Execute(new RestRequest("/", Method.Get));
                 Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
                 Assert.That(resp.Content ?? string.Empty, Does.Contain("id=\"cookie-consent\""));
-                AllureApi.AddAttachment("home-cookie.html", "text/html", System.Text.Encoding.UTF8.GetBytes(resp.Content ?? string.Empty));
             }
         }
 
         [Test]
-        public void Home_CspContainsNonce()
+        [AllureDescription(@"What: Verify CSP header contains a per-request nonce on Home.
+Steps:
+1) GET '/'.
+Expected: 'Content-Security-Policy' header exists and contains ""script-src 'self' 'nonce-...'"".")]
+        public void Home_Csp_ContainsNonce()
         {
             if (_httpClient != null)
             {
                 var resp = _httpClient.GetAsync("/").GetAwaiter().GetResult();
                 Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.OK));
                 Assert.That(resp.Headers.Contains("Content-Security-Policy"), Is.True);
-                var csp = string.Join(",", resp.Headers.GetValues("Content-Security-Policy"));
-                AllureApi.AddAttachment("home-csp.txt", "text/plain", System.Text.Encoding.UTF8.GetBytes(csp));
             }
             else
             {
@@ -140,7 +136,6 @@ namespace SocksShoppingStore.Tests
                 var headers = resp.Headers ?? Array.Empty<HeaderParameter>();
                 var csp = headers.FirstOrDefault(h => h.Name == "Content-Security-Policy")?.Value?.ToString() ?? string.Empty;
                 Assert.That(csp, Does.Contain("script-src 'self' 'nonce-"));
-                AllureApi.AddAttachment("home-csp.txt", "text/plain", System.Text.Encoding.UTF8.GetBytes(csp));
             }
         }
     }

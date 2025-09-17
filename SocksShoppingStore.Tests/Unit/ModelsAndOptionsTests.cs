@@ -21,7 +21,11 @@ namespace SocksShoppingStore.Tests
     public class ModelsAndOptionsTests
     {
         [Test]
-        public void ErrorViewModel_ShowRequestId_Reflects_RequestId()
+        [AllureDescription(@"What: Verify ShowRequestId reflects whether RequestId is set.
+Steps:
+1) Create ErrorViewModel with null and non-null RequestId.
+Expected: null => false; non-null => true.")]
+        public void ErrorViewModel_ShowRequestId_ReflectsRequestId()
         {
             var m1 = new ErrorViewModel { RequestId = null };
             Assert.That(m1.ShowRequestId, Is.False);
@@ -30,7 +34,11 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void RateOptions_Defaults()
+        [AllureDescription(@"What: Verify default RateOptions values are positive.
+Steps:
+1) Instantiate RateOptions.
+Expected: GlobalPerMinute>0; ApiPerMinute>0.")]
+        public void RateOptions_Defaults_ArePositive()
         {
             var o = new RateOptions();
             Assert.That(o.GlobalPerMinute, Is.GreaterThan(0));
@@ -38,7 +46,11 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void LegalOptions_Defaults()
+        [AllureDescription(@"What: Verify default LegalOptions fields are not empty.
+Steps:
+1) Instantiate LegalOptions.
+Expected: ControllerName and ContactEmail are not empty.")]
+        public void LegalOptions_Defaults_AreNotEmpty()
         {
             var o = new LegalOptions();
             Assert.That(o.ControllerName, Is.Not.Empty);

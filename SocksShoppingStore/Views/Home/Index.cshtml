@@ -1,6 +1,6 @@
 @model SocksShoppingStore.Models.CatalogViewModel
 @{
-    ViewData["Title"] = "Socks catalog";
+    ViewData["Title"] = T["Catalog_Title"];
     var q = Model.Query ?? string.Empty;
     string Highlight(string text, string query)
     {
@@ -15,33 +15,37 @@
     <h1 class="display-4">@T["Home_Title"]</h1>
     <p class="lead">@T["Home_Lead"]</p>
     <hr />
-    <form method="get" asp-controller="Home" asp-action="Index" class="row g-2 mt-3" role="region" aria-label="Catalog filters">
+    <form method="get" asp-controller="Home" asp-action="Index" class="row g-3 mt-3 catalog-filters" role="region" aria-label="Catalog filters">
         <input type="hidden" name="q" value="@q" />
-        <div class="col-12 col-md-6 d-flex align-items-center gap-2">
-            <strong class="text-nowrap">Price:</strong>
-            <input type="number" step="0.01" min="0" name="minPrice" value="@(Model.MinPrice?.ToString("0.00") ?? "")" class="form-control" placeholder="min" aria-label="Min price" />
-            <span>—</span>
-            <input type="number" step="0.01" min="0" name="maxPrice" value="@(Model.MaxPrice?.ToString("0.00") ?? "")" class="form-control" placeholder="max" aria-label="Max price" />
-        </div>
-        <div class="col-12 col-md-6 d-flex align-items-center gap-2">
-            <strong class="text-nowrap">Sort:</strong>
-            <div class="btn-group" role="group" aria-label="Sort options">
-                <a class="btn btn-outline-secondary @(Model.Sort=="price_asc"?"active":"")" asp-action="Index" asp-route-q="@Model.Query" asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice" asp-route-sort="price_asc">
-                    <i class="fa-solid fa-arrow-up"></i> price
-                </a>
-                <a class="btn btn-outline-secondary @(Model.Sort=="price_desc"?"active":"")" asp-action="Index" asp-route-q="@Model.Query" asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice" asp-route-sort="price_desc">
-                    <i class="fa-solid fa-arrow-down"></i> price
-                </a>
-                <a class="btn btn-outline-secondary @(Model.Sort=="name_asc"?"active":"")" asp-action="Index" asp-route-q="@Model.Query" asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice" asp-route-sort="name_asc">
-                    <i class="fa-solid fa-arrow-up-a-z"></i> name
-                </a>
-                <a class="btn btn-outline-secondary @(Model.Sort=="name_desc"?"active":"")" asp-action="Index" asp-route-q="@Model.Query" asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice" asp-route-sort="name_desc">
-                    <i class="fa-solid fa-arrow-down-z-a"></i> name
-                </a>
+        <div class="col-12 col-lg-6">
+            <div class="catalog-price-range d-flex align-items-center gap-2 flex-wrap flex-lg-nowrap">
+                <strong class="text-nowrap mb-0">@T["Price"]:</strong>
+                <input type="number" step="0.01" min="0" name="minPrice" value="@(Model.MinPrice?.ToString("0.00") ?? "")" class="form-control form-control-sm price-input" placeholder="@T["Min"]" aria-label="@T["MinPriceAria"]" />
+                <span class="text-muted">-</span>
+                <input type="number" step="0.01" min="0" name="maxPrice" value="@(Model.MaxPrice?.ToString("0.00") ?? "")" class="form-control form-control-sm price-input" placeholder="@T["Max"]" aria-label="@T["MaxPriceAria"]" />
             </div>
-            <div class="ms-auto d-flex gap-2">
-                <a class="btn btn-outline-secondary" asp-action="Index" asp-route-q="@Model.Query">Reset</a>
-                <button type="submit" class="btn btn-primary">Apply</button>
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="catalog-sort-row d-flex align-items-center gap-2 flex-wrap flex-lg-nowrap justify-content-lg-end">
+                <strong class="text-nowrap mb-0">@T["Sort"]:</strong>
+                <div class="catalog-sort d-flex gap-2 flex-wrap flex-lg-nowrap flex-grow-1 flex-lg-grow-0">
+                    <a class="btn btn-outline-secondary btn-filter btn-sort flex-grow-0 @(Model.Sort=="price_asc"?"active":"")" asp-action="Index" asp-route-q="@Model.Query" asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice" asp-route-sort="price_asc" aria-label="@T["Sort"]: @T["Price"] ↑" title="@T["Sort"]: @T["Price"] ↑">
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </a>
+                    <a class="btn btn-outline-secondary btn-filter btn-sort flex-grow-0 @(Model.Sort=="price_desc"?"active":"")" asp-action="Index" asp-route-q="@Model.Query" asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice" asp-route-sort="price_desc" aria-label="@T["Sort"]: @T["Price"] ↓" title="@T["Sort"]: @T["Price"] ↓">
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </a>
+                    <a class="btn btn-outline-secondary btn-filter btn-sort flex-grow-0 @(Model.Sort=="name_asc"?"active":"")" asp-action="Index" asp-route-q="@Model.Query" asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice" asp-route-sort="name_asc" aria-label="@T["Sort"]: @T["Name"] A→Z" title="@T["Sort"]: @T["Name"] A→Z">
+                        <i class="fa-solid fa-arrow-up-a-z"></i>
+                    </a>
+                    <a class="btn btn-outline-secondary btn-filter btn-sort flex-grow-0 @(Model.Sort=="name_desc"?"active":"")" asp-action="Index" asp-route-q="@Model.Query" asp-route-minPrice="@Model.MinPrice" asp-route-maxPrice="@Model.MaxPrice" asp-route-sort="name_desc" aria-label="@T["Sort"]: @T["Name"] Z→A" title="@T["Sort"]: @T["Name"] Z→A">
+                        <i class="fa-solid fa-arrow-down-z-a"></i>
+                    </a>
+                </div>
+                <div class="filter-actions d-flex gap-2 flex-wrap flex-lg-nowrap">
+                    <a class="btn btn-outline-secondary btn-filter" asp-action="Index" asp-route-q="@Model.Query">@T["Reset"]</a>
+                    <button type="submit" class="btn btn-primary btn-filter">@T["Apply"]</button>
+                </div>
             </div>
         </div>
     </form>
@@ -50,17 +54,17 @@
         <p class="mt-2">@T["Results_For"] <strong>@q</strong> - @T["Found"] @Model.Total</p>
     }
     <hr />
-  </div>
+</div>
 
 @if (Model.Total == 0)
 {
     <div class="alert alert-info">@T["NoItems"]</div>
 }
 
-<div class="row mt-3" id="catalog-grid" data-loaded="@Model.Items.Count" data-total="@Model.Total" data-page="@Model.Page" data-pagesize="@Model.PageSize" data-q="@Model.Query" data-sort="@Model.Sort" data-minprice="@Model.MinPrice" data-maxprice="@Model.MaxPrice" data-price-label="@T["Price"]" data-details-label="@T["Details"]" data-addtocart-label="@T["AddToCart"]">
+<div class="row mt-3" id="catalog-grid" data-loaded="@Model.Items.Count" data-total="@Model.Total" data-page="@Model.Page" data-pagesize="@Model.PageSize" data-q="@Model.Query" data-sort="@Model.Sort" data-minprice="@Model.MinPrice" data-maxprice="@Model.MaxPrice" data-price-label="@T["Price"]" data-details-label="@T["Details"]" data-addtocart-label="@T["AddToCart"]" data-loadmore-label="@T["LoadMore"]" data-loading-label="@T["Loading"]" data-allloaded-label="@T["AllItemsLoaded"]">
     @foreach (var sock in Model.Items)
     {
-        <div class="col-md-4 mb-4">
+        <div class="col-12 col-sm-6 col-lg-4 mb-4 product-card">
             <div class="card h-100">
                 <a asp-controller="Products" asp-action="Details" asp-route-id="@sock.Id">
                     <img src="@sock.ImageUrl" class="card-img-top product-card-img" alt="@sock.Name">
@@ -69,9 +73,9 @@
                     <h5 class="card-title">@Html.Raw(Highlight(sock.Name ?? string.Empty, q))</h5>
                     <p class="card-text">@Html.Raw(Highlight(sock.Description ?? string.Empty, q))</p>
                     <p class="card-text mt-auto"><strong>@T["Price"]: @Currency.Eur(sock.Price)</strong></p>
-                    <div class="d-flex gap-2">
-                        <a asp-controller="Products" asp-action="Details" asp-route-id="@sock.Id" class="btn btn-outline-secondary">@T["Details"]</a>
-                        <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@sock.Id" asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)" class="btn btn-primary">@T["AddToCart"]</a>
+                    <div class="product-card-actions">
+                        <a asp-controller="Products" asp-action="Details" asp-route-id="@sock.Id" class="btn btn-outline-secondary w-100">@T["Details"]</a>
+                        <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@sock.Id" asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)" class="btn btn-primary w-100 js-add-to-cart">@T["AddToCart"]</a>
                     </div>
                 </div>
             </div>
@@ -81,10 +85,10 @@
 <div class="text-center mt-3" id="load-more-wrap">
     @if (Model.Items.Count < Model.Total)
     {
-        <button id="load-more" class="btn btn-outline-primary">Load more</button>
+        <button id="load-more" class="btn btn-outline-primary">@T["LoadMore"]</button>
     }
     else
     {
-        <span class="text-muted">All items loaded</span>
+        <span class="text-muted">@T["AllItemsLoaded"]</span>
     }
 </div>

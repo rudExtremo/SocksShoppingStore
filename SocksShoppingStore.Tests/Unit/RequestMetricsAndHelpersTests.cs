@@ -20,7 +20,12 @@ namespace SocksShoppingStore.Tests
     public class RequestMetricsAndHelpersTests
     {
         [Test]
-        public void RequestMetrics_Computes_Percentiles()
+        [AllureDescription(@"What: Verify RequestMetrics computes percentiles and sample count.
+Steps:
+1) Record 10 samples.
+2) Read snapshot and serialize to JSON.
+Expected: ok>0; p50>0; samples==10.")]
+        public void RequestMetrics_Computes_Percentiles_AndSamples()
         {
             var m = new RequestMetrics(10);
             var arr = new double[] { 1,2,3,4,5,6,7,8,9,10 };
@@ -35,7 +40,11 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void Currency_Eur_Returns_EuroSymbol()
+        [AllureDescription(@"What: Verify Currency.Eur formats string with euro symbol or 'EUR'.
+Steps:
+1) Format 12.34m.
+Expected: Output contains '€' or 'EUR'.")]
+        public void Currency_Eur_Returns_EuroSymbolOrCode()
         {
             var s = Currency.Eur(12.34m);
             Assert.That(s.Contains("€") || s.Contains("\u20AC") || s.Contains("EUR", System.StringComparison.OrdinalIgnoreCase));

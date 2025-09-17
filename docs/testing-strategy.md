@@ -89,35 +89,14 @@ This section provides a comprehensive list of test scenarios for the enhanced ap
 
 ## Test Categories and Filters
 
-Labeling & Filters (Allure/NUnit)
+Common categories used to slice runs in CI and locally (see also `docs/test-conventions.md`):
 
-- Areas (layer):
-  - Allure Suite: "Unit Tests" | "Integration Tests" | "API Tests" | "UI Tests"
-  - NUnit Category: `Unit`, `Integration`, `API`, `UI`
-  - Allure label: `area=Unit|Integration|API|UI`
+- By layer: `Unit`, `Integration`, `API-Smoke`, `UI-Smoke` (extend with `UI-Reg` if needed)
+- By intent: `Positive`, `Negative`, `Security`, `Performance`, `Accessibility`
 
-- Types (nature of check):
-  - NUnit Category: `Functional`, `Security`, `Performance`, `Accessibility`, `Usability`
-  - Allure label: `type=<same>`
-
-- Flow (scenario intent):
-  - NUnit Category: `Positive`, `Negative`, `Edge`
-  - Allure label: `flow=<same>`
-
-- Scope (Smoke vs Regression): Option A — use Allure Severity
-  - Smoke → `Severity=critical` (or `blocker` for ultra‑smoke)
-  - Regression → `Severity=normal` (optionally `minor` for low‑prio)
-  - Tip: keep existing categories like `API-Smoke`, `UI-Smoke`, `UI-Regression` for convenient NUnit filters.
-
-Where to see this in Allure:
-- Suites view → by Areas
-- Behaviors → Epic `Store`, Features like `Cart`, `Product Catalog`, `Checkout`, `Localization`, `Security`, `Metrics`, `Middleware`, Stories per scenario
-- Severity widget → quick split by Smoke vs Regression
-- Packages → technical tree `SocksShoppingStore.Tests.(Unit|Integration|API|UI)`
-
-Common filters (PowerShell):
-- Fast run (dev): `--filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke"`
-- UI smoke: `--filter "TestCategory=UI-Smoke"`
+Examples:
+- `--filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke"`
+- `--filter "TestCategory=UI-Smoke"`
 
 ## Centralized Test Settings
 

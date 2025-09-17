@@ -23,7 +23,12 @@ namespace SocksShoppingStore.Tests
     public class JsonProductRepositoryTests
     {
         [Test]
-        public void Create_Add_Update_Delete_Works()
+        [AllureDescription(@"What: Validate JSON repository CRUD flow.
+Steps:
+1) Create repo with temp path (seed copies legacy items).
+2) Add new sock; update its description; delete it.
+Expected: Add/Update/Delete succeed; item appears/changes/disappears accordingly.")]
+        public void JsonRepository_CreateAddUpdateDelete_Works()
         {
             var tempDir = Path.Combine(Path.GetTempPath(), "socks-json-repo-tests");
             Directory.CreateDirectory(tempDir);

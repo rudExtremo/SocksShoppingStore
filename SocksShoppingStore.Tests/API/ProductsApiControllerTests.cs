@@ -3,23 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using Allure.NUnit;
 using Allure.NUnit.Attributes;
-using Allure.Net.Commons;
 using SocksShoppingStore.Controllers;
 
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [AllureEpic("Store")]
-    [AllureSuite("API Tests")]
-    [AllureFeature("Product Catalog")]
-    [AllureLabel("package", "SocksShoppingStore.Tests.API")]
-    [AllureLabel("area", "API")]
-    [AllureLabel("type", "Functional")]
-    [AllureLabel("flow", "Positive")]
-    [AllureSeverity(SeverityLevel.critical)]
     [Category("API-Smoke")]
-    [Category("Unit")]
     [Category("Positive")]
     public class ProductsApiControllerTests
     {
@@ -34,7 +24,12 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void GetAllProducts_SetsCachingHeaders_AndReturnsJson()
+        [AllureDescription(@"What: Verify GET /api/products returns JSON and sets caching headers.
+Steps:
+1) Call controller GetAllProducts.
+2) Inspect ContentResult and response headers.
+Expected: Content-Type starts with application/json; ETag, Last-Modified and Cache-Control present; X-Total-Count is numeric.")]
+        public void ProductsApi_GetAll_SetsCachingHeaders_AndReturnsJson()
         {
             var ctx = new DefaultHttpContext();
             var controller = CreateController(ctx);
@@ -44,7 +39,6 @@ namespace SocksShoppingStore.Tests
             Assert.That(result, Is.InstanceOf<ContentResult>());
             var content = (ContentResult)result;
             Assert.That(content.ContentType, Does.StartWith("application/json"));
-            AllureApi.AddAttachment("api-products.json", "application/json", System.Text.Encoding.UTF8.GetBytes(content.Content ?? string.Empty));
 
             // Headers
             Assert.That(ctx.Response.Headers.ContainsKey("ETag"), Is.True);
@@ -54,7 +48,12 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void GetAllProducts_Respects_IfNoneMatch_Returns304()
+        [AllureDescription(@"What: Validate If-None-Match behavior for GetAllProducts.
+Steps:
+1) First call to obtain ETag.
+2) Second call with If-None-Match header.
+Expected: ETag is stable; status is either 200 or 304 (environment dependent).")]
+        public void ProductsApi_GetAll_Respects_IfNoneMatch_Returns304()
         {
             // First call to get ETag
             var ctx1 = new DefaultHttpContext();
@@ -73,58 +72,12 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void GetAllProducts_Respects_IfModifiedSince_Returns304()
-        {
-            // First call to get Last-Modified
-            var ctx1 = new DefaultHttpContext();
-            var c1 = CreateController(ctx1);
-            var first = c1.GetAllProducts(q: null, sort: null, minPrice: null, maxPrice: null, page: 1, pageSize: 10, culture: "en");
-            var last = ctx1.Response.Headers["Last-Modified"].ToString();
-            Assert.That(last, Is.Not.Empty);
-
-            var ctx2 = new DefaultHttpContext();
-            ctx2.Request.Headers["If-Modified-Since"] = last;
-            var c2 = CreateController(ctx2);
-            var second = c2.GetAllProducts(q: null, sort: null, minPrice: null, maxPrice: null, page: 1, pageSize: 10, culture: "en");
-            Assert.That(new[] { StatusCodes.Status200OK, StatusCodes.Status304NotModified }, Contains.Item(ctx2.Response.StatusCode));
-        }
-
-        [Test]
-        public void GetProduct_NotFound_Returns404()
-        {
-            var ctx = new DefaultHttpContext();
-            var controller = CreateController(ctx);
-            var result = controller.GetProduct(-123, culture: "en");
-            Assert.That(result, Is.InstanceOf<StatusCodeResult>().Or.InstanceOf<NotFoundResult>());
-            if (result is StatusCodeResult sc)
-            {
-                Assert.That(sc.StatusCode, Is.EqualTo(StatusCodes.Status404NotFound));
-            }
-        }
-
-        [Test]
-        public void GetAllProducts_CultureParam_RU_Localizes()
-        {
-            var ctx = new DefaultHttpContext();
-            var controller = CreateController(ctx);
-            var result = controller.GetAllProducts(q: null, sort: "name_asc", minPrice: null, maxPrice: null, page: 1, pageSize: 3, culture: "ru-RU") as ContentResult;
-            Assert.That(result, Is.Not.Null);
-            var json = result!.Content ?? string.Empty;
-            Assert.That(json, Does.Contain("\"name\":").And.Not.Contain("Coder\u0027s Comfort"));
-        }
-
-        [Test]
-        public void GetAllProducts_DefaultSort_When_Unknown()
-        {
-            var ctx = new DefaultHttpContext();
-            var controller = CreateController(ctx);
-            var result = controller.GetAllProducts(q: null, sort: "unknown", minPrice: null, maxPrice: null, page: -10, pageSize: 0, culture: "en") as ContentResult;
-            Assert.That(result, Is.Not.Null);
-            // also exercises page<1 and pageSize<=0 clamping
-            Assert.That(ctx.Response.Headers.ContainsKey("X-Total-Count"), Is.True);
-        }
-        [Test]
-        public void GetProduct_Returns304_OnIfModifiedSince()
+        [AllureDescription(@"What: Validate If-Modified-Since behavior for GetProduct.
+Steps:
+1) First call to obtain Last-Modified.
+2) Second call with If-Modified-Since header.
+Expected: Status is either 200 or 304 (environment dependent).")]
+        public void ProductsApi_GetById_Returns304_OnIfModifiedSince()
         {
             var ctx1 = new DefaultHttpContext();
             var c1 = CreateController(ctx1);

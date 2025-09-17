@@ -5,7 +5,6 @@ using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using Allure.NUnit;
 using Allure.NUnit.Attributes;
-using Allure.Net.Commons;
 using SocksShoppingStore.Middleware;
 using System.Threading.Tasks;
 
@@ -13,22 +12,16 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [AllureEpic("Store")]
-    [AllureSuite("Integration Tests")]
-    [AllureFeature("Security")]
-    [AllureFeature("Limits")]
-    [AllureLabel("package", "SocksShoppingStore.Tests.Integration")]
-    [AllureLabel("area", "Integration")]
-    [AllureLabel("type", "Security")]
-    [AllureLabel("flow", "Positive")]
-    [AllureSeverity(SeverityLevel.normal)]
     [Category("Integration")]
-    [Category("Unit")]
     [Category("Security")]
     public class MiddlewareTests
     {
         [Test]
-        public async Task SecurityHeaders_AddsCoreHeaders()
+        [AllureDescription(@"What: Ensure SecurityHeadersMiddleware adds core security headers and CSP nonce.
+Steps:
+1) Invoke middleware with a fresh HttpContext.
+Expected: Response contains CSP header; X-Frame-Options is DENY; a nonce is stored in HttpContext.Items.")]
+        public async Task Middleware_SecurityHeaders_AddsCoreHeaders()
         {
             var ctx = new DefaultHttpContext();
             var mw = new SecurityHeadersMiddleware(_ => Task.CompletedTask);
@@ -39,7 +32,12 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public async Task FreeTier_BlockAll_Returns503_ExceptAllowlisted()
+        [AllureDescription(@"What: Verify FreeTierGuardMiddleware blocks all except allowlisted paths.
+Steps:
+1) Configure options: Enabled=true, BlockAllTraffic=true, AllowPaths=['/healthz'].
+2) Call middleware for '/' and '/healthz'.
+Expected: '/' returns 503; '/healthz' passes to next.")]
+        public async Task Middleware_FreeTier_BlockAll_Returns503_ExceptAllowlisted()
         {
             var services = new ServiceCollection();
             services.Configure<FreeTierOptions>(o => { o.Enabled = true; o.BlockAllTraffic = true; o.AllowPaths = new[] { "/healthz" }; });
@@ -62,7 +60,12 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public async Task ConcurrencyLimiter_Blocks_When_Saturated()
+        [AllureDescription(@"What: Ensure ConcurrencyLimiterMiddleware returns 429 when saturated.
+Steps:
+1) Set MaxConcurrentRequests=1; hold first request.
+2) Start second request.
+Expected: Second returns 429 Too Many Requests.")]
+        public async Task Middleware_ConcurrencyLimiter_Returns429_WhenSaturated()
         {
             var services = new ServiceCollection();
             services.Configure<ConcurrencyOptions>(o => o.MaxConcurrentRequests = 1);
@@ -83,3 +86,4 @@ namespace SocksShoppingStore.Tests
         }
     }
 }
+

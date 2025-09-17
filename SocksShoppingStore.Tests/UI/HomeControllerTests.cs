@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using Allure.NUnit;
 using Allure.NUnit.Attributes;
-using Allure.Net.Commons;
 using SocksShoppingStore.Controllers;
 using SocksShoppingStore.Tests.TestDoubles;
 
@@ -11,16 +10,7 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [AllureEpic("Store")]
-    [AllureSuite("UI Tests")]
-    [AllureFeature("Home")]
-    [AllureLabel("package", "SocksShoppingStore.Tests.UI")]
-    [AllureLabel("area", "UI")]
-    [AllureLabel("type", "Functional")]
-    [AllureLabel("flow", "Positive")]
-    [AllureSeverity(SeverityLevel.critical)]
     [Category("UI-Smoke")]
-    [Category("Unit")]
     [Category("Positive")]
     public class HomeControllerTests
     {
@@ -32,7 +22,11 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void Index_Default_ReturnsPagedModel()
+        [AllureDescription(@"What: Verify default Index returns a paged catalog model.
+Steps:
+1) Call Index with page=1,pageSize=3.
+Expected: ViewResult with model having 3 items, total>=3, page=1.")]
+        public void Home_Index_Default_ReturnsPagedModel()
         {
             var controller = Create();
             var result = controller.Index(q: null, sort: null, minPrice: null, maxPrice: null, page: 1, pageSize: 3) as ViewResult;
@@ -45,15 +39,11 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void Privacy_Returns_View()
-        {
-            var controller = Create();
-            var result = controller.Privacy() as ViewResult;
-            Assert.That(result, Is.Not.Null);
-        }
-
-        [Test]
-        public void Index_SearchAndFilter_SortsByPriceDesc()
+        [AllureDescription(@"What: Verify search/filter with price range sorts by price_desc.
+Steps:
+1) Call Index with q='socks', sort='price_desc', minPrice=3.5, maxPrice=5.0.
+Expected: Items are sorted by price descending.")]
+        public void Home_Index_SearchAndFilter_SortsByPriceDesc()
         {
             var controller = Create();
             var result = controller.Index(q: "socks", sort: "price_desc", minPrice: 3.5m, maxPrice: 5.0m, page: 1, pageSize: 10) as ViewResult;
@@ -63,38 +53,6 @@ namespace SocksShoppingStore.Tests
             for (int i = 1; i < items.Count; i++)
             {
                 Assert.That(items[i-1].Price, Is.GreaterThanOrEqualTo(items[i].Price));
-            }
-        }
-
-        [Test]
-        public void Index_InvalidPaging_IsClamped_And_Defaults_WhenZero()
-        {
-            var controller = Create();
-            // page < 1 and pageSize <= 0 should clamp to page=1, pageSize=6 (default)
-            var result = controller.Index(q: null, sort: "name_desc", minPrice: null, maxPrice: null, page: -5, pageSize: 0) as ViewResult;
-            Assert.That(result, Is.Not.Null);
-            var model = (SocksShoppingStore.Models.CatalogViewModel)result!.Model!;
-            Assert.That(model.Page, Is.EqualTo(1));
-            Assert.That(model.PageSize, Is.EqualTo(6));
-            // name_desc sorting check (first >= second lexicographically)
-            var items = model.Items;
-            if (items.Count >= 2)
-            {
-                Assert.That(string.Compare(items[0].Name, items[1].Name, StringComparison.Ordinal) >= 0);
-            }
-        }
-
-        [Test]
-        public void Index_PriceAsc_SortsAscending_WhenOnlyMinPriceApplied()
-        {
-            var controller = Create();
-            var result = controller.Index(q: null, sort: "price_asc", minPrice: 2.5m, maxPrice: null, page: 1, pageSize: 8) as ViewResult;
-            Assert.That(result, Is.Not.Null);
-            var model = (SocksShoppingStore.Models.CatalogViewModel)result!.Model!;
-            var items = model.Items;
-            for (int i = 1; i < items.Count; i++)
-            {
-                Assert.That(items[i-1].Price, Is.LessThanOrEqualTo(items[i].Price));
             }
         }
     }

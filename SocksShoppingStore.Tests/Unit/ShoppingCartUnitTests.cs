@@ -19,7 +19,12 @@ namespace SocksShoppingStore.Tests
     public class ShoppingCartUnitTests
     {
         [Test]
-        public void SetQuantity_Zero_RemovesItem()
+        [AllureDescription(@"What: Setting quantity to zero removes the item from the cart.
+Steps:
+1) Add one item to cart.
+2) SetQuantity(id, 0).
+Expected: Item removed; count equals 0.")]
+        public void Cart_SetQuantityZero_RemovesItem()
         {
             var cart = new ShoppingCart();
             cart.AddItem(new Sock { Id = 1, Name = "Test", Price = 2.0m });
@@ -30,7 +35,13 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void Add_Remove_Delete_CalculateTotals()
+        [AllureDescription(@"What: Validate add/remove/delete operations and total calculation.
+Steps:
+1) Add socks (two of A, one of B).
+2) Verify total items and sum.
+3) Remove one A; delete B.
+Expected: Counts and totals update accordingly.")]
+        public void Cart_AddRemoveDelete_CalculatesTotals()
         {
             var cart = new ShoppingCart();
             var s1 = new Sock { Id = 1, Name = "A", Price = 3.0m };

@@ -4,10 +4,22 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat Code Coverage">
         <Configuration>
+          <!-- Output format -->
           <Format>cobertura</Format>
+
+          <!-- Include only product assemblies -->
+          <Include>[SocksShoppingStore]*</Include>
+          <IncludeTestAssembly>false</IncludeTestAssembly>
+
+          <!-- Exclude generated/host wiring types -->
           <Exclude>[SocksShoppingStore]Program;[SocksShoppingStore]AspNetCoreGeneratedDocument.*</Exclude>
-          <!-- Exclude host wiring and Razor views from unit coverage -->
+
+          <!-- Exclude by file patterns -->
           <ExcludeByFile>**/Program.cs;**/*.cshtml;**/Views/*</ExcludeByFile>
+
+          <!-- Additional stability options -->
+          <ExcludeByAttribute>Obsolete|GeneratedCodeAttribute|CompilerGeneratedAttribute|ExcludeFromCodeCoverage</ExcludeByAttribute>
+          <SkipAutoProps>true</SkipAutoProps>
         </Configuration>
       </DataCollector>
     </DataCollectors>

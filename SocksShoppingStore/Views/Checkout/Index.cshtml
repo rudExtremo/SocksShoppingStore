@@ -1,6 +1,6 @@
 @model SocksShoppingStore.Models.CheckoutViewModel
 @{
-    ViewData["Title"] = "Checkout";
+    ViewData["Title"] = T["Checkout_Title"];
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -10,48 +10,48 @@
     <input type="text" name="Website" value="" class="d-none" autocomplete="off" tabindex="-1" aria-hidden="true" />
 
     <div class="col-md-6">
-        <label asp-for="CustomerName" class="form-label"></label>
+        <label for="CustomerName" class="form-label">@T["FullName"]</label>
         <input asp-for="CustomerName" class="form-control" />
         <span asp-validation-for="CustomerName" class="text-danger"></span>
     </div>
     <div class="col-md-6">
-        <label asp-for="Email" class="form-label"></label>
+        <label for="Email" class="form-label">@T["Email"]</label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     <div class="col-12">
-        <label asp-for="AddressLine1" class="form-label"></label>
+        <label for="AddressLine1" class="form-label">@T["AddressLine1"]</label>
         <input asp-for="AddressLine1" class="form-control" />
         <span asp-validation-for="AddressLine1" class="text-danger"></span>
     </div>
     <div class="col-12">
-        <label asp-for="AddressLine2" class="form-label"></label>
+        <label for="AddressLine2" class="form-label">@T["AddressLine2"]</label>
         <input asp-for="AddressLine2" class="form-control" />
     </div>
     <div class="col-md-4">
-        <label asp-for="City" class="form-label"></label>
+        <label for="City" class="form-label">@T["City"]</label>
         <input asp-for="City" class="form-control" />
         <span asp-validation-for="City" class="text-danger"></span>
     </div>
     <div class="col-md-4">
-        <label asp-for="PostalCode" class="form-label"></label>
+        <label for="PostalCode" class="form-label">@T["PostalCode"]</label>
         <input asp-for="PostalCode" class="form-control" />
         <span asp-validation-for="PostalCode" class="text-danger"></span>
     </div>
     <div class="col-md-4">
-        <label asp-for="Country" class="form-label"></label>
+        <label for="Country" class="form-label">@T["Country"]</label>
         <input asp-for="Country" class="form-control" />
         <span asp-validation-for="Country" class="text-danger"></span>
     </div>
 
     <div class="col-12 d-grid d-sm-flex gap-2">
-        <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-secondary">Back to cart</a>
-        <button type="submit" class="btn btn-primary">Review order</button>
+        <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-secondary">@T["BackToCart"]</a>
+        <button type="submit" class="btn btn-primary">@T["ReviewOrder"]</button>
     </div>
     <div class="col-12">
         @if (!ViewData.ModelState.IsValid)
         {
-            <div class="text-danger">Please correct the errors above.</div>
+            <div class="text-danger">@T["CorrectErrorsAbove"]</div>
         }
     </div>
 </form>
@@ -59,4 +59,3 @@
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
 }
-

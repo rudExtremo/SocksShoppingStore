@@ -14,27 +14,24 @@
     <!-- External Font Awesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
-<body>
+<body class="@((ViewData["BodyClass"] as string) ?? string.Empty)">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
+        <nav class="navbar navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid d-flex align-items-center">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SocksShoppingStore</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                
+                <div class="d-flex align-items-center justify-content-between w-100">
+                    <ul class="navbar-nav flex-row flex-grow-1 main-nav d-none d-sm-flex">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@T["Nav_Home"]</a>
                         </li>
                     </ul>
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav nav-utilities flex-row ms-auto">
                         <li class="nav-item dropdown me-2">
-                            <a class="nav-link" href="#" id="searchDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Search">
+                            <a class="nav-link" href="#" id="searchDropdown" role="button" data-bs-toggle="dropdown" data-bs-boundary="viewport" data-bs-offset="0,8" aria-expanded="false" aria-label="Search">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-end p-2" aria-labelledby="searchDropdown" style="min-width:260px;">
+                            <div class="dropdown-menu dropdown-menu-end p-2 search-dropdown" aria-labelledby="searchDropdown">
                                 <form method="get" asp-controller="Home" asp-action="Index" class="d-flex" role="search" aria-label="Site search">
                                     <input type="text" name="q" class="form-control form-control-sm" placeholder="@T["Search_Placeholder"]" aria-label="Search" />
                                     <button class="btn btn-sm btn-primary ms-2" type="submit">@T["Search_Button"]</button>
@@ -43,14 +40,14 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Language selector">
-                                @T["Nav_Language"]
+                                <i class="fa-solid fa-globe"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
                                 <li>
                                     <form class="px-3 py-1" method="post" asp-controller="Localization" asp-action="Set">
                                         <input type="hidden" name="culture" value="en" />
                                         <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
-                                        <button class="dropdown-item" type="submit">English</button>
+                                        <button class="dropdown-item" type="submit">EN</button>
                                     </form>
                                 </li>
                                 <li><hr class="dropdown-divider" /></li>
@@ -66,18 +63,18 @@
                         <li class="nav-item">
                             @{
                                 var cart = Context.Session.Get<ShoppingCart>("Cart") ?? new ShoppingCart();
-                                var totalItems = cart.GetTotalItems();
+                                var uniqueItems = cart.GetUniqueItemCount();
                                 var totalSum = cart.GetTotalSum();
                             }
                             <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index" aria-label="Cart">
                                 <i class="fa-solid fa-cart-shopping"></i>
-                                @T["Nav_Cart"] <span class="badge bg-primary rounded-pill" aria-label="Items in cart">@totalItems</span>
-                                <span class="ms-1 text-muted" aria-label="Cart total">@Currency.Eur(totalSum)</span>
+                                <span class="badge bg-primary rounded-pill cart-count ms-1" aria-label="Items in cart">@uniqueItems</span>
+                                <span class="ms-1 text-muted cart-total" aria-label="Cart total">@Currency.Eur(totalSum)</span>
                             </a>
                         </li>
                     </ul>
                 </div>
-                
+
             </div>
         </nav>
     </header>
@@ -87,18 +84,23 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container-fluid text-start px-3">
-            &copy; 2025 - Moseyko Stanislav - <a asp-area="" asp-controller="Legal" asp-action="Terms">@T["Footer_Terms"]</a> | <a asp-controller="Legal" asp-action="Privacy">@T["Footer_Privacy"]</a>
+    <footer class="border-top footer text-muted site-footer">
+        <div class="container-fluid text-start px-3 footer-content">
+            <span class="footer-copy">&copy; 2025 - Moseyko Stanislav</span>
+            <span class="footer-links">
+                <a asp-area="" asp-controller="Legal" asp-action="Terms">@T["Footer_Terms"]</a>
+                <span class="footer-divider">|</span>
+                <a asp-controller="Legal" asp-action="Privacy">@T["Footer_Privacy"]</a>
+            </span>
         </div>
     </footer>
     <!-- Cookie consent banner (essential cookies only) -->
     <div id="cookie-consent" class="alert alert-info cookie-consent" role="alert" aria-live="polite">
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <span>@T["Cookie_Text"]</span>
-            <div class="ms-3">
+            <div class="ms-sm-3 d-flex flex-wrap gap-2">
                 <a class="btn btn-sm btn-outline-secondary" asp-controller="Legal" asp-action="Privacy">@T["Cookie_LearnMore"]</a>
-                <button id="cookie-accept" class="btn btn-sm btn-primary ms-2">@T["Cookie_Accept"]</button>
+                <button id="cookie-accept" class="btn btn-sm btn-primary">@T["Cookie_Accept"]</button>
             </div>
         </div>
     </div>

@@ -31,7 +31,12 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void Add_Remove_Delete_Clear_Workflow()
+        [AllureDescription(@"What: Validate CartController add/remove/delete/clear workflow.
+Steps:
+1) Ensure empty cart; add id=1 twice.
+2) Remove one; delete remaining; then clear after adding another.
+Expected: Counts reflect operations; ends empty.")]
+        public void CartController_AddRemoveDeleteClear_Workflow()
         {
             var (c, session) = Create();
 
@@ -69,7 +74,11 @@ namespace SocksShoppingStore.Tests
         }
 
         [Test]
-        public void SetQuantity_Zero_Removes()
+        [AllureDescription(@"What: Setting quantity to zero removes item in CartController.
+Steps:
+1) Add id=1; SetQuantity(1,0).
+Expected: Cart becomes empty.")]
+        public void CartController_SetQuantity_Zero_Removes()
         {
             var (c, _) = Create();
             c.AddToCart(1);

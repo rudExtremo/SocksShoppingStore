@@ -22,7 +22,12 @@ namespace SocksShoppingStore.Tests
     public class SessionHelperTests
     {
         [Test]
-        public void SetAndGet_Serializes_ShoppingCart()
+        [AllureDescription(@"What: Verify session Set/Get helpers serialize ShoppingCart.
+Steps:
+1) Create cart with two items; session.Set(""Cart"", cart).
+2) session.Get<ShoppingCart>(""Cart"").
+Expected: Not null; total items equals 2.")]
+        public void SessionHelpers_SetAndGet_SerializesShoppingCart()
         {
             ISession session = new TestSession();
             var cart = new ShoppingCart();
