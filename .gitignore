@@ -26,3 +26,4 @@ docs/test-coverage-report.md
 
 # Log files
 [Ll]og/
+.logs/
