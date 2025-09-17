@@ -36,6 +36,7 @@ namespace SocksShoppingStore.Controllers
                 return Json(new
                 {
                     totalItems = cart.GetTotalItems(),
+                    uniqueItems = cart.GetUniqueItemCount(),
                     totalSum = cart.GetTotalSum(),
                     item = item == null ? null : new { id = item.Sock.Id, quantity = item.Quantity, price = item.Sock.Price, subtotal = item.Sock.Price * item.Quantity }
                 });
@@ -78,6 +79,7 @@ namespace SocksShoppingStore.Controllers
                 return Json(new
                 {
                     totalItems = cart.GetTotalItems(),
+                    uniqueItems = cart.GetUniqueItemCount(),
                     totalSum = cart.GetTotalSum(),
                     item = item == null ? new { id = id, quantity = 0, price = 0m, subtotal = 0m } : new { id = item.Sock.Id, quantity = item.Quantity, price = item.Sock.Price, subtotal = item.Sock.Price * item.Quantity }
                 });
@@ -98,6 +100,7 @@ namespace SocksShoppingStore.Controllers
                 return Json(new
                 {
                     totalItems = cart.GetTotalItems(),
+                    uniqueItems = cart.GetUniqueItemCount(),
                     totalSum = cart.GetTotalSum(),
                     item = item == null ? new { id = id, quantity = 0, price = 0m, subtotal = 0m } : new { id = item.Sock.Id, quantity = item.Quantity, price = item.Sock.Price, subtotal = item.Sock.Price * item.Quantity }
                 });
@@ -116,6 +119,7 @@ namespace SocksShoppingStore.Controllers
                 return Json(new
                 {
                     totalItems = cart.GetTotalItems(),
+                    uniqueItems = cart.GetUniqueItemCount(),
                     totalSum = cart.GetTotalSum(),
                     item = new { id = id, quantity = 0, price = 0m, subtotal = 0m }
                 });
@@ -130,7 +134,7 @@ namespace SocksShoppingStore.Controllers
             var accept = Request.Headers["Accept"].ToString();
             if (!string.IsNullOrEmpty(accept) && accept.Contains("application/json", StringComparison.OrdinalIgnoreCase))
             {
-                return Json(new { totalItems = 0, totalSum = 0m });
+                return Json(new { totalItems = 0, uniqueItems = 0, totalSum = 0m });
             }
             return RedirectToAction("Index");
         }

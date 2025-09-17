@@ -1,8 +1,8 @@
-<!-- Файл: Views/Cart/Index.cshtml -->
 @model SocksShoppingStore.Models.ShoppingCart
 
-@{
+@{ 
     ViewData["Title"] = T["Cart_Title"];
+    ViewData["BodyClass"] = "page-cart";
 }
 
 <div class="d-flex justify-content-between align-items-center"><h1 class="mb-0">@ViewData["Title"]</h1>@if (Model.Items.Any()) { <a asp-controller="Cart" asp-action="Clear" class="btn btn-outline-danger">@T["ClearCart"]</a> }</div>
@@ -12,7 +12,10 @@
     <table class="table align-middle" id="cart-table">
         <thead>
             <tr>
-                <th>@T["Item"]</th><th class="text-center">@T["PricePerUnit"]</th><th class="text-center">@T["Quantity"]</th><th class="text-end">@T["Subtotal"]</th>
+                <th>@T["Item"]</th>
+                <th class="text-center">@T["Quantity"]</th>
+                <th class="text-end cart-price-header">@T["PricePerUnit"]</th>
+                <th class="text-center">@T["Subtotal"]</th>
                 <th></th>
             </tr>
         </thead>
@@ -20,17 +23,17 @@
             @foreach (var item in Model.Items)
             {
                 <tr data-id="@item.Sock.Id">
-                    <td>@item.Sock.Name</td>
-                    <td class="text-center">@Currency.Eur(item.Sock.Price)</td>
-                    <td class="text-center">
-                        <div class="d-flex align-items-center justify-content-center gap-2">
+                    <td data-label="@T["Item"]">@item.Sock.Name</td>
+                    <td class="text-center cart-qty-cell" data-label="@T["Quantity"]">
+                        <div class="d-inline-flex align-items-center gap-2 cart-table-controls justify-content-center">
                             <a asp-controller="Cart" asp-action="RemoveFromCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary" title="@T["Decrease"]" data-action="dec">-</a>
-                            <input type="number" name="quantity" min="0" class="form-control form-control-sm text-center" value="@item.Quantity" aria-label="Quantity" style="min-width: 72px;" />
+                            <input type="number" name="quantity" min="1" class="form-control form-control-sm text-center cart-qty-input" value="@item.Quantity" aria-label="Quantity" />
                             <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.Sock.Id" class="btn btn-sm btn-outline-secondary" title="@T["Increase"]" data-action="inc">+</a>
                         </div>
                     </td>
-                    <td class="text-end" data-subtotal>@Currency.Eur(item.Sock.Price * item.Quantity)</td>
-                    <td class="text-center">
+                    <td class="text-end cart-price" data-label="@T["PricePerUnit"]">@Currency.Eur(item.Sock.Price)</td>
+                    <td class="text-center cart-subtotal" data-subtotal data-label="@T["Subtotal"]">@Currency.Eur(item.Sock.Price * item.Quantity)</td>
+                    <td class="text-end actions-cell" data-label="@T["RemoveItem"]">
                         <a asp-controller="Cart" asp-action="DeleteItem" asp-route-id="@item.Sock.Id" class="btn btn-outline-danger btn-sm" title="@T["RemoveItem"]">
                             <i class="fa-solid fa-trash"></i>
                         </a>
@@ -41,7 +44,7 @@
         <tfoot>
             <tr>
                 <td colspan="3" class="text-end"><strong>@T["Total"]:</strong></td>
-                <td class="text-end"><strong id="cart-total-sum">@Currency.Eur(Model.GetTotalSum())</strong></td>
+                <td class="text-center"><strong id="cart-total-sum">@Currency.Eur(Model.GetTotalSum())</strong></td>
                 <td></td>
             </tr>
         </tfoot>

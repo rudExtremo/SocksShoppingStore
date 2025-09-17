@@ -1,4 +1,4 @@
-﻿namespace SocksShoppingStore.Models
+namespace SocksShoppingStore.Models
 {
     public class ShoppingCart
     {
@@ -55,6 +55,11 @@
         public int GetTotalItems()
         {
             return Items.Sum(i => i.Quantity);
+        }
+
+        public int GetUniqueItemCount()
+        {
+            return Items.Count;
         }
     }
 }

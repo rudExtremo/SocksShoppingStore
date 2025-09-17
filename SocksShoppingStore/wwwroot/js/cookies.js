@@ -5,7 +5,7 @@
   const consentCookie = 'cookie-consent=accepted';
   const hasConsent = document.cookie.split(';').some(c => c.trim().startsWith('cookie-consent='));
   if (!hasConsent) {
-    banner.style.display = 'block';
+    banner.classList.add('is-visible');
   }
 
   const acceptBtn = document.getElementById('cookie-accept');
@@ -13,8 +13,7 @@
     acceptBtn.addEventListener('click', () => {
       const oneYear = 365 * 24 * 60 * 60;
       document.cookie = consentCookie + `; Max-Age=${oneYear}; Path=/; SameSite=Lax`;
-      banner.style.display = 'none';
+      banner.classList.remove('is-visible');
     });
   }
 })();
-

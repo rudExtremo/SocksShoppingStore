@@ -7,8 +7,14 @@
   <h1 class="display-5">@T["ThankYou_ForYourOrder"]</h1>
   @if (Model != null)
   {
-    <p class="lead">@T["OrderId"]: <code>@Model.Id</code></p>
-    <p>@T["Total"]: <strong>@SocksShoppingStore.Helpers.Currency.Eur(Model.Total)</strong></p>
+    <p class="lead mb-1">@T["OrderId"]:</p>
+    <div class="d-inline-flex align-items-center gap-2 justify-content-center">
+      <code id="order-id" class="user-select-all">@Model.Id</code>
+      <button type="button" class="btn btn-sm btn-outline-secondary copy-btn" data-copy-target="#order-id" title="@T["Copy"]">
+        <i class="fa-regular fa-copy"></i>
+      </button>
+    </div>
+    <p class="mt-3">@T["Total"]: <strong>@SocksShoppingStore.Helpers.Currency.Eur(Model.Total)</strong></p>
   }
   else
   {

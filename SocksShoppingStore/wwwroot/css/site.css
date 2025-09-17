@@ -8,7 +8,11 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
@@ -18,25 +22,420 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+  margin-bottom: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 575.98px) {
+  body {
+    margin-bottom: 0;
+  }
+}
+
+/* Sticky footer layout: main content grows */
+body > .container {
+  flex: 1 0 auto;
 }
 
 /* Product card image fixed height */
-.card-img-top.product-card-img{height:300px;object-fit:cover}
-@media (max-width: 576px){.card-img-top.product-card-img{height:200px}}
+.card-img-top.product-card-img {
+  height: 300px;
+  object-fit: cover;
+}
+
+@media (max-width: 576px) {
+  .card-img-top.product-card-img {
+    height: 200px;
+  }
+}
 
 /* Cookie banner hidden by default; shown via JS when consent not found */
-#cookie-consent{display:none}
+#cookie-consent {
+  display: none;
+}
 
-
+#cookie-consent.is-visible {
+  display: block;
+}
 
 /* Cookie consent floating box */
-.cookie-consent{position:fixed;bottom:1rem;right:1rem;z-index:1050;max-width:50vw;width:auto;border:1px solid rgba(0,0,0,.125);border-radius:.5rem;box-shadow:0 .5rem 1rem rgba(0,0,0,.15)}
-@media (max-width:576px){.cookie-consent{left:1rem;right:1rem;max-width:90vw}}
+.cookie-consent {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 1050;
+  max-width: 50vw;
+  width: auto;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
 
-/* Hide cookie banner by default; JS shows it on first visit */
-#cookie-consent{display:none}
+@media (max-width: 576px) {
+  .cookie-consent {
+    left: 1rem;
+    right: 1rem;
+    max-width: 90vw;
+  }
+}
 
-/* Wrap sort buttons on small screens */
-.btn-group[role="group"]{flex-wrap:wrap}
+/* Layout helpers */
+.search-dropdown {
+  min-width: 260px;
+  width: min(420px, calc(100vw - 16px));
+  max-width: calc(100vw - 16px);
+}
+/* Prevent dropdown from going off-screen vertically */
+.search-dropdown {
+  max-height: calc(100vh - 96px);
+  overflow: auto;
+}
+
+.site-footer {
+  padding: 0.75rem 0.75rem;
+  line-height: 1.4;
+  margin-top: auto;
+}
+
+@media (max-width: 575.98px) {
+  .site-footer {
+    padding-bottom: 1.5rem;
+  }
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-divider {
+  color: var(--bs-secondary-color, #6c757d);
+}
+
+.nav-utilities {
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav-utilities > .nav-item {
+  display: flex;
+  align-items: center;
+}
+
+/* Push utilities to the right in navbar */
+.navbar .nav-utilities {
+  margin-left: auto;
+}
+
+/* Keep brand and utilities on one line */
+.navbar .container-fluid {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+/* Force navbar navs into a row */
+.navbar .navbar-nav {
+  flex-direction: row;
+}
+
+/* Ensure dropdowns overlay the header and page content */
+.navbar {
+  overflow: visible;
+  z-index: 1020;
+}
+.navbar .dropdown-menu {
+  position: absolute !important;
+  z-index: 2000;
+}
+
+/* Mobile: show search dropdown centered and below navbar, within viewport */
+@media (max-width: 575.98px) {
+  .navbar .search-dropdown {
+    position: fixed !important;
+    top: 64px; /* below header */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
+    max-height: calc(100vh - 96px);
+    overflow: auto;
+    z-index: 2100;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .footer-links {
+    gap: 0.25rem 0.75rem;
+  }
+  .navbar-collapse {
+    align-items: flex-end !important;
+    text-align: right;
+  }
+  .navbar-collapse .navbar-nav {
+    width: 100%;
+    align-items: flex-end;
+  }
+  .navbar-collapse .navbar-nav .nav-item {
+    width: 100%;
+  }
+  .navbar-collapse .main-nav {
+    margin-bottom: 0.75rem;
+  }
+  .navbar-collapse .nav-utilities {
+    width: 100%;
+    gap: 0.5rem;
+    margin-left: 0;
+    justify-content: flex-end;
+    align-items: flex-end;
+    text-align: right;
+  }
+  .navbar-collapse .nav-utilities > .nav-item {
+    justify-content: flex-end;
+    width: 100%;
+  }
+}
+
+/* Catalog filters */
+.catalog-filters {
+  text-align: left;
+}
+
+.catalog-price-range .price-input {
+  max-width: 120px;
+  flex: 0 1 120px;
+}
+
+@media (max-width: 575.98px) {
+  .catalog-price-range {
+    width: 100%;
+  }
+  .catalog-price-range .price-input {
+    flex: 1 1 45%;
+    min-width: 100px;
+  }
+}
+
+.catalog-sort-row {
+  gap: 0.75rem !important;
+}
+
+.catalog-sort {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.25rem;
+}
+
+.catalog-sort .btn-filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+/* Compact sort buttons (icons only) */
+.catalog-sort .btn-sort {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  min-width: 40px;
+}
+
+/* Ensure fixed size even on small screens */
+@media (max-width: 575.98px) {
+  .catalog-sort .btn-sort {
+    flex: 0 0 40px !important;
+    width: 40px !important;
+    min-width: 40px !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .catalog-sort {
+    width: 100%;
+  }
+  .catalog-sort .btn-filter {
+    flex: 1 1 45%;
+  }
+}
+
+@media (min-width: 992px) {
+  .catalog-sort-row {
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+  }
+  .catalog-sort {
+    flex-wrap: nowrap;
+  }
+  .filter-actions {
+    flex-wrap: nowrap;
+  }
+}
+
+.btn-filter {
+  border-radius: 999px;
+  padding-inline: 1rem;
+}
+
+.filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.filter-actions .btn {
+  min-width: 120px;
+}
+
+/* Product cards */
+.product-card-actions {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 576px) {
+  .product-card-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Product details */
+.product-detail-actions {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 1fr;
+  margin-top: 1.5rem;
+}
+
+.product-detail-actions .btn {
+  width: 100%;
+}
+
+@media (min-width: 576px) {
+  .product-detail-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: start;
+  }
+
+  .product-detail-actions .btn {
+    min-width: 180px;
+  }
+}
+
+/* Cart badge */
+.cart-count {
+  min-width: 2.25rem;
+  text-align: center;
+}
+
+.cart-total,
+.cart-count,
+[data-subtotal],
+.cart-price,
+.cart-subtotal,
+#cart-total-sum {
+  white-space: nowrap;
+}
+
+.cart-table-controls {
+  justify-content: center;
+}
+
+.cart-qty-input {
+  width: 72px;
+}
+
+@media (max-width: 575.98px) {
+  .cart-qty-input {
+    width: 32px;
+  }
+
+  #cart-table {
+    width: 100%;
+    border: 0;
+    table-layout: auto;
+  }
+
+  #cart-table th,
+  #cart-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  #cart-table thead th.cart-price-header,
+  #cart-table tbody td.cart-price {
+    display: none;
+  }
+
+  #cart-table tbody td,
+  #cart-table tfoot td {
+    text-align: right !important;
+  }
+
+  #cart-table tbody td:first-child,
+  #cart-table tfoot td:first-child {
+    text-align: left !important;
+  }
+
+  #cart-table tbody td[data-label]::before {
+    display: none;
+  }
+
+  .cart-table-controls {
+    justify-content: center;
+    gap: 0.25rem;
+  }
+}
+
+.product-details-image {
+  width: 100%;
+  height: auto;
+}
+
+/* Removed page-specific footer sizing; use global sticky footer */
+
+/* Force center alignment for specific cart columns even on mobile */
+#cart-table th.text-center,
+#cart-table td.text-center,
+#cart-table td.cart-qty-cell,
+#cart-table td.cart-subtotal {
+  text-align: center !important;
+}
+
+/* Reduce space between subtotal and actions */
+#cart-table td.cart-subtotal {
+  padding-right: 0.25rem;
+}
+ 
+#cart-table td.actions-cell {
+  padding-left: 0;
+  width: 1%;
+  white-space: nowrap;
+}
+
+
+
+
+
+
 
