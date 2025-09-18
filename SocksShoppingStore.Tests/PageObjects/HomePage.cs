@@ -107,9 +107,13 @@ namespace SocksShoppingStore.Tests.PageObjects
 
         public IReadOnlyList<decimal> GetVisibleProductPrices()
         {
-            // Be resilient to DOM updates during read (stale elements)
+            // Prefer a single JavaScript snapshot to avoid stale references
+            var prices = GetVisibleProductPricesViaJs();
+            if (prices.Count > 0) return prices;
+
+            // Fallback: resilient C# DOM read with retries
             var attempts = 0;
-            while (attempts < 3)
+            while (attempts < 5)
             {
                 try
                 {
@@ -125,16 +129,60 @@ namespace SocksShoppingStore.Tests.PageObjects
                         var num = m.Value.Replace('.', ',');
                         if (decimal.TryParse(num, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.GetCultureInfo("fr-FR"), out var val)) list.Add(val);
                     }
-                    return list;
+                    if (list.Count > 0) return list;
                 }
                 catch (OpenQA.Selenium.StaleElementReferenceException)
                 {
-                    attempts++;
-                    System.Threading.Thread.Sleep(100);
+                    // ignored, retry
+                }
+                attempts++;
+                System.Threading.Thread.Sleep(150);
+            }
+            return Array.Empty<decimal>();
+        }
+
+        private IReadOnlyList<decimal> GetVisibleProductPricesViaJs()
+        {
+            try
+            {
+                var js = (IJavaScriptExecutor)_driver;
+                var raw = js.ExecuteScript(@"return Array.from(document.querySelectorAll('.product-card .card-text strong'))
+                    .map(e => e.textContent || '')
+                    .map(t => (t.match(/\d+[,.]\d{2}/)||[''])[0]);");
+                if (raw is System.Collections.IEnumerable arr)
+                {
+                    var list = new List<decimal>();
+                    foreach (var o in arr)
+                    {
+                        var s = (o?.ToString() ?? string.Empty).Trim();
+                        if (string.IsNullOrEmpty(s)) continue;
+                        var num = s.Replace('.', ',');
+                        if (decimal.TryParse(num, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.GetCultureInfo("fr-FR"), out var val)) list.Add(val);
+                    }
+                    return list;
                 }
             }
-            // Last resort: empty list
+            catch { }
             return Array.Empty<decimal>();
+        }
+
+        public void WaitForCatalogStable(int timeoutSeconds = 12)
+        {
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(timeoutSeconds));
+            wait.Until(_ =>
+            {
+                try
+                {
+                    // Consider catalog stable if card count is consistent across consecutive reads
+                    int c1 = GetProductCardCount();
+                    System.Threading.Thread.Sleep(150);
+                    int c2 = GetProductCardCount();
+                    // or NoItems alert present
+                    var alerts = _driver.FindElements(By.CssSelector(".alert.alert-info"));
+                    return (c1 == c2) || alerts.Count > 0;
+                }
+                catch { return false; }
+            });
         }
 
         public void ClickLoadMoreIfPresentAndWait()

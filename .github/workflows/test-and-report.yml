@@ -138,7 +138,6 @@ jobs:
           echo "Aggregated files:"; ls -la allure-results || true
       - name: UI coverage (instrument server with coverlet) and run UI smoke
         if: success()
-        continue-on-error: true
         shell: bash
         env:
           OWNER: ${{ github.repository_owner }}

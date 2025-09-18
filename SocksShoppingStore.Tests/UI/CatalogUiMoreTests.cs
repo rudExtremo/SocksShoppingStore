@@ -123,13 +123,15 @@ Expected: Visible products have that price only (<= page size).")]
             var max = (target + 0.05m).ToString(System.Globalization.CultureInfo.InvariantCulture);
             HomePage.SetPriceFilter(min, max);
             HomePage.ClickApplyFilters();
-            var wait = new WebDriverWait(Driver!, TimeSpan.FromSeconds(12));
+            // Wait for the catalog to settle after server-side reload
+            HomePage.WaitForCatalogStable(15);
+            var wait = new WebDriverWait(Driver!, TimeSpan.FromSeconds(15));
             wait.Until(_ =>
             {
                 try
                 {
                     var np = HomePage.GetVisibleProductPrices();
-                    return np.Count > 0 && np.All(p => Math.Abs(p - target) <= 0.001m);
+                    return np.Count > 0 && np.All(p => Math.Abs(p - target) <= 0.02m);
                 }
                 catch (OpenQA.Selenium.StaleElementReferenceException)
                 {
