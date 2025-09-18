@@ -208,6 +208,27 @@ jobs:
             SocksShoppingStore.Tests/TestResults/Coverage/main.trx
             SocksShoppingStore.Tests/TestResults/UI/ui.trx
 
+  deploy-azure:
+    name: Deploy to Azure App Service
+    if: github.ref == 'refs/heads/main'
+    needs: main-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Publish app (Release)
+        run: |
+          dotnet restore SocksShoppingStore/SocksShoppingStore.csproj
+          dotnet publish SocksShoppingStore/SocksShoppingStore.csproj -c Release -o ./publish
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'stassocksshop'
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: './publish'
+
   manual-ui:
     if: github.event_name == 'workflow_dispatch' && inputs.run_ui == 'true'
     runs-on: ubuntu-latest
