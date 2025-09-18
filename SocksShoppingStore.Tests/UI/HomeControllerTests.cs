@@ -10,6 +10,9 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("SocksShoppingStore")]
+    [AllureSuite("UI")]
+    [AllureFeature("HomeController")]
     [Category("UI-Smoke")]
     [Category("Positive")]
     public class HomeControllerTests

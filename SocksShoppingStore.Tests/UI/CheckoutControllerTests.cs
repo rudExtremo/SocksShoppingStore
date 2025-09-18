@@ -13,6 +13,9 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("SocksShoppingStore")]
+    [AllureSuite("UI")]
+    [AllureFeature("CheckoutController")]
     [Category("UI-Regression")]
     [Category("Positive")]
     public class CheckoutControllerTests
