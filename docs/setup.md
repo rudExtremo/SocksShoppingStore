@@ -10,6 +10,14 @@
 - Open the printed HTTPS URL (e.g., `https://localhost:5001`)
 - Health probe: `GET /healthz`
 
+### Local Scripts (Windows/PowerShell)
+
+- Start app: `./scripts/start-app.ps1 -Url http://127.0.0.1:5123 -Configuration Release`
+- Stop app: `./scripts/stop-app.ps1`
+- Fast tests (dev): `./scripts/run-tests.ps1 -Suite dev-fast`
+- Full tests (main-like): `./scripts/run-tests.ps1 -Suite main-full -BaseUrl http://127.0.0.1:5123`
+- UI smoke: `./scripts/run-tests.ps1 -Suite ui-smoke -BaseUrl http://127.0.0.1:5123`
+
 ## Configuration
 
 Edit `SocksShoppingStore/appsettings.json`:

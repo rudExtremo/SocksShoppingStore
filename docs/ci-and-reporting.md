@@ -44,3 +44,13 @@ Centralized test settings live in `SocksShoppingStore.Tests/appsettings.Test.jso
   - `dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --launch-profile https`
   - `dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=UI-Smoke"`
 
+
+### Local Scripts (Windows/PowerShell)
+
+- Start app with health check: `./scripts/start-app.ps1 -Url http://127.0.0.1:5123 -Configuration Release`
+- Stop app: `./scripts/stop-app.ps1`
+- Dev fast tests: `./scripts/run-tests.ps1 -Suite dev-fast`
+- Main-like tests: `./scripts/run-tests.ps1 -Suite main-full -BaseUrl http://127.0.0.1:5123`
+- UI smoke: `./scripts/run-tests.ps1 -Suite ui-smoke -BaseUrl http://127.0.0.1:5123`
+
+Results are written under `.logs/TestResults/<Suite>`, and console output is captured to `.logs/test-<Suite>.log`.
