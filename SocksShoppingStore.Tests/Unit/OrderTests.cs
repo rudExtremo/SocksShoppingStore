@@ -9,8 +9,7 @@ namespace SocksShoppingStore.Tests
     [AllureNUnit]
     [AllureEpic("SocksShoppingStore")]
     [AllureSuite("Unit")]
-    [AllureEpic("Store")]
-    [AllureSuite("Unit Tests")]
+    
     [AllureFeature("Order")] 
     [AllureLabel("package", "SocksShoppingStore.Tests.Unit")]
     [AllureLabel("area", "Unit")]

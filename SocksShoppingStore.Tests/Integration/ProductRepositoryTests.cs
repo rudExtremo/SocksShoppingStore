@@ -10,8 +10,7 @@ namespace SocksShoppingStore.Tests
     [AllureNUnit]
     [AllureEpic("SocksShoppingStore")]
     [AllureSuite("Integration")]
-    [AllureEpic("Store")]
-    [AllureSuite("Integration Tests")]
+    
     [AllureFeature("Product Catalog")]
     [AllureLabel("package", "SocksShoppingStore.Tests.Integration")]
     [AllureLabel("area", "Integration")]
