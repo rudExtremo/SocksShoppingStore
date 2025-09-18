@@ -17,14 +17,26 @@ namespace SocksShoppingStore.Tests.PageObjects
 
         // --- Элементы страницы ---
         private By FirstProductAddToCartButtonBy = By.CssSelector(".product-card .js-add-to-cart");
-        private IWebElement CartLink => _driver.FindElement(By.CssSelector("a[href='/Cart']"));
-        public IWebElement CartItemCountBadge => _driver.FindElement(By.CssSelector("a[aria-label='Cart'] .cart-count, a[aria-label='Cart'] .badge"));
+        private IWebElement CartLink => _driver.FindElement(By.CssSelector("a[aria-label='Cart']"));
+        public IWebElement CartItemCountBadge
+        {
+            get
+            {
+                var sel = By.CssSelector("a[aria-label='Cart'] .cart-count, a[aria-label='Cart'] .badge");
+                var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+                wait.Until(d => d.FindElements(sel).Count > 0);
+                return _driver.FindElement(sel);
+            }
+        }
 
         // --- Действия на странице ---
         public void Navigate()
         {
             _driver.Navigate().GoToUrl(_baseUrl);
             AcceptCookiesIfPresent();
+            // ensure header cart link is present before proceeding
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            wait.Until(d => d.FindElements(By.CssSelector("a[aria-label='Cart']")).Count > 0);
         }
 
         public void NavigateWithQuery(string queryString)
@@ -62,7 +74,17 @@ namespace SocksShoppingStore.Tests.PageObjects
 
         public void GoToCart()
         {
-            CartLink.Click();
+            AcceptCookiesIfPresent();
+            var link = CartLink;
+            try
+            {
+                ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView({behavior:'instant',block:'center'});", link);
+                ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", link);
+            }
+            catch
+            {
+                link.Click();
+            }
         }
 
         public int GetProductCardCount()

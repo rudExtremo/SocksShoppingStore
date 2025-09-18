@@ -36,6 +36,19 @@ A simple ASP.NET Core MVC demo app for browsing fun “job-themed” socks, addi
 - Roadmap: `docs/roadmap.md`
 - Contributing: `docs/contributing.md`
 
+### Local Scripts (Windows/PowerShell)
+
+- Start app with health check (non-blocking):
+  - `./scripts/start-app.ps1 -Url http://127.0.0.1:5123 -Configuration Release`
+  - Logs: `.logs/app-local.log` (stdout), `.logs/app-local.err.log` (stderr), PID: `.logs/app.pid`
+- Stop app (uses PID file, with fallback scan):
+  - `./scripts/stop-app.ps1` (add `-Force` if needed)
+- Run tests like CI:
+  - Fast (dev): `./scripts/run-tests.ps1 -Suite dev-fast`
+  - Full (main): `./scripts/run-tests.ps1 -Suite main-full -BaseUrl http://127.0.0.1:5123`
+  - UI smoke: `./scripts/run-tests.ps1 -Suite ui-smoke -BaseUrl http://127.0.0.1:5123`
+  - Results: `.logs/TestResults/<Suite>`, console log: `.logs/test-<Suite>.log`
+
 For Russian-language docs, see `README.ru.md` and `docs/*/*.ru.md` counterparts.
 
 ## License

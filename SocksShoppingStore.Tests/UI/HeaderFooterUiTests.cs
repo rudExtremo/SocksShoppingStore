@@ -39,7 +39,12 @@ Expected: Counter or total changes (increments).")]
             var beforeCount = HomePage.CartItemCountBadge.Text;
             var beforeTotal = Driver!.FindElement(By.CssSelector(".cart-total")).Text;
             HomePage.AddFirstProductToCart();
-            System.Threading.Thread.Sleep(600);
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            while (sw.Elapsed < TimeSpan.FromSeconds(5))
+            {
+                try { if (HomePage.CartItemCountBadge.Text != beforeCount) break; } catch {}
+                System.Threading.Thread.Sleep(200);
+            }
             var afterCount = HomePage.CartItemCountBadge.Text;
             var afterTotal = Driver.FindElement(By.CssSelector(".cart-total")).Text;
             Assert.That(afterCount != beforeCount || afterTotal != beforeTotal, "Header cart summary did not change");
@@ -54,7 +59,7 @@ Expected: URL contains '/Cart'.")]
         public void HeaderCartLink_NavigatesToCart()
         {
             HomePage!.Navigate();
-            Driver!.FindElement(By.CssSelector("a[aria-label='Cart']")).Click();
+            HomePage.GoToCart();
             StringAssert.Contains("/Cart", Driver.Url);
         }
 

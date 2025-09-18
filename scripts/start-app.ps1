@@ -19,15 +19,25 @@ if (-not $NoBuild) {
   if ($LASTEXITCODE -ne 0) { Write-Error "Build failed"; exit 1 }
 }
 
+# resolve output DLL (prefer current config/net*)
+$projDir = Split-Path -Parent $Project
+$binDir = Join-Path $projDir "bin/$Configuration"
+$dll = Get-ChildItem -Recurse -Filter "SocksShoppingStore.dll" -Path $binDir -ErrorAction SilentlyContinue |
+       Sort-Object LastWriteTime -Descending | Select-Object -First 1
+if (-not $dll) { Write-Error "Could not find built DLL under $binDir"; exit 1 }
+
 $argsList = @(
-  'run','-c',$Configuration,
-  '--project',$Project,
-  '--urls',$Url,
-  '--no-launch-profile'
+  $dll.FullName,
+  '--urls', $Url
 )
 
 Write-Host "Launching app in background..."
-$proc = Start-Process -FilePath "dotnet" -ArgumentList $argsList -RedirectStandardOutput $LogPath -RedirectStandardError $LogPath -NoNewWindow -PassThru
+if (-not (Test-Path (Split-Path -Parent $LogPath))) {
+  New-Item -ItemType Directory -Path (Split-Path -Parent $LogPath) -Force | Out-Null
+}
+$stdOut = $LogPath
+$stdErr = if ($LogPath.ToLower().EndsWith('.log')) { $LogPath.Substring(0, $LogPath.Length-4) + '.err.log' } else { "$LogPath.err" }
+$proc = Start-Process -FilePath "dotnet" -ArgumentList $argsList -RedirectStandardOutput $stdOut -RedirectStandardError $stdErr -NoNewWindow -PassThru
 "$($proc.Id)" | Set-Content -Path ".logs/app.pid"
 
 # health wait
