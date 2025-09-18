@@ -1,4 +1,5 @@
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using System.Globalization;
 
 namespace SocksShoppingStore.Tests.PageObjects
@@ -34,14 +35,20 @@ namespace SocksShoppingStore.Tests.PageObjects
 
         public void ClickIncFirstItem()
         {
+            var before = GetFirstItemQuantity();
             var inc = _driver.FindElement(By.CssSelector("tbody tr:first-child a[data-action='inc']"));
             inc.Click();
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+            wait.Until(_ => GetFirstItemQuantity() > before);
         }
 
         public void ClickDecFirstItem()
         {
+            var before = GetFirstItemQuantity();
             var dec = _driver.FindElement(By.CssSelector("tbody tr:first-child a[data-action='dec']"));
             dec.Click();
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+            wait.Until(_ => GetFirstItemQuantity() < before);
         }
 
         public decimal GetTotalSum()
@@ -59,6 +66,13 @@ namespace SocksShoppingStore.Tests.PageObjects
         public void DeleteFirstItem()
         {
             FirstItemDeleteButton.Click();
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+            wait.Until(_ =>
+            {
+                var inputs = _driver.FindElements(By.CssSelector("tbody .cart-qty-input"));
+                var alerts = _driver.FindElements(By.CssSelector(".alert.alert-info"));
+                return inputs.Count == 0 || (alerts.Count > 0 && alerts[0].Displayed);
+            });
         }
     }
 }
