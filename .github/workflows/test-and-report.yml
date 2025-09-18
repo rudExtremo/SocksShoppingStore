@@ -89,7 +89,7 @@ jobs:
           # Build first to surface compile errors in logs
           dotnet build SocksShoppingStore/SocksShoppingStore.csproj -c Release
           # Start app and capture logs
-          nohup bash -c "ASPNETCORE_URLS=http://127.0.0.1:5123 dotnet run -c Release --project SocksShoppingStore/SocksShoppingStore.csproj" > app.log 2>&1 &
+          nohup bash -c "dotnet run -c Release --project SocksShoppingStore/SocksShoppingStore.csproj --urls http://127.0.0.1:5123 --no-launch-profile" > app.log 2>&1 &
           for i in {1..30}; do
             if curl -fsS "http://127.0.0.1:5123/healthz" >/dev/null; then echo up; break; fi
             sleep 1
@@ -184,7 +184,7 @@ jobs:
       - name: Start app (HTTP)
         run: |
           dotnet build SocksShoppingStore/SocksShoppingStore.csproj -c Release
-          nohup bash -c "ASPNETCORE_URLS=http://127.0.0.1:5123 dotnet run -c Release --project SocksShoppingStore/SocksShoppingStore.csproj" > app.log 2>&1 &
+          nohup bash -c "dotnet run -c Release --project SocksShoppingStore/SocksShoppingStore.csproj --urls http://127.0.0.1:5123 --no-launch-profile" > app.log 2>&1 &
           for i in {1..30}; do
             if curl -fsS "http://127.0.0.1:5123/healthz" >/dev/null; then echo up; break; fi
             sleep 1
