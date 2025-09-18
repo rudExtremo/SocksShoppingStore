@@ -3,38 +3,77 @@ using Allure.NUnit;
 using Allure.NUnit.Attributes;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using System;
+using System.Linq;
 
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
     [Category("UI-Smoke")]
+    [NonParallelizable]
     public class CatalogUiMoreTests : BaseTest
     {
         [Test]
         [Category("Positive")]
-        [AllureDescription(@"What: Sorting by UI buttons (name asc/desc, price asc).
-Steps:
-1) Open Home; click 'name_desc' then 'name_asc' then 'price_asc'.
-Expected: Visible items ordered accordingly (smoke by comparing pairwise).")]
-        public void Catalog_Sort_By_UI_Buttons()
+        [AllureDescription(@"What: Sort by name descending via UI button.
+Steps: 1) Open Home; 2) Click 'name_desc'.
+Expected: Names are in non-increasing order.")]
+        public void Catalog_Sort_Name_Desc_Orders_Correctly()
         {
             HomePage!.Navigate();
             HomePage.ClickSortNameDesc();
-            System.Threading.Thread.Sleep(300);
-            var namesDesc = Driver!.FindElements(By.CssSelector(".product-card h5"));
-            Assert.That(namesDesc.Count, Is.GreaterThan(1));
+            var wait = new WebDriverWait(Driver!, TimeSpan.FromSeconds(10));
+            wait.Until(_ =>
+            {
+                var els = Driver!.FindElements(By.CssSelector(".product-card h5"));
+                if (els.Count < 2) return false;
+                var names = els.Select(e => e.Text).ToList();
+                for (int i = 1; i < names.Count; i++)
+                    if (string.Compare(names[i - 1], names[i], StringComparison.Ordinal) < 0) return false;
+                return true;
+            });
+        }
 
+        [Test]
+        [Category("Positive")]
+        [AllureDescription(@"What: Sort by name ascending via UI button.
+Steps: 1) Open Home; 2) Click 'name_asc'.
+Expected: Names are in non-decreasing order.")]
+        public void Catalog_Sort_Name_Asc_Orders_Correctly()
+        {
+            HomePage!.Navigate();
             HomePage.ClickSortNameAsc();
-            System.Threading.Thread.Sleep(300);
-            var namesAsc = Driver.FindElements(By.CssSelector(".product-card h5"));
-            Assert.That(namesAsc.Count, Is.EqualTo(namesDesc.Count));
+            var wait = new WebDriverWait(Driver!, TimeSpan.FromSeconds(10));
+            wait.Until(_ =>
+            {
+                var els = Driver!.FindElements(By.CssSelector(".product-card h5"));
+                if (els.Count < 2) return false;
+                var names = els.Select(e => e.Text).ToList();
+                for (int i = 1; i < names.Count; i++)
+                    if (string.Compare(names[i - 1], names[i], StringComparison.Ordinal) > 0) return false;
+                return true;
+            });
+        }
 
+        [Test]
+        [Category("Positive")]
+        [AllureDescription(@"What: Sort by price ascending via UI button.
+Steps: 1) Open Home; 2) Click 'price_asc'.
+Expected: Prices are in non-decreasing order.")]
+        public void Catalog_Sort_Price_Asc_Orders_Correctly()
+        {
+            HomePage!.Navigate();
             HomePage.ClickSortPriceAsc();
-            System.Threading.Thread.Sleep(300);
-            var prices = HomePage.GetVisibleProductPrices();
-            for (int i = 1; i < prices.Count; i++)
-                Assert.That(prices[i-1], Is.LessThanOrEqualTo(prices[i]));
+            var wait = new WebDriverWait(Driver!, TimeSpan.FromSeconds(10));
+            wait.Until(_ =>
+            {
+                var prices = HomePage.GetVisibleProductPrices();
+                if (prices.Count < 2) return false;
+                for (int i = 1; i < prices.Count; i++)
+                    if (prices[i - 1] > prices[i]) return false;
+                return true;
+            });
         }
 
         [Test]
@@ -49,10 +88,21 @@ Expected: Card count is restored/increases (smoke check).")]
             var before = HomePage.GetProductCardCount();
             HomePage.SetPriceFilter("3.00", "3.50");
             HomePage.ClickApplyFilters();
-            System.Threading.Thread.Sleep(300);
+            var wait = new WebDriverWait(Driver!, TimeSpan.FromSeconds(12));
+            wait.Until(_ =>
+            {
+                var count = HomePage.GetProductCardCount();
+                var alerts = Driver!.FindElements(By.CssSelector(".alert.alert-info"));
+                return alerts.Count > 0 || count != before || count > 0;
+            });
             var filtered = HomePage.GetProductCardCount();
             HomePage.ClickResetFilters();
-            System.Threading.Thread.Sleep(300);
+            wait.Until(_ =>
+            {
+                var count = HomePage.GetProductCardCount();
+                var alerts = Driver!.FindElements(By.CssSelector(".alert.alert-info"));
+                return count >= filtered || alerts.Count == 0;
+            });
             var after = HomePage.GetProductCardCount();
             Assert.That(after, Is.GreaterThanOrEqualTo(filtered));
         }
@@ -73,10 +123,19 @@ Expected: Visible products have that price only (<= page size).")]
             var max = (target + 0.05m).ToString(System.Globalization.CultureInfo.InvariantCulture);
             HomePage.SetPriceFilter(min, max);
             HomePage.ClickApplyFilters();
-            System.Threading.Thread.Sleep(400);
-            var newPrices = HomePage.GetVisibleProductPrices();
-            Assert.That(newPrices.Count, Is.GreaterThan(0));
-            foreach (var p in newPrices) Assert.That(p, Is.EqualTo(target).Within(0.001m));
+            var wait = new WebDriverWait(Driver!, TimeSpan.FromSeconds(12));
+            wait.Until(_ =>
+            {
+                try
+                {
+                    var np = HomePage.GetVisibleProductPrices();
+                    return np.Count > 0 && np.All(p => Math.Abs(p - target) <= 0.001m);
+                }
+                catch (OpenQA.Selenium.StaleElementReferenceException)
+                {
+                    return false;
+                }
+            });
         }
 
         [Test]
@@ -91,10 +150,13 @@ Expected: Either 'NoItems' alert or fewer cards.")]
             var before = HomePage.GetProductCardCount();
             HomePage.SetPriceFilter("10", "5");
             HomePage.ClickApplyFilters();
-            System.Threading.Thread.Sleep(300);
-            var alerts = Driver!.FindElements(By.CssSelector(".alert.alert-info"));
-            var after = HomePage.GetProductCardCount();
-            Assert.That(alerts.Count > 0 || after <= before);
+            var wait = new WebDriverWait(Driver!, TimeSpan.FromSeconds(7));
+            wait.Until(_ =>
+            {
+                var alerts = Driver!.FindElements(By.CssSelector(".alert.alert-info"));
+                var after = HomePage.GetProductCardCount();
+                return alerts.Count > 0 || after <= before;
+            });
         }
 
         [Test]
@@ -106,7 +168,15 @@ Expected: URL contains '/Products/Details'.")]
         public void Catalog_Click_Image_Opens_Details()
         {
             HomePage!.Navigate();
-            Driver!.FindElement(By.CssSelector(".product-card a[href*='/Products/Details'] img"))?.Click();
+            var wait = new WebDriverWait(Driver!, TimeSpan.FromSeconds(10));
+            wait.Until(d => d.FindElements(By.CssSelector(".product-card a[href*='/Products/Details'] img")).Count > 0);
+            var img = Driver!.FindElement(By.CssSelector(".product-card a[href*='/Products/Details'] img"));
+            try
+            {
+                ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].scrollIntoView({behavior:'instant',block:'center'});", img);
+                ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].click();", img);
+            }
+            catch { img.Click(); }
             StringAssert.Contains("/Products/Details", Driver.Url);
         }
     }

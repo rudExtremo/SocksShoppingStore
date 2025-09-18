@@ -8,26 +8,48 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     [AllureNUnit]
     [Category("UI-Smoke")]
+    [NonParallelizable]
     public class CatalogUiTests : BaseTest
     {
         [Test]
         [Category("Positive")]
-        [Ignore("HeadlessSkip: requires stabilization")]
-        [AllureDescription(@"What: Verify catalog filters, sorting and lazy-load behavior.
+        [AllureDescription(@"What: Filter catalog by price range.
 Steps:
-1) Open home with minPrice=3.0,maxPrice=5.0,sort=price_desc.
-2) Validate prices sorted desc and within range.
-3) Click 'Load more' and ensure more cards appear (if total > pageSize).
-Expected: Ordering correct; card count increases on load more.")]
-        public void Catalog_Filters_Sort_And_LazyLoad()
+1) Open home with minPrice=3.0,maxPrice=5.0.
+Expected: All visible prices fall within [3.0, 5.0].")]
+        public void Catalog_Filter_By_PriceRange_Shows_Only_InRange()
         {
-            HomePage!.NavigateWithQuery("?minPrice=3.0&maxPrice=5.0&sort=price_desc");
+            HomePage!.NavigateWithQuery("?minPrice=3.0&maxPrice=5.0&pageSize=4");
             var prices = HomePage.GetVisibleProductPrices();
+            Assert.That(prices.Count, Is.GreaterThan(0));
+            foreach (var p in prices)
+                Assert.That(p, Is.InRange(3.0m, 5.0m));
+        }
+
+        [Test]
+        [Category("Positive")]
+        [AllureDescription(@"What: Sort by price descending.
+Steps:
+1) Open home with sort=price_desc.
+Expected: Visible prices are in non-increasing order.")]
+        public void Catalog_Sort_Price_Desc_Orders_Correctly()
+        {
+            HomePage!.NavigateWithQuery("?sort=price_desc&pageSize=4");
+            var prices = HomePage.GetVisibleProductPrices();
+            Assert.That(prices.Count, Is.GreaterThan(1));
             for (int i = 1; i < prices.Count; i++)
-            {
                 Assert.That(prices[i - 1], Is.GreaterThanOrEqualTo(prices[i]));
-                Assert.That(prices[i], Is.InRange(3.0m, 5.0m));
-            }
+        }
+
+        [Test]
+        [Category("Positive")]
+        [AllureDescription(@"What: Lazy-load adds more items when available.
+Steps:
+1) Open home; click 'Load more' (if present).
+Expected: Card count increases or stays if already all loaded.")]
+        public void Catalog_LazyLoad_Increases_CardCount_When_Available()
+        {
+            HomePage!.NavigateWithQuery("?pageSize=4");
             var before = HomePage.GetProductCardCount();
             HomePage.ClickLoadMoreIfPresentAndWait();
             var after = HomePage.GetProductCardCount();
@@ -36,7 +58,6 @@ Expected: Ordering correct; card count increases on load more.")]
 
         [Test]
         [Category("Positive")]
-        [Ignore("HeadlessSkip: requires stabilization")]
         [AllureDescription(@"What: Add to cart from product details.
 Steps:
 1) Open first product details; click Add to Cart.
@@ -46,7 +67,9 @@ Expected: Counter increases by 1.")]
         {
             HomePage!.Navigate();
             var before = HomePage.CartItemCountBadge.Text;
+            var beforeTotalGlobal = HomePage.GetHeaderCartTotal();
             HomePage.OpenFirstProductDetails();
+            AcceptCookiesIfPresent();
             var addSel = OpenQA.Selenium.By.CssSelector(".product-detail-actions .js-add-to-cart");
             var add = Driver!.FindElement(addSel);
             try
@@ -59,81 +82,31 @@ Expected: Counter increases by 1.")]
                 add.Click();
             }
 
-            var sw = System.Diagnostics.Stopwatch.StartNew();
-            var beforeTotal = Driver.FindElement(OpenQA.Selenium.By.CssSelector(".cart-total")).Text;
-            while (sw.Elapsed < System.TimeSpan.FromSeconds(5))
-            {
-                try
-                {
-                    var cnt = HomePage.CartItemCountBadge.Text;
-                    var tot = Driver.FindElement(OpenQA.Selenium.By.CssSelector(".cart-total")).Text;
-                    if (cnt != before || tot != beforeTotal) break;
-                }
-                catch { }
-                System.Threading.Thread.Sleep(150);
-            }
+            HomePage.WaitForCartSummaryChange(before, beforeTotalGlobal, 10);
             var after = HomePage.CartItemCountBadge.Text;
-            Assert.That(after != before || Driver.FindElement(OpenQA.Selenium.By.CssSelector(".cart-total")).Text != beforeTotal,
-                "Header cart summary did not change after AddToCart");
+            Assert.That(after, Is.Not.EqualTo(before));
         }
 
-        [Test]
-        [Category("Positive")]
-        [AllureDescription(@"What: Increase/decrease quantity and set quantity via input on Cart page.
-Steps:
-1) Add two items; go to cart.
-2) Click '+' then '-' and verify quantity changes.
-3) Set quantity to 0 -> UI clamps to 1 (client-side).
-4) Delete item via trash button -> cart empty.
-Expected: Qty updates accordingly; zero clamps to 1; delete empties cart.")]
-        [Ignore("HeadlessSkip: requires stabilization")]
-        public void Cart_IncDec_And_SetQuantity_Zero_Removes()
-        {
-            HomePage!.Navigate();
-            HomePage.AddFirstProductToCart();
-            HomePage.AddFirstProductToCart();
-            HomePage.GoToCart();
-
-            var q1 = CartPage!.GetFirstItemQuantity();
-            CartPage.ClickIncFirstItem();
-            System.Threading.Thread.Sleep(400);
-            var q2 = CartPage.GetFirstItemQuantity();
-            Assert.That(q2, Is.EqualTo(q1 + 1));
-            CartPage.ClickDecFirstItem();
-            System.Threading.Thread.Sleep(400);
-            var q3 = CartPage.GetFirstItemQuantity();
-            Assert.That(q3, Is.EqualTo(q2 - 1));
-
-            CartPage.SetFirstItemQuantity(0);
-            System.Threading.Thread.Sleep(600);
-            var q4 = CartPage.GetFirstItemQuantity();
-            Assert.That(q4, Is.GreaterThanOrEqualTo(1));
-            CartPage.DeleteFirstItem();
-            System.Threading.Thread.Sleep(400);
-            Assert.That(CartPage.IsCartEmpty(), Is.True);
-        }
+        // Cart flow tests moved to CartUiTests.cs (split into independent cases)
 
         [Test]
         [Category("Negative")]
-        [Ignore("HeadlessSkip: requires stabilization")]
         [AllureDescription(@"What: Invalid search query should not break the page.
 Steps:
 1) Open home with q containing special characters.
 Expected: Page loads (either cards or 'NoItems' alert). No crash.")]
         public void Catalog_InvalidSearch_NoCrash()
         {
-            HomePage!.NavigateWithQuery("?q=%27%20OR%201%3D1%3B--");
-            // Either some cards or 'NoItems' alert
-            var cards = HomePage.GetProductCardCount();
-            if (cards == 0)
+            HomePage!.NavigateWithQuery("?q=%27%20OR%201%3D1%3B--&pageSize=4");
+            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver!, TimeSpan.FromSeconds(5));
+            wait.Until(_ =>
             {
+                var cards = HomePage.GetProductCardCount();
                 var alerts = Driver!.FindElements(OpenQA.Selenium.By.CssSelector(".alert.alert-info"));
-                Assert.That(alerts.Count, Is.GreaterThanOrEqualTo(1));
-            }
-            else
-            {
-                Assert.That(cards, Is.GreaterThan(0));
-            }
+                return cards > 0 || alerts.Count > 0;
+            });
+            var count = HomePage.GetProductCardCount();
+            Assert.That(count >= 0);
         }
     }
 }

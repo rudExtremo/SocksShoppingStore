@@ -38,7 +38,7 @@ namespace SocksShoppingStore.Tests.PageObjects
             var before = GetFirstItemQuantity();
             var inc = _driver.FindElement(By.CssSelector("tbody tr:first-child a[data-action='inc']"));
             inc.Click();
-            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(_ => GetFirstItemQuantity() > before);
         }
 
@@ -47,7 +47,7 @@ namespace SocksShoppingStore.Tests.PageObjects
             var before = GetFirstItemQuantity();
             var dec = _driver.FindElement(By.CssSelector("tbody tr:first-child a[data-action='dec']"));
             dec.Click();
-            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(_ => GetFirstItemQuantity() < before);
         }
 
@@ -66,7 +66,7 @@ namespace SocksShoppingStore.Tests.PageObjects
         public void DeleteFirstItem()
         {
             FirstItemDeleteButton.Click();
-            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(_ =>
             {
                 var inputs = _driver.FindElements(By.CssSelector("tbody .cart-qty-input"));

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
+  <NUnit>
+    <NumberOfTestWorkers>4</NumberOfTestWorkers>
+  </NUnit>
   <DataCollectionRunSettings>
     <DataCollectors>
       <DataCollector friendlyName="XPlat Code Coverage">

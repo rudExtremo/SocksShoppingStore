@@ -4,7 +4,8 @@ param(
   [string]$Configuration = "Release",
   [int]$TimeoutSec = 30,
   [string]$LogPath = ".logs/app-local.log",
-  [switch]$NoBuild
+  [switch]$NoBuild,
+  [switch]$TestMode = $true  # set env for stable local tests and use dotnet run
 )
 
 Write-Host "Starting app: $Project -> $Url (config=$Configuration)"
@@ -19,24 +20,25 @@ if (-not $NoBuild) {
   if ($LASTEXITCODE -ne 0) { Write-Error "Build failed"; exit 1 }
 }
 
-# resolve output DLL (prefer current config/net*)
-$projDir = Split-Path -Parent $Project
-$binDir = Join-Path $projDir "bin/$Configuration"
-$dll = Get-ChildItem -Recurse -Filter "SocksShoppingStore.dll" -Path $binDir -ErrorAction SilentlyContinue |
-       Sort-Object LastWriteTime -Descending | Select-Object -First 1
-if (-not $dll) { Write-Error "Could not find built DLL under $binDir"; exit 1 }
-
-$argsList = @(
-  $dll.FullName,
-  '--urls', $Url
-)
-
-Write-Host "Launching app in background..."
+Write-Host "Launching app in background (dotnet run)..."
 if (-not (Test-Path (Split-Path -Parent $LogPath))) {
   New-Item -ItemType Directory -Path (Split-Path -Parent $LogPath) -Force | Out-Null
 }
 $stdOut = $LogPath
 $stdErr = if ($LogPath.ToLower().EndsWith('.log')) { $LogPath.Substring(0, $LogPath.Length-4) + '.err.log' } else { "$LogPath.err" }
+
+# Environment for stable local tests
+if ($TestMode) {
+  $env:ASPNETCORE_ENVIRONMENT = 'Development'
+  $env:DOTNET_ENVIRONMENT = 'Development'
+  $env:RateLimiting__GlobalPerMinute = '1000'
+  $env:RateLimiting__ApiPerMinute = '1000'
+  $env:FreeTier__Enabled = 'false'
+}
+
+$argsList = @('run', '-c', $Configuration, '--project', $Project, '--urls', $Url, '--no-launch-profile')
+if ($NoBuild) { $argsList += '--no-build' }
+
 $proc = Start-Process -FilePath "dotnet" -ArgumentList $argsList -RedirectStandardOutput $stdOut -RedirectStandardError $stdErr -NoNewWindow -PassThru
 "$($proc.Id)" | Set-Content -Path ".logs/app.pid"
 

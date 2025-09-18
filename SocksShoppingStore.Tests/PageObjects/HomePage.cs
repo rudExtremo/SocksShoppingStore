@@ -56,6 +56,8 @@ namespace SocksShoppingStore.Tests.PageObjects
             _driver.Navigate().GoToUrl(_baseUrl);
             AcceptCookiesIfPresent();
 
+            var beforeCount = CartItemCountBadge.Text;
+            var beforeTotal = GetHeaderCartTotal();
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(30));
             // Wait until at least one AddToCart button is present and displayed
             wait.Until(d => d.FindElements(FirstProductAddToCartButtonBy).Any(e => e.Displayed && e.Enabled));
@@ -70,6 +72,9 @@ namespace SocksShoppingStore.Tests.PageObjects
             {
                 button.Click();
             }
+
+            // Wait for header cart summary to reflect the change
+            WaitForCartSummaryChange(beforeCount, beforeTotal, 10);
         }
 
         public void GoToCart()
@@ -85,6 +90,14 @@ namespace SocksShoppingStore.Tests.PageObjects
             {
                 link.Click();
             }
+            // Wait for cart page to load: either table present or empty alert
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            wait.Until(_ =>
+            {
+                var table = _driver.FindElements(By.CssSelector("#cart-table .cart-qty-input"));
+                var alert = _driver.FindElements(By.CssSelector(".alert.alert-info"));
+                return table.Count > 0 || alert.Count > 0;
+            });
         }
 
         public int GetProductCardCount()
@@ -94,17 +107,34 @@ namespace SocksShoppingStore.Tests.PageObjects
 
         public IReadOnlyList<decimal> GetVisibleProductPrices()
         {
-            var list = new List<decimal>();
-            var priceEls = _driver.FindElements(By.CssSelector(".product-card .card-text strong"));
-            foreach (var el in priceEls)
+            // Be resilient to DOM updates during read (stale elements)
+            var attempts = 0;
+            while (attempts < 3)
             {
-                var text = el.Text;
-                var m = System.Text.RegularExpressions.Regex.Match(text, "\\d+[,.]\\d{2}");
-                if (!m.Success) continue;
-                var num = m.Value.Replace('.', ',');
-                if (decimal.TryParse(num, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.GetCultureInfo("fr-FR"), out var val)) list.Add(val);
+                try
+                {
+                    var list = new List<decimal>();
+                    var priceEls = _driver.FindElements(By.CssSelector(".product-card .card-text strong"));
+                    foreach (var el in priceEls)
+                    {
+                        string text;
+                        try { text = el.Text; }
+                        catch (OpenQA.Selenium.StaleElementReferenceException) { continue; }
+                        var m = System.Text.RegularExpressions.Regex.Match(text, "\\d+[,.]\\d{2}");
+                        if (!m.Success) continue;
+                        var num = m.Value.Replace('.', ',');
+                        if (decimal.TryParse(num, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.GetCultureInfo("fr-FR"), out var val)) list.Add(val);
+                    }
+                    return list;
+                }
+                catch (OpenQA.Selenium.StaleElementReferenceException)
+                {
+                    attempts++;
+                    System.Threading.Thread.Sleep(100);
+                }
             }
-            return list;
+            // Last resort: empty list
+            return Array.Empty<decimal>();
         }
 
         public void ClickLoadMoreIfPresentAndWait()
@@ -139,6 +169,24 @@ namespace SocksShoppingStore.Tests.PageObjects
             var nav = _driver.FindElement(By.CssSelector("a[aria-label='Cart']"));
             var el = nav.FindElements(By.CssSelector(".cart-total, .ms-1.text-muted"));
             return el.Count > 0 ? el[0].Text : string.Empty;
+        }
+
+        public void WaitForCartSummaryChange(string previousCountText, string previousTotalText, int timeoutSeconds = 5)
+        {
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(timeoutSeconds));
+            wait.Until(_ =>
+            {
+                try
+                {
+                    var cnt = CartItemCountBadge.Text;
+                    var tot = GetHeaderCartTotal();
+                    return cnt != previousCountText || tot != previousTotalText;
+                }
+                catch
+                {
+                    return false;
+                }
+            });
         }
 
         // Filters and sorting helpers

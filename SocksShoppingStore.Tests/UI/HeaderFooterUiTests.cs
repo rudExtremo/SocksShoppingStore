@@ -9,9 +9,10 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     [AllureNUnit]
     [Category("UI-Smoke")]
+    [NonParallelizable]
     public class HeaderFooterUiTests : BaseTest
     {
-        [Test, Ignore("pending: navbar-brand not reliably found in headless")] 
+        [Test]
         [Category("Positive")]
         [AllureDescription(@"What: Clicking logo navigates to Home page.
 Steps:
@@ -22,7 +23,18 @@ Expected: URL path is '/' (catalog).")]
         {
             HomePage!.Navigate();
             HomePage.OpenFirstProductDetails();
-            Driver!.FindElement(By.CssSelector("a.navbar-brand"))!.Click();
+            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver!, TimeSpan.FromSeconds(5));
+            wait.Until(d => d.FindElements(By.CssSelector("a.navbar-brand")).Count > 0);
+            var brand = Driver!.FindElement(By.CssSelector("a.navbar-brand"));
+            try
+            {
+                ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].scrollIntoView({behavior:'instant',block:'center'});", brand);
+                ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].click();", brand);
+            }
+            catch
+            {
+                brand.Click();
+            }
             Assert.That(new System.Uri(Driver.Url).AbsolutePath, Is.EqualTo("/").Or.EqualTo(""));
         }
 
@@ -37,16 +49,11 @@ Expected: Counter or total changes (increments).")]
         {
             HomePage!.Navigate();
             var beforeCount = HomePage.CartItemCountBadge.Text;
-            var beforeTotal = Driver!.FindElement(By.CssSelector(".cart-total")).Text;
+            var beforeTotal = HomePage.GetHeaderCartTotal();
             HomePage.AddFirstProductToCart();
-            var sw = System.Diagnostics.Stopwatch.StartNew();
-            while (sw.Elapsed < TimeSpan.FromSeconds(5))
-            {
-                try { if (HomePage.CartItemCountBadge.Text != beforeCount) break; } catch {}
-                System.Threading.Thread.Sleep(200);
-            }
+            HomePage.WaitForCartSummaryChange(beforeCount, beforeTotal, 10);
             var afterCount = HomePage.CartItemCountBadge.Text;
-            var afterTotal = Driver.FindElement(By.CssSelector(".cart-total")).Text;
+            var afterTotal = HomePage.GetHeaderCartTotal();
             Assert.That(afterCount != beforeCount || afterTotal != beforeTotal, "Header cart summary did not change");
         }
 

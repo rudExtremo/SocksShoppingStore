@@ -9,6 +9,7 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     [AllureNUnit]
     [Category("UI-Smoke")]
+    [NonParallelizable]
     public class CheckoutUiTests : BaseTest
     {
         private CheckoutPage? Checkout;

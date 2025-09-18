@@ -60,6 +60,14 @@ namespace SocksShoppingStore.Tests
 
             HomePage = new HomePage(Driver, baseUrl);
             CartPage = new CartPage(Driver);
+
+            // Warm-up: open base URL once to accept cookies and stabilize header
+            try
+            {
+                Driver.Navigate().GoToUrl(baseUrl);
+                AcceptCookiesIfPresent();
+            }
+            catch { }
         }
 
         [TearDown]
@@ -83,15 +91,50 @@ namespace SocksShoppingStore.Tests
             if (Driver == null) return;
             try
             {
+                // Ensure DOM is ready
+                WaitForDomReady(Driver, TimeSpan.FromSeconds(10));
+
                 var banner = Driver.FindElements(By.Id("cookie-consent"));
-                if (banner.Count == 0) return;
-                var accept = Driver.FindElements(By.Id("cookie-accept"));
-                if (accept.Count > 0 && accept[0].Displayed)
+                if (banner.Count > 0)
                 {
-                    accept[0].Click();
+                    var accept = Driver.FindElements(By.Id("cookie-accept"));
+                    if (accept.Count > 0 && accept[0].Displayed)
+                    {
+                        accept[0].Click();
+                    }
+                    // Wait until banner is gone
+                    var end = DateTime.UtcNow + TimeSpan.FromSeconds(5);
+                    while (DateTime.UtcNow < end)
+                    {
+                        banner = Driver.FindElements(By.Id("cookie-consent"));
+                        if (banner.Count == 0 || !banner[0].Displayed) break;
+                        System.Threading.Thread.Sleep(100);
+                    }
                 }
+                // Ensure header cart link is present
+                WaitForHeaderReady(Driver, TimeSpan.FromSeconds(10));
             }
             catch { }
+        }
+
+        protected static void WaitForDomReady(IWebDriver driver, TimeSpan timeout)
+        {
+            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, timeout);
+            wait.Until(d =>
+            {
+                try
+                {
+                    var state = ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState")?.ToString();
+                    return string.Equals(state, "complete", StringComparison.OrdinalIgnoreCase);
+                }
+                catch { return false; }
+            });
+        }
+
+        protected static void WaitForHeaderReady(IWebDriver driver, TimeSpan timeout)
+        {
+            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, timeout);
+            wait.Until(d => d.FindElements(By.CssSelector("a[aria-label='Cart']")).Count > 0);
         }
     }
 }

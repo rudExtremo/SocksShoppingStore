@@ -8,9 +8,10 @@ namespace SocksShoppingStore.Tests
     [TestFixture]
     [AllureNUnit]
     [Category("UI-Smoke")]
+    [NonParallelizable]
     public class ProductUiTests : BaseTest
     {
-        [Test, Ignore("pending: stabilize add-to-cart on details in headless")] 
+        [Test]
         [Category("Positive")]
         [AllureDescription(@"What: Product details page shows key elements.
 Steps:
@@ -20,12 +21,16 @@ Expected: Image, name, description, price, 'Add to Cart', 'Back to Catalog' visi
         {
             HomePage!.Navigate();
             HomePage.OpenFirstProductDetails();
+            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver!, TimeSpan.FromSeconds(5));
+            wait.Until(d => d.FindElements(By.CssSelector(".product-details-image")).Count > 0);
+            wait.Until(d => d.FindElements(By.CssSelector(".product-detail-actions .js-add-to-cart")).Count > 0);
+            wait.Until(d => d.FindElements(By.CssSelector(".product-detail-actions a.btn-outline-secondary")).Count > 0);
             Assert.That(Driver!.FindElements(By.CssSelector(".product-details-image")).Count, Is.GreaterThan(0));
             Assert.That(Driver.FindElements(By.CssSelector(".product-detail-actions .js-add-to-cart")).Count, Is.GreaterThan(0));
             Assert.That(Driver.FindElements(By.CssSelector(".product-detail-actions a.btn-outline-secondary")).Count, Is.GreaterThan(0));
         }
 
-        [Test, Ignore("pending: stabilize add-to-cart on details in headless")] 
+        [Test]
         [Category("Positive")]
         [AllureDescription(@"What: Back to catalog link returns to home.
 Steps:
@@ -35,7 +40,18 @@ Expected: URL returns to '/'.")]
         {
             HomePage!.Navigate();
             HomePage.OpenFirstProductDetails();
-            Driver!.FindElement(By.CssSelector(".product-detail-actions a.btn-outline-secondary")).Click();
+            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver!, TimeSpan.FromSeconds(5));
+            wait.Until(d => d.FindElements(By.CssSelector(".product-detail-actions a.btn-outline-secondary")).Count > 0);
+            var back = Driver!.FindElement(By.CssSelector(".product-detail-actions a.btn-outline-secondary"));
+            try
+            {
+                ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].scrollIntoView({behavior:'instant',block:'center'});", back);
+                ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].click();", back);
+            }
+            catch
+            {
+                back.Click();
+            }
             Assert.That(new System.Uri(Driver.Url).AbsolutePath, Is.EqualTo("/").Or.EqualTo(""));
         }
 
@@ -48,6 +64,7 @@ Expected: Header total sum increases; unique items counter may remain unchanged.
         public void ProductDetails_AddFive_IncrementsCounterByFive()
         {
             HomePage!.Navigate();
+            var beforeCount = HomePage.CartItemCountBadge.Text;
             var beforeSum = HomePage!.GetHeaderCartTotal();
             HomePage.OpenFirstProductDetails();
             var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver!, TimeSpan.FromSeconds(10));
@@ -55,8 +72,15 @@ Expected: Header total sum increases; unique items counter may remain unchanged.
             var add = Driver!.FindElement(OpenQA.Selenium.By.CssSelector(".product-detail-actions .js-add-to-cart"));
             for (int i = 0; i < 5; i++)
             {
-                add.Click();
-                System.Threading.Thread.Sleep(250);
+                var prevCount = HomePage.CartItemCountBadge.Text;
+                var prevSum = HomePage.GetHeaderCartTotal();
+                try
+                {
+                    ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].scrollIntoView({behavior:'instant',block:'center'});", add);
+                    ((IJavaScriptExecutor)Driver).ExecuteScript("arguments[0].click();", add);
+                }
+                catch { add.Click(); }
+                HomePage.WaitForCartSummaryChange(prevCount, prevSum, 10);
             }
             var afterSum = HomePage.GetHeaderCartTotal();
             Assert.That(afterSum, Is.Not.EqualTo(beforeSum));
