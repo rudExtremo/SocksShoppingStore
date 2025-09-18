@@ -85,6 +85,12 @@ jobs:
       - name: Install coverlet.console tool
         run: dotnet tool update --global coverlet.console
       - name: Start app (HTTP)
+        env:
+          ASPNETCORE_ENVIRONMENT: Development
+          DOTNET_ENVIRONMENT: Development
+          RateLimiting__GlobalPerMinute: '1000'
+          RateLimiting__ApiPerMinute: '1000'
+          FreeTier__Enabled: 'false'
         run: |
           # Build first to surface compile errors in logs
           dotnet build SocksShoppingStore/SocksShoppingStore.csproj -c Release
@@ -97,17 +103,29 @@ jobs:
           if ! curl -fsS "http://127.0.0.1:5123/healthz" >/dev/null; then
             echo 'App failed to start'; echo '--- app.log (tail) ---'; tail -n 200 app.log || true; exit 1;
           fi
-      - name: Run full test suite (incl. UI)
+      - name: Run non-UI tests (coverage)
         env:
           BASE_URL: http://127.0.0.1:5123
-          RUN_UI_TESTS: '1'
+          RUN_UI_TESTS: '0'
           IGNORE_CERT_ERRORS: '0'
           USE_TEST_FACTORY: '1'
         run: |
           dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release \
+            --filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke" \
             --logger "trx;LogFileName=main.trx" \
             --settings coverlet.runsettings \
             --results-directory SocksShoppingStore.Tests/TestResults/Coverage
+      - name: Run UI smoke tests (no coverage)
+        env:
+          BASE_URL: http://127.0.0.1:5123
+          RUN_UI_TESTS: '1'
+          IGNORE_CERT_ERRORS: '0'
+          USE_TEST_FACTORY: '0'
+        run: |
+          dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release \
+            --filter "TestCategory=UI-Smoke" \
+            --logger "trx;LogFileName=ui.trx" \
+            --results-directory SocksShoppingStore.Tests/TestResults/UI
       - name: UI coverage (instrument server with coverlet) and run UI smoke
         if: success()
         shell: bash
@@ -132,6 +150,7 @@ jobs:
           # stop server (coverlet target)
           pkill -f "SocksShoppingStore.dll" || true
       - name: Generate Allure Report
+        if: always()
         uses: simple-elf/allure-report-action@v1.8
         with:
           allure_results: allure-results
@@ -168,6 +187,14 @@ jobs:
             SocksShoppingStore.Tests/TestResults/Coverage
             **/coverage.opencover.xml
             coverage-ui/coverage.cobertura.xml
+      - name: Upload TRX (non-UI + UI)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trx-main
+          path: |
+            SocksShoppingStore.Tests/TestResults/Coverage/main.trx
+            SocksShoppingStore.Tests/TestResults/UI/ui.trx
 
   manual-ui:
     if: github.event_name == 'workflow_dispatch' && inputs.run_ui == 'true'
