@@ -43,9 +43,21 @@ namespace SocksShoppingStore.Tests.PageObjects
             // Ensure we are on home page (AddToCart redirects back to the page)
             _driver.Navigate().GoToUrl(_baseUrl);
             AcceptCookiesIfPresent();
-            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
-            var button = wait.Until(ExpectedConditions.ElementToBeClickable(FirstProductAddToCartButtonBy));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", button);
+
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(30));
+            // Wait until at least one AddToCart button is present and displayed
+            wait.Until(d => d.FindElements(FirstProductAddToCartButtonBy).Any(e => e.Displayed && e.Enabled));
+
+            var button = _driver.FindElements(FirstProductAddToCartButtonBy).First(e => e.Displayed && e.Enabled);
+            try
+            {
+                ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView({behavior:'instant',block:'center'});", button);
+                ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", button);
+            }
+            catch
+            {
+                button.Click();
+            }
         }
 
         public void GoToCart()
