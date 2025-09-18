@@ -8,6 +8,13 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("Store")]
+    [AllureSuite("Unit Tests")]
+    [AllureFeature("Metrics")]
+    [AllureLabel("package", "SocksShoppingStore.Tests.Unit")]
+    [AllureLabel("area", "Unit")]
+    [AllureLabel("type", "Functional")]
+    [AllureLabel("flow", "Positive")]
     [Category("Unit")]
     [Category("Positive")]
     public class RequestMetricsAndHelpersTests
@@ -44,3 +51,4 @@ Expected: Output contains '€' or 'EUR'.")]
         }
     }
 }
+

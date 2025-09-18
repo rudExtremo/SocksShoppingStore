@@ -31,6 +31,7 @@ namespace SocksShoppingStore.Tests
             options.AddArgument("--no-sandbox");
             options.AddArgument("--disable-dev-shm-usage");
             options.AddArgument("--disable-gpu");
+            options.AddArgument("--window-size=1280,900");
             if (TestSettings.IgnoreCertErrors)
             {
                 // Allow self-signed dev cert only when explicitly enabled

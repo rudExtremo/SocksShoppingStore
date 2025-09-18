@@ -3,12 +3,22 @@ using Allure.NUnit;
 using Allure.NUnit.Attributes;
 using SocksShoppingStore.Data;
 using SocksShoppingStore.Models;
+using Allure.Net.Commons;
 
 namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("Store")]
+    [AllureSuite("Integration Tests")]
+    [AllureFeature("Product Catalog")]
+    [AllureLabel("package", "SocksShoppingStore.Tests.Integration")]
+    [AllureLabel("area", "Integration")]
+    [AllureLabel("type", "Functional")]
+    [AllureLabel("flow", "Positive")]
+    [AllureSeverity(SeverityLevel.normal)]
     [Category("Integration")]
+    [Category("Unit")]
     [Category("Positive")]
     public class JsonProductRepositoryTests
     {
@@ -45,4 +55,3 @@ Expected: Add/Update/Delete succeed; item appears/changes/disappears accordingly
         }
     }
 }
-

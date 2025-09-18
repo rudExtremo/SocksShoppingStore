@@ -28,7 +28,7 @@ Centralized test settings live in `SocksShoppingStore.Tests/appsettings.Test.jso
 ## Allure
 
 - Raw results are collected under `allure-results` (see `SocksShoppingStore.Tests/allureConfig.json`).
-- On `main`, the workflow builds an Allure HTML report and publishes it to GitHub Pages.
+- On `main`, the workflow aggregates all `**/allure-results` into a single folder, builds an Allure HTML report, and publishes it to GitHub Pages.
 - URL: https://rudExtremo.github.io/SocksShoppingStore
 
 ## Local Tips
@@ -36,6 +36,7 @@ Centralized test settings live in `SocksShoppingStore.Tests/appsettings.Test.jso
 - Fast suite (no external server required):
   - `setx USE_TEST_FACTORY 1`
   - `dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=Unit|TestCategory=Integration|TestCategory=API-Smoke"`
+  - Scope mapping: Allure Severity → Smoke=critical, Regression=normal
 
 - UI locally (trusted dev cert):
   - `dotnet dev-certs https --trust`

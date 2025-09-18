@@ -10,6 +10,13 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("Store")]
+    [AllureSuite("Unit Tests")]
+    [AllureFeature("Session")]
+    [AllureLabel("package", "SocksShoppingStore.Tests.Unit")]
+    [AllureLabel("area", "Unit")]
+    [AllureLabel("type", "Functional")]
+    [AllureLabel("flow", "Positive")]
     [Category("Unit")]
     [Category("Positive")]
     public class SessionHelperTests
@@ -35,3 +42,4 @@ Expected: Not null; total items equals 2.")]
         }
     }
 }
+
