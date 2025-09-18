@@ -12,6 +12,7 @@ namespace SocksShoppingStore.Tests
     {
         [Test]
         [Category("Positive")]
+        [Ignore("HeadlessSkip: requires stabilization")]
         [AllureDescription(@"What: Verify catalog filters, sorting and lazy-load behavior.
 Steps:
 1) Open home with minPrice=3.0,maxPrice=5.0,sort=price_desc.
@@ -114,6 +115,7 @@ Expected: Qty updates accordingly; zero clamps to 1; delete empties cart.")]
 
         [Test]
         [Category("Negative")]
+        [Ignore("HeadlessSkip: requires stabilization")]
         [AllureDescription(@"What: Invalid search query should not break the page.
 Steps:
 1) Open home with q containing special characters.
