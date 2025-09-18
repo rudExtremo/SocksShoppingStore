@@ -126,6 +126,16 @@ jobs:
             --filter "TestCategory=UI-Smoke" \
             --logger "trx;LogFileName=ui.trx" \
             --results-directory SocksShoppingStore.Tests/TestResults/UI
+      - name: Aggregate Allure results
+        shell: bash
+        run: |
+          rm -rf allure-results || true
+          mkdir -p allure-results
+          # Copy all allure-results produced by tests into a single folder
+          find . -type d -name "allure-results" | while read d; do
+            cp -r "$d"/. allure-results/ || true
+          done
+          echo "Aggregated files:"; ls -la allure-results || true
       - name: UI coverage (instrument server with coverlet) and run UI smoke
         if: success()
         shell: bash
