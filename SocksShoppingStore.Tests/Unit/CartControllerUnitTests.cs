@@ -11,8 +11,8 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
-    [AllureEpic("Store")]
-    [AllureSuite("Unit Tests")]
+    [AllureEpic("SocksShoppingStore")]
+    [AllureSuite("Unit")]
     [AllureFeature("Cart")]
     [AllureLabel("package", "SocksShoppingStore.Tests.Unit")]
     [AllureLabel("area", "Unit")]

@@ -7,6 +7,8 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("SocksShoppingStore")]
+    [AllureSuite("Unit")]
     [AllureEpic("Store")]
     [AllureSuite("Unit Tests")]
     [AllureFeature("Cart")]

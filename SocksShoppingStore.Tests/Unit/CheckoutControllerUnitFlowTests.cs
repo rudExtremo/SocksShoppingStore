@@ -13,6 +13,8 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("SocksShoppingStore")]
+    [AllureSuite("Unit")]
     [Category("Unit")]
     [Category("Positive")]
     public class CheckoutControllerUnitFlowTests

@@ -11,6 +11,8 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("SocksShoppingStore")]
+    [AllureSuite("Unit")]
     [Category("Unit")]
     [Category("Security")]
     public class MiddlewareUnitTests

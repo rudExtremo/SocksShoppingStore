@@ -21,7 +21,17 @@ This document standardizes test names, metadata, and authoring patterns across U
 Each test MUST include an English description with What/Steps/Expected.
 
 - Attribute: `[AllureDescription(@"What: ...\nSteps: ...\nExpected: ...")]`
-- Example:
+- All test classes MUST declare an Allure Suite at class level to avoid scattering in the report:
+  - Unit: `[AllureSuite("Unit")]`
+  - Integration (incl. API): `[AllureSuite("Integration")]`
+  - UI: `[AllureSuite("UI")]`
+  - Add `[AllureEpic("SocksShoppingStore")]` to keep reports consistent.
+
+- UI test classes additionally SHOULD declare:
+  - `[AllureEpic("SocksShoppingStore")]`
+  - `[AllureFeature("<Area>")]` e.g., `Catalog`, `Cart`, `Checkout`, `Header`, `Product`
+
+Example:
 
 ```csharp
 [Test]
@@ -45,6 +55,16 @@ Recommended optional labels:
 - Always wait for navigation or DOM updates before assertions (explicit waits or retry loops with timeouts).
 - Keep page objects minimal and focused; expose actions and key assertions.
 - Avoid hard sleeps; prefer condition-based waits.
+
+Stability helpers used in the suite:
+- Pre-waits: DOM ready + header ready after navigation (see `BaseTest.AcceptCookiesIfPresent`).
+- Header cart summary change wait after AddToCart.
+- Catalog stabilization before reading prices (`HomePage.WaitForCatalogStable`).
+- Price reads via one JS snapshot to avoid stale references.
+
+Parallelism:
+- Unit/Integration/API may use multiple workers (runsettings `NumberOfTestWorkers`).
+- UI tests are marked `[NonParallelizable]` and run sequentially by fixture.
 
 ## Negative Tests Policy
 

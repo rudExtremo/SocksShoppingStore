@@ -9,6 +9,8 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("SocksShoppingStore")]
+    [AllureSuite("Integration")]
     [Category("API-Smoke")]
     [Category("Positive")]
     public class ApiDependenciesHelpersTests

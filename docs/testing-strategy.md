@@ -8,12 +8,12 @@ This section provides a comprehensive list of test scenarios for the enhanced ap
     *   **Unit Tests (NUnit):** Focus on individual methods in controllers, services, and models.
     *   **Integration Tests (NUnit):** Test the interaction between components, especially the repository's interaction with the `products.json` file.
     *   **API Tests:** Directly test the RESTful API for correctness, performance, and security.
-*   **End-to-End (UI) Tests (Selenium):** Simulate full user scenarios through the web interface.
+*   **End-to-End (UI) Tests (Selenium):** Simulate full user scenarios through the web interface. One test = one idea/expected; UI cases are fragmented to reduce flakiness and improve reporting.
 *   **Execution Modes:**
     *   Local fast runs: Unit + Integration/API via `WebApplicationFactory` (no external server required)
-    *   Local UI runs: start app locally (`https` profile), run Selenium against `BASE_URL`
+    *   Local UI runs: start app locally (TestMode via `./scripts/start-app.ps1`), run Selenium against `BASE_URL`
     *   CI dev branch: fast suite (Unit + Integration + API-Smoke), Allure results archived
-    *   CI main branch: full regression (incl. UI), coverage export, Allure published to GitHub Pages
+    *   CI main branch: non-UI with coverage + UI-Smoke, Allure aggregated and published to GitHub Pages; optional UI coverage (instrumented)
 *   **Coverage Goals:** High code coverage (>80%) for unit/integration tests. For UI/API tests, the focus is on requirements coverage, ensuring every user story and feature is tested.
 
 ## Positive Test Scenarios ("Happy Path")
@@ -110,6 +110,8 @@ Examples:
 - Add to Cart UX: stays on the current page by default.
   - Controller accepts `returnUrl` (preferred), otherwise redirects back to validated `Referer`.
   - UI tests navigate explicitly to the Cart when needed.
+- Prefer `pageSize` in catalog queries (e.g., `/?pageSize=4`) to reduce DOM size and speed up waits.
+- Stability helpers used across UI tests: DOM/header pre-waits, catalog stabilization, header summary change wait.
 
 This matrix visualizes the overall testing strategy, showing which test types provide primary coverage for each feature.
 

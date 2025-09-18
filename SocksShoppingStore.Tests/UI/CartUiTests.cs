@@ -6,6 +6,9 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("SocksShoppingStore")]
+    [AllureSuite("UI")]
+    [AllureFeature("Cart")]
     [Category("UI-Smoke")]
     [NonParallelizable]
     public class CartUiTests : BaseTest

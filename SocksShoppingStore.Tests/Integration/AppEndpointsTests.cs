@@ -11,6 +11,8 @@ namespace SocksShoppingStore.Tests
 {
     [TestFixture]
     [AllureNUnit]
+    [AllureEpic("SocksShoppingStore")]
+    [AllureSuite("Integration")]
     [Category("Integration")]
     [Category("Positive")]
     public class AppEndpointsTests
