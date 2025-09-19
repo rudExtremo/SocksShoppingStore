@@ -36,6 +36,8 @@ jobs:
         run: chmod +x SocksShoppingStore.Tests/bin/Release/net8.0/selenium-manager/linux/selenium-manager
 
       - name: Start Web App
+        env:
+          ASPNETCORE_ENVIRONMENT: Production
         run: |
           dotnet run --project SocksShoppingStore/SocksShoppingStore.csproj --urls "http://0.0.0.0:5123" &
           sleep 15
