@@ -27,3 +27,6 @@ docs/test-coverage-report.md
 # Log files
 [Ll]og/
 .logs/
+
+# Client-side libraries managed by libman
+wwwroot/lib/
