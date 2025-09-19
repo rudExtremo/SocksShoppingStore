@@ -164,8 +164,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 // Lightweight health endpoint (allowed in FreeTier mode) with short cache
-app.MapGet("/healthz", (HttpContext ctx) => Results.Ok("OK"))
-   .WithMetadata(new ResponseCacheAttribute { Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false });
+app.MapGet("/healthz", (HttpContext ctx) => Results.Ok("OK"));
 
 // Robots.txt to discourage crawling on free tier (cache short)
 app.MapGet("/robots.txt", (HttpContext ctx) => Results.Text("User-agent: *\nDisallow: /\n", "text/plain"))
