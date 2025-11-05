@@ -52,8 +52,8 @@ jobs:
         continue-on-error: true
         run: dotnet test SocksShoppingStore/SocksShoppingStore.sln --no-build --configuration Release
 
-      - name: Generate Allure Report
-        if: always()
+      - name: Generate Allure Report (PRs only)
+        if: github.event_name == 'pull_request'
         uses: simple-elf/allure-report-action@v1.7
         with:
           allure_results: SocksShoppingStore.Tests/bin/Release/net8.0/allure-results
@@ -61,8 +61,8 @@ jobs:
           gh_pages: gh-pages
           allure_history: allure-history
 
-      - name: Upload Allure Report as Artifact
-        if: always()
+      - name: Upload Allure Report as Artifact (PRs only)
+        if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
