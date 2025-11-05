@@ -80,7 +80,14 @@
         </nav>
     </header>
     <div class="container">
-        @if (StripeOptions?.Value?.UseTestModeBanner == true)
+        @{
+            var ctrl = (ViewContext.RouteData.Values["controller"] as string) ?? string.Empty;
+            var act = (ViewContext.RouteData.Values["action"] as string) ?? string.Empty;
+            var showTestBanner = StripeOptions?.Value?.UseTestModeBanner == true
+                                  && string.Equals(ctrl, "Checkout", StringComparison.OrdinalIgnoreCase)
+                                  && string.Equals(act, "Review", StringComparison.OrdinalIgnoreCase);
+        }
+        @if (showTestBanner)
         {
             <div class="alert alert-warning d-flex align-items-center gap-2 mt-2" role="status">
                 <i class="fa-solid fa-flask"></i>
