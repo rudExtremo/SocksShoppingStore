@@ -162,7 +162,7 @@ jobs:
           BASE_URL=http://127.0.0.1:5123 RUN_UI_TESTS=1 IGNORE_CERT_ERRORS=0 USE_TEST_FACTORY=0 \
           dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=UI-Smoke" --logger "trx;LogFileName=ui-coverage.trx"
           # stop server (coverlet target)
-          pkill -f "SocksShoppingStore.dll" || true\n      - name: Upload coverage artifacts
+          pkill -f "SocksShoppingStore.dll" || true      - name: Upload coverage artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
