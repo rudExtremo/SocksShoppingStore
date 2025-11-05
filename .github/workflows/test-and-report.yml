@@ -95,6 +95,7 @@ jobs:
           RateLimiting__GlobalPerMinute: '1000'
           RateLimiting__ApiPerMinute: '1000'
           FreeTier__Enabled: 'false'
+          HttpsRedirect__Enabled: 'false'
         run: |
           # Build first to surface compile errors in logs
           dotnet build SocksShoppingStore/SocksShoppingStore.csproj -c Release

@@ -116,7 +116,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// Allow disabling HTTPS redirect via config for CI runners (where HTTPS may be unavailable)
+var httpsRedirectEnabled = builder.Configuration.GetValue<bool?>("HttpsRedirect:Enabled");
+if (httpsRedirectEnabled != false)
+{
+    app.UseHttpsRedirection();
+}
 // Static files with cache headers
 app.UseStaticFiles(new StaticFileOptions
 {
