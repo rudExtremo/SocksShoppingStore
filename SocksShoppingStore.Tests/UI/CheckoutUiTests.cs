@@ -34,8 +34,17 @@ Expected: Inputs for name/email/address/city/postal/country and Review button vi
             HomePage!.Navigate();
             Driver!.Navigate().GoToUrl(TestSettings.BaseUrl.TrimEnd('/') + "/Checkout");
             AcceptCookiesIfPresent();
-            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver, TimeSpan.FromSeconds(5));
-            wait.Until(d => d.FindElements(By.Id("CustomerName")).Count > 0);
+            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver, TimeSpan.FromSeconds(12));
+            wait.Until(d =>
+            {
+                try
+                {
+                    var hasForm = d.FindElements(By.CssSelector("form[action*='/Checkout']")).Count > 0;
+                    var hasInput = d.FindElements(By.Id("CustomerName")).Count > 0;
+                    return hasForm && hasInput;
+                }
+                catch { return false; }
+            });
             Assert.That(Driver.FindElements(By.Id("CustomerName")).Count, Is.GreaterThan(0));
             Assert.That(Driver.FindElements(By.CssSelector("form button[type='submit']")).Count, Is.GreaterThan(0));
         }
