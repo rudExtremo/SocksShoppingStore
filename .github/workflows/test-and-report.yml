@@ -162,37 +162,7 @@ jobs:
           BASE_URL=http://127.0.0.1:5123 RUN_UI_TESTS=1 IGNORE_CERT_ERRORS=0 USE_TEST_FACTORY=0 \
           dotnet test SocksShoppingStore.Tests/SocksShoppingStore.Tests.csproj -c Release --filter "TestCategory=UI-Smoke" --logger "trx;LogFileName=ui-coverage.trx"
           # stop server (coverlet target)
-          pkill -f "SocksShoppingStore.dll" || true
-      - name: Generate Allure Report
-        if: always()
-        uses: simple-elf/allure-report-action@v1.8
-        with:
-          allure_results: allure-results
-          allure_report: allure-report
-          github_run_num: ${{ github.run_number }}
-      - name: Deploy Allure Report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        if: success()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-report
-          publish_branch: gh-pages
-      - name: Verify Allure Pages
-        if: success()
-        shell: bash
-        env:
-          OWNER: ${{ github.repository_owner }}
-        run: |
-          REPO_NAME=${GITHUB_REPOSITORY#*/}
-          URL="https://${OWNER}.github.io/${REPO_NAME}"
-          echo "Checking ${URL}..."
-          for i in {1..20}; do
-            if curl -fsSL "$URL/index.html" >/dev/null; then echo "Allure available at $URL"; exit 0; fi
-            sleep 3
-          done
-          echo "Allure report not reachable at $URL" >&2
-          exit 1
-      - name: Upload coverage artifacts
+          pkill -f "SocksShoppingStore.dll" || true\n      - name: Upload coverage artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
