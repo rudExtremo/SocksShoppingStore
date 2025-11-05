@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SocksShoppingStore.Models;
-using SocksShoppingStore.Options;
+using SocksShoppingStore.Config;
 using Stripe;
 using Stripe.Checkout;
 

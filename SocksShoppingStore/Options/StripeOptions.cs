@@ -1,4 +1,4 @@
-namespace SocksShoppingStore.Options
+namespace SocksShoppingStore.Config
 {
     public class StripeOptions
     {

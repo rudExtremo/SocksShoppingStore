@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using SocksShoppingStore.Options;
+using SocksShoppingStore.Config;
 using SocksShoppingStore.Services;
 using Stripe;
 using Stripe.Checkout;
@@ -74,4 +74,3 @@ namespace SocksShoppingStore.Controllers
         }
     }
 }
-

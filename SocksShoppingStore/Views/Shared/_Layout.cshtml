@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
 <body class="@((ViewData["BodyClass"] as string) ?? string.Empty)">
-    @inject Microsoft.Extensions.Options.IOptions<SocksShoppingStore.Options.StripeOptions> StripeOptions
+    @inject Microsoft.Extensions.Options.IOptions<SocksShoppingStore.Config.StripeOptions> StripeOptions
     <header>
         <nav class="navbar navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid d-flex align-items-center">
