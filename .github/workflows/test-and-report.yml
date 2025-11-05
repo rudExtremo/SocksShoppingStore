@@ -1,8 +1,10 @@
-name: Tests and Allure Report
+name: Tests and Deployment
 
 on:
   push:
     branches: [ dev, main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
     inputs:
       run_ui:
@@ -71,7 +73,7 @@ jobs:
             **/TestResults/CoverageApi/**/coverage.cobertura.xml
 
   main-tests:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: write
