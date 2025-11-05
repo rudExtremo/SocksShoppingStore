@@ -23,10 +23,8 @@ jobs:
         run: |
           dotnet publish SocksShoppingStore/SocksShoppingStore.csproj -c Release -o $GITHUB_WORKSPACE/publish
 
-      - name: Deploy to Azure Web App
+      - name: Deploy to Azure Web App (publish profile only)
         uses: azure/webapps-deploy@v3
         with:
-          app-name: testsocksshop-agdng4gkcyeuhpgs
-          slot-name: production
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           package: ${{ github.workspace }}/publish
