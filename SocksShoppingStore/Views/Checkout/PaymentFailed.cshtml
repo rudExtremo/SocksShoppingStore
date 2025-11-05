@@ -1,0 +1,13 @@
+@{
+    ViewData["Title"] = T["PaymentFailed_Title"];
+}
+
+<div class="text-center py-5">
+  <h1 class="display-6 text-danger"><i class="fa-regular fa-circle-xmark me-2"></i>@ViewData["Title"]</h1>
+  <p class="lead">@T["PaymentFailed_Message"]</p>
+  <div class="d-grid d-sm-flex gap-2 justify-content-center mt-3">
+    <a asp-action="Review" class="btn btn-primary">@T["TryAgain"]</a>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">@T["BackToCatalog"]</a>
+  </div>
+</div>
+

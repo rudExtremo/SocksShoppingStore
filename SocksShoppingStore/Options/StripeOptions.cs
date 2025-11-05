@@ -7,7 +7,6 @@ namespace SocksShoppingStore.Options
         public string WebhookSecret { get; set; } = string.Empty;
         public bool UseTestModeBanner { get; set; } = true;
         public string SuccessReturnPath { get; set; } = "/Checkout/ReturnSuccess";
-        public string CancelReturnPath { get; set; } = "/Checkout/Review";
+        public string CancelReturnPath { get; set; } = "/Checkout/PaymentFailed";
     }
 }
-

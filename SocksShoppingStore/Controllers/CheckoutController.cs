@@ -126,6 +126,12 @@ namespace SocksShoppingStore.Controllers
             var order = HttpContext.Session.Get<Order>("LastOrder");
             return View(order);
         }
+
+        [HttpGet]
+        public IActionResult PaymentFailed()
+        {
+            return View();
+        }
     }
 }
 

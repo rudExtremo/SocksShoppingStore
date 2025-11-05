@@ -67,4 +67,8 @@
   <data name="OrderId" xml:space="preserve"><value>Order ID</value></data>
   <data name="Test_Banner_Title" xml:space="preserve"><value>Test Mode:</value></data>
   <data name="Test_Banner_Text" xml:space="preserve"><value>This is a demo environment. Payments run in Stripe test mode. No real charges. Use Stripe test cards (e.g., 4242 4242 4242 4242).</value></data>
+  <data name="PayNow" xml:space="preserve"><value>Pay Now</value></data>
+  <data name="PaymentFailed_Title" xml:space="preserve"><value>Payment unsuccessful</value></data>
+  <data name="PaymentFailed_Message" xml:space="preserve"><value>Your payment was not completed or was canceled. Please try again or use another card.</value></data>
+  <data name="TryAgain" xml:space="preserve"><value>Try again</value></data>
 </root>
