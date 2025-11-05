@@ -5,7 +5,9 @@ param(
   [int]$TimeoutSec = 30,
   [string]$LogPath = ".logs/app-local.log",
   [switch]$NoBuild,
-  [switch]$TestMode = $true  # set env for stable local tests and use dotnet run
+  [switch]$TestMode = $true,  # set env for stable local tests and use dotnet run
+  [switch]$DisableHttpsRedirect,
+  [switch]$TrustHttpsCert
 )
 
 Write-Host "Starting app: $Project -> $Url (config=$Configuration)"
@@ -34,6 +36,20 @@ if ($TestMode) {
   $env:RateLimiting__GlobalPerMinute = '1000'
   $env:RateLimiting__ApiPerMinute = '1000'
   $env:FreeTier__Enabled = 'false'
+}
+
+# If requested (or implied by URL scheme), disable HTTPS redirect so health checks over HTTP work
+try {
+  $uri = [Uri]$Url
+  if ($DisableHttpsRedirect -or $uri.Scheme -eq 'http') {
+    $env:HttpsRedirect__Enabled = 'false'
+  }
+  if ($uri.Scheme -eq 'https' -and $TrustHttpsCert) {
+    Write-Host "Trusting local HTTPS dev certificate (dotnet dev-certs https --trust)"
+    dotnet dev-certs https --trust | Out-Host
+  }
+} catch {
+  # ignore URL parse errors
 }
 
 $argsList = @('run', '-c', $Configuration, '--project', $Project, '--urls', $Url, '--no-launch-profile')
