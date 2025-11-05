@@ -65,4 +65,6 @@
   <data name="ThankYou_ForYourOrder" xml:space="preserve"><value>Спасибо за ваш заказ!</value></data>
   <data name="ThankYou_OrderPlaced" xml:space="preserve"><value>Ваш заказ оформлен.</value></data>
   <data name="OrderId" xml:space="preserve"><value>Номер заказа</value></data>
+  <data name="Test_Banner_Title" xml:space="preserve"><value>Режим тестирования:</value></data>
+  <data name="Test_Banner_Text" xml:space="preserve"><value>Это тестовый стенд. Оплата выполняется в тестовом режиме Stripe. Средства не списываются. Используйте тестовые карты (например, 4242 4242 4242 4242).</value></data>
 </root>

@@ -36,6 +36,11 @@
   </tfoot>
 </table>
 
+@if (TempData["Error"] is string err && !string.IsNullOrWhiteSpace(err))
+{
+  <div class="alert alert-danger" role="alert">@err</div>
+}
+
 <form asp-action="Confirm" method="post">
   @Html.AntiForgeryToken()
   <div class="d-grid d-sm-flex gap-2">

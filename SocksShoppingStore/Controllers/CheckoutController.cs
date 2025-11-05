@@ -2,15 +2,20 @@ using Microsoft.AspNetCore.Mvc;
 using SocksShoppingStore.Helpers;
 using SocksShoppingStore.Models;
 using Microsoft.Extensions.Logging;
+using SocksShoppingStore.Services;
 
 namespace SocksShoppingStore.Controllers
 {
     public class CheckoutController : Controller
     {
         private readonly ILogger<CheckoutController> _logger;
-        public CheckoutController(ILogger<CheckoutController> logger)
+        private readonly StripeCheckoutService _stripe;
+        private readonly PaymentSessionStore _sessionStore;
+        public CheckoutController(ILogger<CheckoutController> logger, StripeCheckoutService stripe, PaymentSessionStore sessionStore)
         {
             _logger = logger;
+            _stripe = stripe;
+            _sessionStore = sessionStore;
         }
 
         [HttpGet]
@@ -76,21 +81,42 @@ namespace SocksShoppingStore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Confirm()
+        public async Task<IActionResult> Confirm()
         {
             var draft = HttpContext.Session.Get<Order>("OrderDraft");
             if (draft == null) return RedirectToAction("Index");
 
-            // Finalize (no persistence in demo)
+            // Redirect to Stripe Checkout (test mode)
+            try
+            {
+                var session = await _stripe.CreateCheckoutSessionAsync(draft, HttpContext.Request);
+                _sessionStore.SaveDraft(session.Id, draft);
+                return Redirect(session.Url);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "payment_session_error");
+                // Fallback: show review with error message
+                TempData["Error"] = "Payment initialization failed. Please try again later.";
+                return RedirectToAction("Review");
+            }
+        }
+
+        [HttpGet]
+        public IActionResult ReturnSuccess()
+        {
+            var draft = HttpContext.Session.Get<Order>("OrderDraft");
+            if (draft == null) return RedirectToAction("Index");
+
+            // Finalize locally after successful payment (demo)
             draft.Id = Guid.NewGuid();
             draft.CreatedAt = DateTimeOffset.UtcNow;
 
-            // Clear cart and draft; keep last order for ThankYou page
             HttpContext.Session.Set("LastOrder", draft);
             HttpContext.Session.Set("Cart", new ShoppingCart());
             HttpContext.Session.Set<Order>("OrderDraft", null!);
 
-            _logger.LogInformation("checkout_confirmed: order={OrderId} total={Total}", draft.Id, draft.Total);
+            _logger.LogInformation("payment_completed: order={OrderId} total={Total}", draft.Id, draft.Total);
             return RedirectToAction("ThankYou");
         }
 

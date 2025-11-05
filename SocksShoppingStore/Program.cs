@@ -25,6 +25,10 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// Payments
+builder.Services.AddScoped<SocksShoppingStore.Services.StripeCheckoutService>();
+builder.Services.AddSingleton<SocksShoppingStore.Services.PaymentSessionStore>();
+
 // Default culture for numbers (we will format prices explicitly as EUR)
 var defaultCulture = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentCulture = defaultCulture;
@@ -40,6 +44,7 @@ builder.Services.AddWebEncoders(options =>
 builder.Services.Configure<FreeTierOptions>(builder.Configuration.GetSection("FreeTier"));
 builder.Services.Configure<ConcurrencyOptions>(builder.Configuration.GetSection("Concurrency"));
 builder.Services.Configure<LegalOptions>(builder.Configuration.GetSection("Legal"));
+builder.Services.Configure<SocksShoppingStore.Options.StripeOptions>(builder.Configuration.GetSection("Stripe"));
 
 // Repository provider (InMemory default, optional JSON persistence)
 var repoProvider = builder.Configuration.GetSection("Repository:Provider").Get<string>() ?? "InMemory";
