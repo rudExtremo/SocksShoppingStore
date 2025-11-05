@@ -3,6 +3,7 @@ using SocksShoppingStore.Helpers;
 using SocksShoppingStore.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using SocksShoppingStore.Services;
 using SocksShoppingStore.Config;
@@ -14,6 +15,7 @@ namespace SocksShoppingStore.Controllers
         private readonly ILogger<CheckoutController> _logger;
         private readonly StripeCheckoutService _stripe;
         private readonly PaymentSessionStore _sessionStore;
+        [ActivatorUtilitiesConstructor]
         public CheckoutController(ILogger<CheckoutController> logger, StripeCheckoutService stripe, PaymentSessionStore sessionStore)
         {
             _logger = logger;
