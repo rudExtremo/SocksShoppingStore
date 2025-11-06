@@ -165,16 +165,39 @@ jobs:
         run: |
           allure generate --clean allure-results -o allure-report
 
-      - name: Generate Coverage HTML (ReportGenerator)
+      - name: Install ReportGenerator CLI (local)
         if: success()
-        continue-on-error: true
-        uses: danielpalme/ReportGenerator-GitHub-Action@v5
-        with:
-          reports: |
-            **/coverage.cobertura.xml
-            **/coverage.opencover.xml
-          targetdir: coverage-report
-          reporttypes: Html;TextSummary;Badge
+        run: |
+          dotnet tool update --tool-path ./tools dotnet-reportgenerator-globaltool --version 5.4.18
+
+      - name: Generate Coverage HTML (CLI)
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./tools/reportgenerator \
+            -reports:"**/coverage.cobertura.xml;**/coverage.opencover.xml" \
+            -targetdir:"coverage-report" \
+            -reporttypes:"Html;Badge" || echo "COVERAGE_FAILED=1" >> $GITHUB_ENV
+
+      - name: Add coverage metrics to Allure environment
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Generate TextSummary to parse key metrics (do not create files)
+          summary=$(./tools/reportgenerator -reports:"**/coverage.cobertura.xml;**/coverage.opencover.xml" -targetdir:"coverage-report" -reporttypes:"TextSummary" 2>&1 || true)
+          line=$(echo "$summary" | sed -n 's/^.*Line coverage:[[:space:]]*\([0-9.]*%\).*/\1/p' | head -n1)
+          branch=$(echo "$summary" | sed -n 's/^.*Branch coverage:[[:space:]]*\([0-9.]*%\).*/\1/p' | head -n1)
+          method=$(echo "$summary" | sed -n 's/^.*Method coverage:[[:space:]]*\([0-9.]*%\).*/\1/p' | head -n1)
+          class=$(echo "$summary" | sed -n 's/^.*Class coverage:[[:space:]]*\([0-9.]*%\).*/\1/p' | head -n1)
+          mkdir -p allure-results
+          {
+            [ -n "$line" ] && echo "Coverage.Line=$line" || true
+            [ -n "$branch" ] && echo "Coverage.Branch=$branch" || true
+            [ -n "$method" ] && echo "Coverage.Method=$method" || true
+            [ -n "$class" ] && echo "Coverage.Class=$class" || true
+          } > allure-results/environment.properties
 
       - name: Build Pages site (Allure + Coverage)
         if: success()
@@ -184,7 +207,23 @@ jobs:
           rm -rf site || true
           mkdir -p site/allure site/coverage
           cp -r allure-report/* site/allure/ || true
-          cp -r coverage-report/* site/coverage/ || true
+          if [ -d coverage-report ] && ls -1 coverage-report/* >/dev/null 2>&1; then
+            cp -r coverage-report/* site/coverage/ || true
+          else
+            cat > site/coverage/index.html << 'EOF'
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+              <meta charset="utf-8" />
+              <title>Coverage Unavailable</title>
+            </head>
+            <body>
+              <h1>Coverage Unavailable</h1>
+              <p>The coverage report was not generated for this run.</p>
+            </body>
+            </html>
+            EOF
+          fi
           cat > site/index.html << 'EOF'
           <!DOCTYPE html>
           <html lang="en">
