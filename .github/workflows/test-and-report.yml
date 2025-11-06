@@ -210,36 +210,36 @@ jobs:
           if [ -d coverage-report ] && ls -1 coverage-report/* >/dev/null 2>&1; then
             cp -r coverage-report/* site/coverage/ || true
           else
-            cat > site/coverage/index.html << 'EOF'
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-              <meta charset="utf-8" />
-              <title>Coverage Unavailable</title>
-            </head>
-            <body>
-              <h1>Coverage Unavailable</h1>
-              <p>The coverage report was not generated for this run.</p>
-            </body>
-            </html>
-            EOF
+            printf '%s\n' \
+              '<!DOCTYPE html>' \
+              '<html lang="en">' \
+              '<head>' \
+              '  <meta charset="utf-8" />' \
+              '  <title>Coverage Unavailable</title>' \
+              '</head>' \
+              '<body>' \
+              '  <h1>Coverage Unavailable</h1>' \
+              '  <p>The coverage report was not generated for this run.</p>' \
+              '</body>' \
+              '</html>' \
+              > site/coverage/index.html
           fi
-          cat > site/index.html << 'EOF'
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-            <meta charset="utf-8" />
-            <title>Test Reports</title>
-          </head>
-          <body>
-            <h1>Test Reports</h1>
-            <ul>
-              <li><a href="allure/index.html">Allure Report</a></li>
-              <li><a href="coverage/index.html">Coverage Report</a></li>
-            </ul>
-          </body>
-          </html>
-          EOF
+          printf '%s\n' \
+            '<!DOCTYPE html>' \
+            '<html lang="en">' \
+            '<head>' \
+            '  <meta charset="utf-8" />' \
+            '  <title>Test Reports</title>' \
+            '</head>' \
+            '<body>' \
+            '  <h1>Test Reports</h1>' \
+            '  <ul>' \
+            '    <li><a href="allure/index.html">Allure Report</a></li>' \
+            '    <li><a href="coverage/index.html">Coverage Report</a></li>' \
+            '  </ul>' \
+            '</body>' \
+            '</html>' \
+            > site/index.html
 
       - name: Deploy Reports to GitHub Pages
         if: success()
