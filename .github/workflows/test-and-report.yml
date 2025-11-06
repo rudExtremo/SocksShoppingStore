@@ -141,6 +141,37 @@ jobs:
             cp -r "$d"/. allure-results/ || true
           done
           echo "Aggregated files:"; ls -la allure-results || true
+
+      - name: Setup Java (for Allure CLI)
+        if: success()
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Allure CLI
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          VER=2.24.0
+          curl -sSL -o allure.tgz https://github.com/allure-framework/allure2/releases/download/$VER/allure-$VER.tgz
+          sudo tar -zxf allure.tgz -C /opt/
+          sudo ln -sf /opt/allure-$VER/bin/allure /usr/local/bin/allure
+          allure --version
+
+      - name: Generate Allure report
+        if: success()
+        run: |
+          allure generate --clean allure-results -o allure-report
+
+      - name: Deploy Allure Report to GitHub Pages
+        if: success()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          publish_branch: gh-pages
       - name: UI coverage (instrument server with coverlet) and run UI smoke
         if: success()
         shell: bash
