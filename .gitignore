@@ -28,5 +28,8 @@ docs/test-coverage-report.md
 [Ll]og/
 .logs/
 
+# Local developer scripts (not for repo)
+scripts/
+
 # Client-side libraries managed by libman
 wwwroot/lib/
