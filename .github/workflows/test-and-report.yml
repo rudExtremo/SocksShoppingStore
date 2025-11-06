@@ -165,13 +165,62 @@ jobs:
         run: |
           allure generate --clean allure-results -o allure-report
 
-      - name: Deploy Allure Report to GitHub Pages
+      - name: Generate Coverage HTML (ReportGenerator)
+        if: success()
+        uses: danielpalme/ReportGenerator-GitHub-Action@v5
+        with:
+          reports: |
+            **/coverage.cobertura.xml
+            **/coverage.opencover.xml
+          targetdir: coverage-report
+          reporttypes: Html;TextSummary;Badge
+
+      - name: Build Pages site (Allure + Coverage)
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf site || true
+          mkdir -p site/allure site/coverage
+          cp -r allure-report/* site/allure/ || true
+          cp -r coverage-report/* site/coverage/ || true
+          cat > site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <title>Test Reports</title>
+          </head>
+          <body>
+            <h1>Test Reports</h1>
+            <ul>
+              <li><a href="allure/index.html">Allure Report</a></li>
+              <li><a href="coverage/index.html">Coverage Report</a></li>
+            </ul>
+          </body>
+          </html>
+          EOF
+
+      - name: Deploy Reports to GitHub Pages
         if: success()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-report
+          publish_dir: site
           publish_branch: gh-pages
+
+      - name: Publish app (Release)
+        if: success() && github.ref == 'refs/heads/main'
+        run: |
+          dotnet restore SocksShoppingStore/SocksShoppingStore.csproj
+          dotnet publish SocksShoppingStore/SocksShoppingStore.csproj -c Release -o ./publish
+
+      - name: Deploy to Azure App Service
+        if: success() && github.ref == 'refs/heads/main'
+        uses: azure/webapps-deploy@v3
+        with:
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: ./publish
       - name: UI coverage (instrument server with coverlet) and run UI smoke
         if: success()
         shell: bash
