@@ -167,6 +167,7 @@ jobs:
 
       - name: Generate Coverage HTML (ReportGenerator)
         if: success()
+        continue-on-error: true
         uses: danielpalme/ReportGenerator-GitHub-Action@v5
         with:
           reports: |
