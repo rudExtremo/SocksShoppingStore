@@ -48,7 +48,13 @@
       </tr>
     }
     <tr>
-      <td colspan="2" class="text-end">@Model?.Totals?.TaxLabel</td>
+      <td colspan="2" class="text-end">
+        @{
+          var taxLabel = Model?.Totals?.TaxLabel ?? "VAT";
+          var taxRate = Model?.Totals?.TaxRatePercent ?? 0m;
+        }
+        @taxLabel @if (taxRate > 0) { <text>(@taxRate.ToString("0.##")%)</text> }
+      </td>
       <td class="text-end">@SocksShoppingStore.Helpers.Currency.Eur(Model?.Totals?.TaxAmount ?? 0)</td>
     </tr>
     <tr>

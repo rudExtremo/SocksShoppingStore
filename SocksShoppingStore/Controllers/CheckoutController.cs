@@ -129,6 +129,22 @@ namespace SocksShoppingStore.Controllers
         {
             var draft = HttpContext.Session.Get<Order>("OrderDraft");
             if (draft == null) return RedirectToAction("Index");
+
+            // Ensure totals are present (e.g., if draft created before features enabled)
+            try
+            {
+                var ff = _featureFlags?.Value;
+                var env = HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>();
+                var enable = ff == null || !ff.OnlyInDevelopment || env.IsDevelopment();
+                var taxesOn = ff?.EnableTaxes ?? true;
+                if (enable && taxesOn && (draft.Totals == null || draft.Totals.TaxRatePercent <= 0))
+                {
+                    var (totals, _, _) = _totals.Compute(draft.Items, draft?.Totals != null ? null : null, null, estimated: false);
+                    draft.Totals = totals;
+                    HttpContext.Session.Set("OrderDraft", draft);
+                }
+            }
+            catch { }
             return View(draft);
         }
 
