@@ -15,28 +15,21 @@
 
 ## Карта репозитория
 
-- `SocksShoppingStore/Controllers` — MVC контроллеры (`Home`, `Products`, `ProductsApi`, `Cart`, `Legal`, `Localization`).
+- `SocksShoppingStore/Controllers` — MVC контроллеры (`Home`, `Products`, `ProductsApi`, `Cart`, `Checkout`, `StripeWebhook`, `Legal`, `Localization`).
 - `SocksShoppingStore/Middleware` — `SecurityHeaders`, `FreeTierGuard`, `ConcurrencyLimiter`.
 - `SocksShoppingStore/Services` — `ProductCatalogLocalizer`, `RateOptions`, `RequestMetrics`.
 - `SocksShoppingStore/Data` — in-memory `ProductRepository`.
 - `SocksShoppingStore/Models` — `Sock`, `ShoppingCart`, `CartItem`, `ErrorViewModel`.
 - `SocksShoppingStore/Views` — Razor Views (UI), `wwwroot` — статика.
 - `SocksShoppingStore/Program.cs` — пайплайн, DI, локализация, сессии, лимиты, метрики.
-- `.codex` — исторические RTF/PDF (содержимое перенесено в `docs/`).
 
 ## Документация
 
-- Обзор: `docs/overview.ru.md`
-- Архитектура: `docs/architecture.ru.md`
-- Установка: `docs/setup.ru.md`
-- API: `docs/api/products.ru.md`
-- Локализация: `docs/internationalization.ru.md`
-- Безопасность и лимиты: `docs/security-and-limits.ru.md`
-- Метрики: `docs/metrics.ru.md`
-- Дорожная карта: `docs/roadmap.ru.md`
-- Вклад: `docs/contributing.ru.md`
-
-Англоязычные версии находятся рядом без суффикса `.ru`.
+- Обзор (EN): `docs/overview.md`
+- Архитектура (EN): `docs/architecture.md`
+- Установка (EN): `docs/setup.md`
+- Тестирование (EN): `docs/testing.md`
+- Гайд для агента: `docs/SOCKS_AGENT_GUIDE.md`
 
 ## Лицензия
 

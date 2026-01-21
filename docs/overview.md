@@ -1,19 +1,62 @@
 # Overview
 
-This document provides a strategic roadmap for transforming the "SocksShoppingStore" web application from a basic online store into a comprehensive, publicly accessible demonstration platform illustrating best practices in Quality Assurance (QA). The primary value of the project is not its commercial functionality, but its role as a portfolio piece that showcases not only the technical skills of a QA engineer but also strategic thinking, ingenuity, and a deep understanding of modern software development lifecycles.
+SocksShoppingStore is a small ASP.NET Core 8 MVC demo app for browsing “job-themed” socks, adding them to a session-backed cart, and running a test-mode checkout flow (Stripe Checkout). The repo is intentionally designed as a QA/automation showcase: the app stays simple, but includes production-friendly concerns (security headers/CSP, rate limiting, concurrency cap, minimal metrics, localization) and a layered test suite with CI reporting.
 
-The proposed development strategy is based on three key principles:
-1.  **Disciplined Feature Expansion:** Introducing new features typical of modern e-commerce platforms, with an emphasis on creating diverse and complex testing scenarios.
-2.  **Building a Multi-layered Testing System:** Upgrading the existing test infrastructure to include not only functional but also performance and security tests integrated into a CI/CD pipeline.
-3.  **Practical Application of Artificial Intelligence (AI):** Integrating AI technologies to solve specific QA tasks, such as generating test data and improving the resilience of UI tests.
+## Canonical Documentation (5 files)
 
-All stages of the roadmap are designed with strict adherence to the limitations of free-tier cloud services, particularly Microsoft Azure (Free F1) and GitHub Actions, requiring special attention to efficiency and resource optimization.
+- `docs/overview.md` — this file (purpose, constraints, roadmap)
+- `docs/setup.md` — local run, configuration, Stripe, test settings
+- `docs/architecture.md` — code map, request pipeline, endpoints, core flows
+- `docs/testing.md` — tests, CI pipeline, Allure + coverage
+- `docs/SOCKS_AGENT_GUIDE.md` — “full context” guide for coding agents
 
-## Key Principles of the Roadmap
+## What’s Implemented Today
 
-The implementation of all subsequent recommendations must be guided by the following fundamental principles:
+- Catalog browsing with `q` search, sorting, price filtering, and paging.
+- Session-backed cart with AJAX “add to cart” and in-place quantity updates.
+- Checkout form → review → Stripe Checkout redirect (test keys only) with a safe local fallback.
+- Localization (EN/RU): UI strings via `.resx`; product name/description via an in-memory map.
+- Safety and free-tier friendliness: CSP/security headers, rate limiting, concurrency cap, optional free-tier guard.
+- Operability: `GET /healthz` and a small IP-allowlisted `GET /_status` metrics endpoint.
 
-*   **Efficiency by Design:** Every technical choice, from implementing a new feature to configuring CI/CD, must aim to minimize resource consumption (CPU, RAM, CI/CD execution minutes). This is a critical condition for sustainable operation within the free tiers of Azure App Service F1 and GitHub Actions.
-*   **Maximum Testability:** Priority in selecting and implementing new application features is given to those that open the broadest and deepest testing opportunities. Each new feature is primarily considered a proving ground for demonstrating QA competencies.
-*   **Automation First:** Manual intervention in the build, test, and deployment processes must be minimized. The CI/CD pipeline is the central system of the project, responsible for all stages of the code lifecycle.
-*   **Public Demonstration:** All testing artifacts, especially reports, must be automatically publishable, publicly accessible, and serve as a dynamic, living resume that clearly demonstrates the quality of work and the approaches used.
+## Constraints / Safety Rails
+
+- Stripe: the app refuses non-test keys (`sk_test_*`) to avoid accidental live charges.
+- Free-tier guard: can block most traffic in certain deployments; see `FreeTier` options in `SocksShoppingStore/appsettings.json`.
+- Rate limiting and concurrency caps are enabled by default; CI runs relax these to keep UI tests stable.
+
+## Roadmap (Vision)
+
+This roadmap is a guide for future expansion. Many items are not implemented yet.
+
+### Principles
+
+1. Efficiency by design (free-tier awareness).
+2. Maximum testability (features chosen to create diverse test scenarios).
+3. Automation first (CI is the center of the lifecycle).
+4. Public demonstration (reports are automatically publishable and publicly accessible).
+
+### Feature Expansion (high level)
+
+- Phase 1: accounts, order history, user-generated content (reviews/ratings), wishlist.
+- Phase 2: faceted search/filtering, promo codes, lightweight recommendations (mock).
+- Phase 3: guest checkout, mock payment variations, mock order confirmation.
+
+### QA / Testing Roadmap (high level)
+
+- Richer Allure reports (steps/attachments/history/categories).
+- Lightweight performance checks (e.g., k6) targeting key routes and APIs.
+- Automated security scanning (e.g., OWASP ZAP baseline) integrated into CI.
+- Practical AI use for QA tasks (e.g., structured test data generation, locator resilience research).
+
+## Tech Debt / Known Gaps
+
+- Catalog price validation UX (invalid inputs, min > max messaging).
+- Cart decrement-to-zero behavior (currently clamps at `>=1` unless deleted).
+- UI coverage collection in CI (initial wiring exists; iterate as needed).
+
+## Contributing Guidelines (short)
+
+- Prefer English for PRs and commit messages.
+- Keep changes small and focused; update/extend tests with behavior changes.
+- Use Conventional Commits style (e.g., `feat: ...`, `fix: ...`).

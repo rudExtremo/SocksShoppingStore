@@ -10,14 +10,6 @@
 - Open the printed HTTPS URL (e.g., `https://localhost:5001`)
 - Health probe: `GET /healthz`
 
-### Local Scripts (Windows/PowerShell)
-
-- Start app: `./scripts/start-app.ps1 -Url http://127.0.0.1:5123 -Configuration Release`
-- Stop app: `./scripts/stop-app.ps1`
-- Fast tests (dev): `./scripts/run-tests.ps1 -Suite dev-fast`
-- Full tests (main-like): `./scripts/run-tests.ps1 -Suite main-full -BaseUrl http://127.0.0.1:5123`
-- UI smoke: `./scripts/run-tests.ps1 -Suite ui-smoke -BaseUrl http://127.0.0.1:5123`
-
 ## Configuration
 
 Edit `SocksShoppingStore/appsettings.json`:
@@ -30,6 +22,18 @@ Edit `SocksShoppingStore/appsettings.json`:
 
 For development overrides, use `appsettings.Development.json`.
 
+## Payments (Stripe Checkout)
+
+Checkout uses Stripe Checkout in **test mode**.
+
+Configure `SocksShoppingStore/appsettings.json` → `Stripe`:
+
+- `PublishableKey` — `pk_test_*`
+- `SecretKey` — **must** be `sk_test_*` (non-test keys are rejected)
+- `WebhookSecret` — optional (only needed if you use Stripe webhooks locally)
+
+If Stripe keys are missing/invalid, the checkout flow falls back to a local “finalize order” demo path.
+
 ## Localization
 
 - Default culture: `en` (`en-US` for numbers)
@@ -41,7 +45,7 @@ For development overrides, use `appsettings.Development.json`.
 ASP.NET dev cert is required for HTTPS. If missing, install with:
 
 - `dotnet dev-certs https --trust`
-# Setup
+
 ## Test Settings (local and CI)
 
 This repo centralizes test configuration to avoid hardcoding URLs and flags in test code.
